@@ -30,7 +30,7 @@ jobs:
 
     - name: Prepare Laravel Application
       env:
-        DB_CONNECTION: postgres
+        DB_HOST: postgres
       run: |
         cp .env-example .env
         php artisan key:generate
