@@ -7,24 +7,9 @@ jobs:
   # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
   vm-job:
     runs-on: ubuntu-18.04
-    container:
-      image: lorisleiva/laravel-docker:7.4
-    services:
-      postgres:
-        image: postgres:11.11
-        env:
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgresuser
-          POSTGRES_PASSWORD: secret
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
-        ports:
-        - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    
     steps:
     - uses: actions/checkout@v2
+    - uses: docker run -dit --rm --name postgres_db -v db-data:/var/lib/postgresql/data -p 5432:5432 -e POSTGRES_DB=snippet_db -e POSTGRES_USER=snippet_user -e POSTGRES_PASSWORD=P@88w0rd pgtest
     - name: Install composer dependencies
       working-directory: ./backend
       run: composer install
