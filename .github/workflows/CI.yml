@@ -21,6 +21,8 @@ jobs:
       working-directory: ./backend
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
     - name: Install composer dependencies
       run: |
         composer install --no-scripts
