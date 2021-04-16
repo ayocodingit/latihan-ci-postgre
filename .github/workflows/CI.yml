@@ -3,38 +3,66 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  tests:
-    runs-on: ubuntu-latest
+  container-job:
+    runs-on: ubuntu-18.04
+    env: 
+      working-directory: ./backend
+
+    # runs all of the steps inside the specified continer rather than on the VM host.  
+    # Because of this the network configuration changes from host based network to a container network.
     container:
       image: php:7.3-alpine
+
     services:
       postgres:
         image: mdillon/postgis:10
         env:
-          POSTGRES_USER: homestead
+          POSTGRES_DB: postgresdb
+          POSTGRES_USER: postgresuser
           POSTGRES_PASSWORD: secret
-          POSTGRES_DB: homestead
+          POSTGRES_HOST: postgres
         ports:
         - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    env: 
-      working-directory: ./backend
+
     steps:
     - uses: actions/checkout@v1
-      with:
-        fetch-depth: 1
+      env:
+        # use postgres for the host here because we have specified a container for the job.
+        # If we were running the job on the VM this would be localhost
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+
+  # Runs all steps on the VM
+  # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
+  vm-job:
+    runs-on: ubuntu-18.04
+    services:
+      postgres:
+        image: mdillon/postgis:10
+        env:
+          POSTGRES_DB: postgresdb
+          POSTGRES_USER: postgresuser
+          POSTGRES_PASSWORD: secret
+          POSTGRES_HOST: postgres
+        ports:
+        - 5432/tcp
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    
+    steps:
+    - uses: actions/checkout@v1
     - name: Install composer dependencies
       run: composer install --prefer-dist
       working-directory: ${{env.working-directory}}
 
-    - name: Prepare Laravel Application
+    - name: Run PHPUnit tests 
+      run: vendor/bin/phpunit --no-coverage
       env:
-        DB_HOST: postgres
-      run: |
-        cp .env-example .env
-        php artisan key:generate
-      working-directory: ${{env.working-directory}}
-
-    - name: Run Testsuite
-      run: vendor/bin/phpunit tests/
+        # use localhost for the host here because we have specified a container for the job.
+        # If we were running the job on the VM this would be postgres
+        DB_HOST: localhost
+        DB_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+      # run: docker exec -i canie-api vendor/bin/phpunit
       working-directory: ${{env.working-directory}}
