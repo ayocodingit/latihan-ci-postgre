@@ -27,8 +27,8 @@ class CreatePasienTable extends Migration
             $table->unsignedInteger('kota_id');
             $table->string('kecamatan', 100)->nullable();
             $table->string('kelurahan', 100)->nullable();
-            $table->string('no_rw', 3)->nullable();
-            $table->string('no_rt', 3)->nullable();
+            $table->char('no_rw', 3)->nullable();
+            $table->char('no_rt', 3)->nullable();
             $table->text('alamat_lengkap')->nullable();
             $table->text('keterangan_lain')->nullable();
             $table->double('suhu')->nullable();

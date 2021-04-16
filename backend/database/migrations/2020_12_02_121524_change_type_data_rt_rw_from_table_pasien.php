@@ -17,7 +17,11 @@ class ChangeTypeDataRtRwFromTablePasien extends Migration
      */
     public function up()
     {
-        //
+        DB::statement("
+            ALTER TABLE pasien  
+            ALTER COLUMN no_rt type varchar(3), 
+            ALTER COLUMN no_rw type varchar(3) 
+        ");
     }
 
     /**
@@ -27,6 +31,12 @@ class ChangeTypeDataRtRwFromTablePasien extends Migration
      */
     public function down()
     {
-        //
+        if (!Type::hasType('char')) {
+            Type::addType('char', StringType::class);
+        }
+        Schema::table('pasien', function (Blueprint $table) {
+            $table->char('no_rt', 3)->nullable()->change();
+            $table->char('no_rw', 3)->nullable()->change();
+        });
     }
 }
