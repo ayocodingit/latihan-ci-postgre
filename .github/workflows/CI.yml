@@ -6,10 +6,10 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     container:
-      image: edbizarro/gitlab-ci-pipeline-php:7.3
+      image: kirschbaumdevelopment/laravel-test-runner:7.2
     services:
       postgres:
-        image: postgres:11
+        image: postgres:10.8
         env:
           POSTGRES_USER: homestead
           POSTGRES_PASSWORD: secret
