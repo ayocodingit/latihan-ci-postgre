@@ -1,0 +1,16 @@
+version: '3.5'
+services:
+  app:      
+      build: 
+        context: .
+        args: 
+          API_URL: http://localhost/api #tambahkan variable disini agar terbaca pada dockerfile
+          APP_URL: http://localhost/
+          #API_URL: ${API_URL} #contoh jika baca env dari .env file
+      #env_file:
+      #  - .env
+
+      restart: always
+      container_name: satelit-fe     
+      ports:
+        - "81:3000"

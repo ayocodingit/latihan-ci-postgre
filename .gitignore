@@ -1,0 +1,7 @@
+/postgresql
+/certbot
+/data
+.nuxt
+backend/public/uploads
+backend/public/fonts/*
+!backend/public/fonts/arial

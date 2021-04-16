@@ -1,0 +1,33 @@
+FROM node:latest
+
+WORKDIR /app
+COPY . .
+
+#ARG API_URL=http://localhost/api
+ARG API_URL
+ARG APP_URL
+ARG APP_NAME
+ARG APP_LOCALE
+ARG SENTRY_LARAVEL_DSN
+
+ENV HOST 0.0.0.0
+ENV PORT 3000
+
+ENV NUXT_ENV_VERSION $NUXT_ENV_VERSION
+
+ENV API_URL $API_URL
+ENV APP_URL $APP_URL
+ENV APP_NAME $APP_NAME
+ENV APP_LOCALE $APP_LOCALE
+ENV SENTRY_LARAVEL_DSN $SENTRY_LARAVEL_DSN
+
+#Test cek pemanggilan env dari docker-compose
+RUN echo ${API_URL}
+
+RUN npm install
+RUN npm run build
+
+EXPOSE 3000
+
+# start command
+CMD [ "npm", "run", "start" ]

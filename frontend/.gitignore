@@ -1,0 +1,16 @@
+/node_modules
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.nuxt
+/dist
+/public/_nuxt
+*.code-workspace
+/.idea
+sonar-project.properties
+.sonar/
+.scannerwork/

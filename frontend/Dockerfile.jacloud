@@ -1,0 +1,29 @@
+FROM node:14.15.4-slim
+
+WORKDIR /app
+COPY . .
+
+
+ARG APP_NAME
+ARG APP_ENV
+ARG APP_LOCALE
+ARG API_URL
+ARG SENTRY_LARAVEL_DSN
+
+ENV HOST 0.0.0.0
+ENV PORT 3000
+
+ENV NUXT_ENV_VERSION $NUXT_ENV_VERSION
+
+ENV APP_NAME $APP_NAME
+ENV APP_ENV $APP_ENV
+ENV APP_LOCALE $APP_LOCALE
+ENV API_URL $API_URL
+ENV SENTRY_LARAVEL_DSN $SENTRY_LARAVEL_DSN
+
+RUN npm install --prefix /app/frontend
+RUN npm run build --prefix /app/frontend
+
+EXPOSE 3000
+
+CMD [ "npm","--prefix","/app/frontend/","run", "start" ]

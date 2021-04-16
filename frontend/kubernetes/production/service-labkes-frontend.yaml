@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name:   labkes-frontend-app
+  namespace: pikobar-labkes
+  labels:
+    app:   labkes-frontend-app
+spec:
+  selector:
+    app:   labkes-frontend-app
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP

@@ -1,0 +1,344 @@
+{
+  "label": {
+    "pasien": {
+      "status": "Kriteria"
+    },
+    "row": "Baris",
+    "rules-import-registrasi-rujukan": "Maksimal row data yang di inputkan adalah 200 row",
+    "dropzone-import-info": "Silakan klik button ini untuk memilih file yang akan diimport atau drag file yang akan diimport"
+  },
+  "route": {
+    "path": {
+      "settings": "Setting"
+    },
+    "registrasi": {
+      "mandiri": "Registrasi Mandiri (L)",
+      "rujukan": "Registrasi Rujukan (R)",
+      "index": {
+        "tambah": "Tambah Registrasi Baru",
+        "detail": "Detail Registrasi",
+        "update": "Edit Data Registrasi",
+        "import-excel": "Import Excel",
+        "export-excel": "Export Excel",
+        "list-patient": "Daftar Pasien"
+      },
+      "index-rujukan": {
+        "tambah": "Tambah Registrasi Baru",
+        "detail": "Detail Registrasi",
+        "update": "Edit Data Registrasi",
+        "import-excel": "Import Excel",
+        "export-excel": "Export Excel"
+      }
+    },
+    "AdminSampel": "Admin Sampel",
+    "sample": {
+      "index": "Sampel Registrasi Mandiri",
+      "daftar": "Daftar Sampel",
+      "add": "Tambah Sampel",
+      "edit": "Edit Data Sampel",
+      "take": "Ambil Sampel"
+    },
+    "ekstraksi": {
+      "invalid": "Invalid",
+      "index": "Sampel di-Ekstraksi",
+      "penerimaan": "Penerimaan Sampel",
+      "terkirim": "Sampel Terkirim",
+      "dikembalikan": "Sampel Dikembalikan",
+      "terima": "Terima dan Ekstraksi Sampel",
+      "kirim": "Kirim Sampel",
+      "kirim-ulang": "Kirim Ulang Sampel",
+      "detail": "Detail Sampel",
+      "edit": "Edit Data Ekstraksi",
+      "Re-Ekstraksi": "Sampel Re-Ekstraksi"
+    },
+    "pelacakan-sampel": {
+      "index": "Pelacakan Sampel",
+      "detail": "Detail Sampel"
+    },
+    "pengguna": {
+      "index": "Daftar Pengguna",
+      "tambah": "Tambah Pengguna",
+      "update": "Edit Data Pengguna",
+      "detail": "Detail Pengguna"
+    },
+    "kota": {
+      "index": "Daftar Kota",
+      "tambah": "Tambah Kota",
+      "update": "Edit Data Kota",
+      "detail": "Detail Kota"
+    },
+    "dinkes": {
+      "index": "Daftar Instansi Pengirim",
+      "tambah": "Tambah Instansi Pengirim",
+      "update": "Update Data Instansi Pengirim",
+      "detail": "Detail Instansi Pengirim"
+    },
+    "home": "Beranda",
+    "error-role": "Error",
+    "settings": {
+      "password": "Password",
+      "profile": "Profil"
+    },
+    "verifikasi": {
+      "index": {
+        "unverified": "Menunggu Verifikasi",
+        "verified": "Terverifikasi"
+      },
+      "detail-unverified": "Detail Sampel",
+      "detail-verified": "Detail Sampel",
+      "edit": "Verifikasi Hasil"
+    },
+    "validasi": {
+      "index": {
+        "unvalidate": "Menunggu Validasi",
+        "validated": "Tervalidasi"
+      },
+      "detail-unverified": "Detail Sampel",
+      "detail-verified": "Detail Sampel",
+      "edit": "Validasi Hasil"
+    },
+    "pcr": {
+      "list-rna": "Penerimaan RNA",
+      "list-pcr": "List PCR",
+      "detail": "Detail PCR",
+      "input": "Input Analisa",
+      "terima": "Penerimaan RNA Baru",
+      "list-hasil-pemeriksaan": "Hasil Pemeriksaan",
+      "list-hasil-inkonklusif": "Sampel Re-PCR"
+    },
+    "swab": {
+      "hasil-pemeriksaan": "Hasil Pemeriksaan",
+      "tambah": "Registasi Baru",
+      "edit": "Edit",
+      "detail": "Detail",
+      "validated": "Tervalidasi"
+    },
+    "jenis-vtm": {
+      "index": "Jenis VTM",
+      "tambah": "Tambah Jenis VTM",
+      "update": "Edit Data Jenis VTM"
+    },
+    "reagen-ekstraksi": {
+      "index": "Reagen Ekstraksi",
+      "tambah": "Tambah Reagen Ekstraksi",
+      "update": "Edit Data Reagen Ekstraksi"
+    },
+    "reagen-pcr": {
+      "index": "Reagen PCR",
+      "tambah": "Tambah Reagen PCR",
+      "update": "Edit Data Reagen PCR"
+    }
+
+  },
+  "ok": "Ok",
+  "cancel": "Batal",
+  "alert_confirm_invalid_title": "Apakah Anda Yakin Menandai Sampel Menjadi Invalid?",
+  "alert_confirm_invalid_text": "Setelah sampel menjadi invalid, data tidak dapat dikembalikan. Masukkan keterangan invalid:",
+  "alert_confirm_proses_text": "Setelah sampel menjadi diproses, data tidak dapat dikembalikan. Masukkan keterangan proses:",
+  "alert_confirm_delete_title": "Hapus Data",
+  "alert_confirm_delete_text": "Apakah kamu yakin ingin menghapus data ini?",
+  "alert_confirm_submit_text": "Apakah kamu yakin untuk memproses data ini?",
+  "alert_confirm_musnahkan_text": "Anda tidak dapat mengembalikan data yang telah dimusnahkan!",
+  "error_alert_title": "Mohon maaf...",
+  "error_alert_text": "Mohon mencoba lagi.",
+  "error_alert_author": "This action is unauthorized",
+  "token_expired_alert_title": "Sesi habis!",
+  "token_expired_alert_text": "Mohon login lagi untuk melanjutkan.",
+  "login": "Log In",
+  "register": "Daftar",
+  "page_not_found": "Halaman Tidak Ditemukan",
+  "go_home": "Kembali ke Beranda",
+  "logout": "Logout",
+  "email": "Email",
+  "remember_me": "Ingat Saya",
+  "password": "Password",
+  "forgot_password": "Lupa Password?",
+  "confirm_password": "Konfirmasi Password",
+  "name": "Nama",
+  "toggle_navigation": "Navigasi",
+  "home": "Beranda",
+  "you_are_logged_in": "Anda sudah login!",
+  "reset_password": "Reset Password",
+  "send_password_reset_link": "Kirim Link Reset Password",
+  "settings": "Pengaturan",
+  "profile": "Profil",
+  "your_info": "Info Anda",
+  "info_updated": "Info Anda berhasil diubah!",
+  "update": "Update",
+  "your_password": "Password Anda",
+  "password_updated": "Password Anda berhasil diubah!",
+  "new_password": "Password Baru",
+  "login_with": "Login dengan",
+  "register_with": "Register dengan",
+  "verify_email": "Verifikasi Email",
+  "send_verification_link": "Kirim Link Verifikasi",
+  "resend_verification_link": "Kirim ulang Link Verifikasi ?",
+  "failed_to_verify_email": "Gagal untuk verifikasi email.",
+  "verify_email_address": "Email verifikasi telah berhasil dikirim.",
+  "aktivitas": {
+    "label": "Aktivitas",
+    "list_of": "Daftar Aktivitas",
+    "create": "Tambah aktivitas baru",
+    "update": "Update aktivitas",
+    "view": "Lihat aktivitas",
+    "add_new": "Tambah Aktivitas"
+  },
+
+  "review": {
+    "label": "Ulasan",
+    "list_of": "Daftar Ulasan",
+    "update": "Perbaharui Ulasan",
+    "view": "Lihat Ulasan",
+    "add_new": "Tambah Ulasan",
+    "create": "Tambah Ulasan Baru"
+  },
+
+  "satuan_kerja": {
+    "label": "Satuan Kerja",
+    "Create": "Tambah Aktifitas Baru"
+  },
+
+  "unit_kerja": {
+    "label": "Unit Kerja",
+    "Create": "Tambah Aktifitas Baru"
+  },
+
+  "daftar_aset": {
+    "label": "Daftar Aset",
+    "Create": "Tambah Aktifitas Baru"
+  },
+
+  "aset_tanah": {
+    "label": "Aset Tanah",
+    "Create": "Tambah Aset Tanah"
+  },
+
+  "aset_bangunan": {
+    "label": "Aset Bangunan",
+    "Create": "Tambah Aset Bangunan"
+  },
+
+  "aset_kendaraan": {
+    "label": "Aset Kendaraan",
+    "Create": "Tambah Aset Kendaraan"
+  },
+
+  "title": {
+    "show": "Tampilkan",
+    "nodata_show": "Tidak ada data",
+    "nofilter_pelacakan_sampel": "Silahkan lakukan pencarian data untuk melacak sampel",
+    "no_data_changes": "Tidak ada perubahan data",
+    "search": "Cari",
+    "number": "NO",
+    "actions": "AKSI",
+    "previous": "Sebelumnya",
+    "next": "Selanjutnya",
+    "to": "Sampai"
+  },
+  "common": {
+    "data_saved_successfully": "Data berhasil disimpan",
+    "data_deleted_successfully": "Data berhasil dihapus",
+    "we_are_having_trouble": "Terjadi kesalahan",
+    "are_you_sure": "Apakah Anda yakin?",
+    "cancel": "Batal",
+    "view": "Lihat",
+    "edit": "Ubah",
+    "delete": "Hapus",
+    "from": "dari",
+    "entry": "Entri",
+    "page": "Halaman",
+    "yes": "Ya",
+    "back": "Kembali",
+    "success": "Sukses",
+    "error": "Error",
+    "no": "Tidak"
+  },
+  "generic": {
+    "loading": "Loading",
+    "previous": "Sebelumnya",
+    "next": "Selanjutnya",
+    "calender": "Kalender",
+    "today": "Hari Ini",
+    "week": "Minggu",
+    "add_event": "Add Event",
+    "delete_event": "Delete Event",
+    "select_language": "Pilih bahasa",
+    "event_title": "Judul",
+    "event_color": "Warna",
+    "event_description": "Deskripsi",
+    "cancel": "Batal",
+    "color_grey": "Abu-abu",
+    "color_blue": "Biru",
+    "color_lightblue": "Biru muda",
+    "color_green": "Hijau",
+    "color_orange": "Oranye",
+    "color_red": "Merah"
+  },
+  "faq": {
+    "label": "FAQ",
+    "list_of": "Daftar Pertanyaan",
+    "create": "Jawab Pertanyaan"
+  },
+  "jenis_diklat": {
+    "label": "Jenis Diklat",
+    "add_new": "Tambah Jenis Diklat",
+    "update": "Edit Jenis Diklat"
+  },
+  "review_aktivitas": {
+    "label": "Review Aktivitas",
+    "list_of": "Daftar Aktivitas",
+    "create": "Review"
+  },
+  "diklat_struktural": {
+    "label": "Diklat Struktural",
+    "list_of": "Daftar Diklat",
+    "add_new": "Tambah Diklat",
+    "update": "Ubah Diklat"
+  },
+  "diklat_fungsional": {
+    "label": "Diklat Fungsional",
+    "list_of": "Daftar Diklat",
+    "add_new": "Tambah Diklat",
+    "update": "Ubah Diklat"
+  },
+  "diklat_teknis": {
+    "label": "Diklat Teknis",
+    "list_of": "Daftar Diklat",
+    "add_new": "Tambah Diklat",
+    "update": "Ubah Diklat"
+  },
+  "pegawai": {
+    "label": "Pegawai",
+    "history": "Riwayat Diklat",
+    "header": "Data Pegawai",
+    "list-kompetensi": "Daftar Pegawai Kesenjangan Kompetensi",
+    "compare": "Komparasi Kompetensi"
+  },
+  "jabatan": {
+    "label": "Jabatan",
+    "header": "Data Jabatan"
+  },
+  "kompetensi": {
+    "label": "Kompetensi",
+    "header": "Daftar Kompetensi"
+  },
+  "pengguna": {
+    "label": "Pengguna",
+    "header": "Daftar Pengguna",
+    "add_new": "Tambah Pengguna"
+  },
+  "pengumuman": {
+    "header_index": "Pengumuman",
+    "header_list": "Daftar Pengumuman",
+    "add_pengumuman": "Tambah Pengumuman"
+  },
+  "login_history": {
+    "header_index": "Riwayat Login",
+    "header_list": "Daftar Riwayat Login"
+  },
+  "create": "Tambah",
+  "username": "Username",
+  "keterangan_template_hasil_pemeriksaan": "Tersedia template Format Import untuk mengirimkan semua hasil pemeriksaan dalam satu file dan Data Wilayah yang dapat diunduh sebagai referensi",
+  "deskripsi_import_hasil_pemeriksaan": "Import Identitas dan alamat pasien dari database Pikobar dengan menginputkan NIK, Nama, atau Nomor Telepon pasien. Lewati langkah ini untuk menginput data secara manual.",
+  "subheader_daftar_pasien_registrasi_mandiri": "Berikut adalah daftar pasien yang sudah melakukan registrasi melalui aplikasi pendaftaran"
+}

@@ -1,0 +1,6 @@
+version: "2"
+exclude_patterns:
+- "frontend"
+- "backend/public"
+- "backend/database"
+- "backend/app/Console"

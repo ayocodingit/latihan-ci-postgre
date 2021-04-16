@@ -1,0 +1,139 @@
+def secretsProd = [
+  [path: 'kv-labkes-frontend/production/app', engineVersion: 2, secretValues: [
+
+    [envVar: 'APP_NAME', vaultKey: 'APP_NAME'],
+    [envVar: 'APP_ENV', vaultKey: 'APP_ENV'],
+    [envVar: 'APP_LOCALE', vaultKey: 'APP_LOCALE'],
+    [envVar: 'API_URL', vaultKey: 'API_URL']]],
+]
+
+
+def configuration = [vaultUrl: "${VAULT_JABAR_CLOUD}",  vaultCredentialId: 'approle-labkes', engineVersion: 2]
+
+pipeline {
+
+    agent any
+
+    environment {
+        appName = 'frontend-labkes-production'
+        PROJECT_REGISTRY ='labkes-pikobar'
+        VERSION = "${BUILD_TAG}"
+        URL_REGISTRY = "${URL_REGISTRY_JACLOUD}"
+
+        VAULT_JABAR_CLOUD = "${VAULT_JABAR_CLOUD}"
+
+        SENTRY_LARAVEL_DSN = "${SENTRY_LARAVEL_DSN_LABKES}"
+
+        KUBECONFIG_LABKES_PROD = "${KUBECONFIG_LABKES_PROD}"
+        CLIENT_KEY_LABKES_PROD = "${CLIENT_KEY_LABKES_PROD}"
+        CLUSTER_NAME_JACLOUD = "k8s-jacloud001-JDS-RANCHER-NODE-03"        
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+
+     triggers {
+                githubPush()
+     }
+
+    stages{
+
+        stage('stage build labkes frontend production'){
+
+            steps {
+
+                withVault([configuration: configuration, vaultSecrets: secretsProd]) { 
+                        
+                sh 'echo $VERSION > version.txt'
+                sh 'echo $APP_NAME'
+                sh 'echo $APP_ENV'
+                sh 'echo $APP_LOCALE'
+                sh 'echo $API_URL'
+                sh 'echo $SENTRY_LARAVEL_DSN'
+                sh 'docker build --build-arg API_URL=$API_URL --build-arg APP_ENV=$APP_ENV \
+                                 --build-arg APP_NAME=$APP_NAME --build-arg APP_LOCALE=$APP_LOCALE \
+                                 --build-arg SENTRY_LARAVEL_DSN=$SENTRY_LARAVEL_DSN \
+                                 --tag $appName:$VERSION -f frontend/Dockerfile.jacloud . --no-cache'
+                }
+                stash includes: 'version.txt', name: 'version'
+            }
+
+            post {
+                always {
+                    archiveArtifacts artifacts: 'version.txt', fingerprint: true
+                    cleanWs()
+                }
+            }
+        }
+
+        stage('push to registry labkes jabarcloud'){
+
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: '718c9252-2b43-4f24-8bf9-1f68d19e848b', url: "https://${URL_REGISTRY}"]) {
+                    // code block
+                    unstash 'version'
+                    sh 'cat version.txt'
+                    sh 'export REGISTRY_HTTP_RELATIVEURLS=true \
+                        && docker tag $appName:$VERSION $URL_REGISTRY/$PROJECT_REGISTRY/$appName:$VERSION \
+                        && docker push $URL_REGISTRY/$PROJECT_REGISTRY/$appName:$VERSION \
+                        && docker rmi $appName:$VERSION \
+                        && docker rmi $URL_REGISTRY/$PROJECT_REGISTRY/$appName:$VERSION'
+                        }
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'version.txt', fingerprint: true
+                    cleanWs()
+                }
+            }
+        }
+
+         stage ('deploy to kubernetes jabarcloud'){
+            agent {
+                docker { 
+                    image 'dtzar/helm-kubectl:3.3.1'
+                    args '-u root'
+                }
+            }
+
+            steps {
+                    // deploy kubernetes cluster production
+                    withVault([configuration: configuration, vaultSecrets: secretsProd]) {   
+         
+                        sh 'sed -i "s/%VERSION%/${VERSION}/g" frontend/kubernetes/production/deployment-labkes-frontend.yaml'
+
+                        sh '''
+                            set +x
+                            echo $KUBECONFIG_LABKES_PROD | base64 -d > kubeconfig
+                            export KUBECONFIG=./kubeconfig
+                            echo $CLIENT_KEY_LABKES_PROD | base64 -d > client.key
+                            set -x
+                            kubectl config set-credentials labkes-dev --client-key=client.key --embed-certs=true
+                            kubectl config set-cluster $CLUSTER_NAME_JACLOUD --insecure-skip-tls-verify=true
+
+                            kubectl apply -f frontend/kubernetes/production/deployment-labkes-frontend.yaml --dry-run=client --validate
+                            kubectl apply -f frontend/kubernetes/production/service-labkes-frontend.yaml --dry-run=client --validate
+
+                            kubectl apply -f frontend/kubernetes/production/deployment-labkes-frontend.yaml
+                            kubectl apply -f frontend/kubernetes/production/service-labkes-frontend.yaml
+                            kubectl get pods --namespace pikobar-labkes
+                        '''
+                    }
+              }
+
+              post {
+                  always{
+                    cleanWs()
+                  }
+              }
+        }
+
+
+
+        
+    } 
+
+}
