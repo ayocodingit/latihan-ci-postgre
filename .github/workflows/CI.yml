@@ -55,10 +55,16 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install composer dependencies
       working-directory: ./backend
+      
       env:
         # use localhost for the host here because we have specified a container for the job.
         # If we were running the job on the VM this would be postgres
         APP_ENV: local
+        DB_HOST: postgres
+        DB_PORT: 5432
+        DB_DATABASE: postgresdb
+        DB_USERNAME: postgresuser
+        DB_PASSWORD: secret
       run: |
             pwd
             ls
