@@ -38,8 +38,6 @@ jobs:
     runs-on: ubuntu-18.04
     container:
       image: php:7.3-alpine
-    env: 
-      working-directory: ./backend
     services:
       postgres:
         image: mdillon/postgis:10
@@ -57,7 +55,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install composer dependencies
       run: composer install --prefer-dist
-      working-directory: ${{env.working-directory}}
+      working-directory: ./backend
 
     - name: Run PHPUnit tests 
       run: vendor/bin/phpunit --no-coverage
@@ -67,4 +65,4 @@ jobs:
         DB_HOST: localhost
         DB_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       # run: docker exec -i canie-api vendor/bin/phpunit
-      working-directory: ${{env.working-directory}}
+      working-directory: ./backend
