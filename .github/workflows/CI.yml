@@ -30,6 +30,7 @@ jobs:
       working-directory: ./backend
       env:
         APP_ENV: local
+        DB_CONNECTION: pgsql
         DB_HOST: postgres
         DB_PORT: 5432
         DB_DATABASE: test
