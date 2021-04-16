@@ -36,5 +36,5 @@ jobs:
         DB_DATABASE: postgresdb
         DB_USERNAME: postgresuser
         DB_PASSWORD: secret
-      run: vendor/bin/phpunit
+      run: vendor/bin/phpunit tests/
       
