@@ -37,7 +37,7 @@ jobs:
   vm-job:
     runs-on: ubuntu-18.04
     container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.2
+      image: php:7.2-alpine
     services:
       postgres:
         image: mdillon/postgis:10
@@ -52,7 +52,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Install composer dependencies
       run: composer install
       working-directory: ./backend
