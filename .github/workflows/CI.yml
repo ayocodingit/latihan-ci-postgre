@@ -54,7 +54,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install composer dependencies
-      run: composer install --prefer-dist
+      run: composer install
       working-directory: ./backend
 
     - name: Run PHPUnit tests 
