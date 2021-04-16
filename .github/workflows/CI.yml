@@ -24,8 +24,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install composer dependencies
-      run: |
-        composer install --no-scripts
+      run: composer install --prefer-dist
       working-directory: ${{env.working-directory}}
 
     - name: Prepare Laravel Application
