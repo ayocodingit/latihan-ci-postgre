@@ -3,39 +3,34 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  tests:
+  # Runs all steps on the VM
+  # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
+  vm-job:
+    runs-on: ubuntu-18.04
     container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.4
-    runs-on: ubuntu-latest
+      image: kirschbaumdevelopment/laravel-test-runner:7.2
     services:
       postgres:
-        image: postgres:11
+        image: postgres:10.8
         env:
-          POSTGRES_USER: homestead
-          POSTGRES_PASSWORD: secret
-          POSTGRES_DB: homestead
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
         ports:
         - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    env: 
-      working-directory: ./backend
     steps:
-    - uses: actions/checkout@v1
-      with:
-        fetch-depth: 1
+    - uses: actions/checkout@v2
     - name: Install composer dependencies
-      run: |
-        composer install --no-scripts
-      working-directory: ${{env.working-directory}}
-
-    - name: Prepare Laravel Application
+      working-directory: ./backend
+      run: composer install
+    - name: Run PHPUnit tests 
+      working-directory: ./backend
       env:
+        DB_CONNECTION: pgsql
         DB_HOST: postgres
-      run: |
-        cp .env-example .env
-        php artisan key:generate
-      working-directory: ${{env.working-directory}}
-
-    - name: Run Testsuite
-      run: vendor/bin/phpunit tests/
-      working-directory: ${{env.working-directory}}
+        DB_PORT: 5432
+        DB_DATABASE: test
+        DB_USERNAME: postgres
+        DB_PASSWORD: postgres
+      run: vendor/bin/phpunit --no-coverage      
