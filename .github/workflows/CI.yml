@@ -7,9 +7,18 @@ jobs:
   # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
   vm-job:
     runs-on: ubuntu-18.04
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+        - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
     - uses: actions/checkout@v2
-    - uses: docker run -dit --rm --name postgres_db -v db-data:/var/lib/postgresql/data -p 5432:5432 -e POSTGRES_DB=snippet_db -e POSTGRES_USER=snippet_user -e POSTGRES_PASSWORD=P@88w0rd pgtest
     - name: Install composer dependencies
       working-directory: ./backend
       run: composer install
@@ -18,8 +27,8 @@ jobs:
       env:
         APP_ENV: local
         DB_HOST: postgres
-        DB_PORT: ${{ job.services.postgres.ports[5432] }}
-        DB_DATABASE: postgres
-        DB_USERNAME: postgresuser
-        DB_PASSWORD: secret
+        DB_PORT: 5432
+        DB_DATABASE: test
+        DB_USERNAME: postgres
+        DB_PASSWORD: postgres
       run: vendor/bin/phpunit --no-coverage      
