@@ -29,6 +29,8 @@ jobs:
       working-directory: ${{env.working-directory}}
 
     - name: Prepare Laravel Application
+      env:
+        DB_CONNECTION: postgres
       run: |
         cp .env-example .env
         php artisan key:generate
