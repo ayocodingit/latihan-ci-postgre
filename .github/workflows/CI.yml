@@ -36,6 +36,8 @@ jobs:
   # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
   vm-job:
     runs-on: ubuntu-18.04
+    container:
+      image: php:7.3-alpine
     env: 
       working-directory: ./backend
     services:
