@@ -27,7 +27,7 @@ jobs:
       working-directory: ./backend
       run: |
             composer install
-            composer dump-autoload
+            composer dumpautoload
       
     - name: Run PHPUnit tests 
       working-directory: ./backend
