@@ -33,7 +33,7 @@ jobs:
         APP_ENV: local
         DB_HOST: postgres
         DB_PORT: 5432
-        DB_DATABASE: postgresdb
+        DB_DATABASE: postgres
         DB_USERNAME: postgresuser
         DB_PASSWORD: secret
       run: vendor/bin/phpunit --no-coverage      
