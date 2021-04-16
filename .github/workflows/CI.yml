@@ -52,9 +52,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       with:
-        fetch-depth: 1
+        php-version: '7.4'
     - name: Install composer dependencies
-      run: composer update
+      run: composer install
       working-directory: ./backend
 
     - name: Run PHPUnit tests 
