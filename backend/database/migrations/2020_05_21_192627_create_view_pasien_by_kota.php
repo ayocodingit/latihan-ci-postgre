@@ -13,14 +13,7 @@ class CreateViewPasienByKota extends Migration
      */
     public function up()
     {
-        \DB::statement("DROP VIEW IF EXISTS view_sampel_pasien_by_kota");
-
-        \DB::statement("create view view_sampel_pasien_by_kota as select s.register_id,pr.pasien_id,s.nomor_register,s.nomor_sampel,k.nama as nama_kota
-        from sampel as s
-        left join pasien_register as pr on s.register_id=pr.register_id
-        left join pasien as p on pr.pasien_id=p.id
-        left join kota as k on k.id=p.kota_id
-        where s.register_id is not null and p.id is not null");
+        //
     }
 
     /**
@@ -30,6 +23,6 @@ class CreateViewPasienByKota extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('view_pasien_by_kota');
+        //
     }
 }
