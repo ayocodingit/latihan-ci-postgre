@@ -13,7 +13,7 @@ jobs:
       postgres:
         image: postgres:11.11
         env:
-          POSTGRES_DB: postgresdb
+          POSTGRES_DB: postgres
           POSTGRES_USER: postgresuser
           POSTGRES_PASSWORD: secret
           POSTGRES_HOST: postgres
