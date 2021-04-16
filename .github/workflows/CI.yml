@@ -20,10 +20,9 @@ jobs:
     env: 
       working-directory: ./backend
     steps:
-    - uses: shivammathur/setup-php@b7d1d9c9a92d8d8463ce36d7f60da34d461724f8
+    - uses: actions/checkout@v1
       with:
-        php-version: '7.4'
-    - uses: actions/checkout@v2
+        fetch-depth: 1
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env-example', '.env');"
       working-directory: ${{env.working-directory}}
