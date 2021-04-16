@@ -5,6 +5,18 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.3
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: homestead
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: homestead
+        ports:
+        - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     env: 
       working-directory: ./backend
     steps:
@@ -23,14 +35,6 @@ jobs:
       working-directory: ${{env.working-directory}}
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
-      working-directory: ${{env.working-directory}}
-    - name: Create Database
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: |
-        mkdir -p database
-        touch database/database.sqlite
       working-directory: ${{env.working-directory}}
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
