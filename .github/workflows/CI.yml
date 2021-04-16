@@ -36,6 +36,8 @@ jobs:
   # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
   vm-job:
     runs-on: ubuntu-18.04
+    container:
+      image: php:7.3-alpine
     services:
       postgres:
         image: mdillon/postgis:10
@@ -51,8 +53,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-      with:
-        php-version: '7.2.5'
     - name: Install composer dependencies
       run: composer install
       working-directory: ./backend
