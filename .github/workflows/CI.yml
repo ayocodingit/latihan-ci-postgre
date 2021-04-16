@@ -9,7 +9,7 @@ jobs:
       image: kirschbaumdevelopment/laravel-test-runner:7.3
     services:
       postgres:
-        image: postgres:10.8
+        image: postgres:11
         env:
           POSTGRES_USER: homestead
           POSTGRES_PASSWORD: secret
