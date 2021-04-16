@@ -26,11 +26,14 @@ jobs:
     - name: Install composer dependencies
       run: |
         composer install --no-scripts
+      working-directory: ${{env.working-directory}}
 
     - name: Prepare Laravel Application
       run: |
         cp .env-example .env
         php artisan key:generate
+        working-directory: ${{env.working-directory}}
 
     - name: Run Testsuite
       run: vendor/bin/phpunit tests/
+      working-directory: ${{env.working-directory}}
