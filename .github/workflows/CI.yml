@@ -56,11 +56,11 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install composer dependencies
+      working-directory: ./backend
       run: |
             pwd
             ls
             composer install
-      working-directory: ./backend  
 
     - name: Run PHPUnit tests 
       run: vendor/bin/phpunit --no-coverage
