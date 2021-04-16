@@ -4,12 +4,12 @@ on:
     branches: [ master ]
 jobs:
   tests:
-    runs-on: ubuntu-latest
     container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.3
+      image: kirschbaumdevelopment/laravel-test-runner:7.4
+    runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:10.8
+        image: postgres:11
         env:
           POSTGRES_USER: homestead
           POSTGRES_PASSWORD: secret
