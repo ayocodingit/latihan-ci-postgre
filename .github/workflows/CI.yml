@@ -32,6 +32,7 @@ jobs:
       run: |
         cp .env-example .env
         php artisan key:generate
+        php artisan migrate
       working-directory: ${{env.working-directory}}
 
     - name: Run Testsuite
