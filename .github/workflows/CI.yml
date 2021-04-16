@@ -3,9 +3,7 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  # Runs all steps on the VM
-  # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
-  vm-job:
+  ci-run:
     runs-on: ubuntu-18.04
     container:
       image: kirschbaumdevelopment/laravel-test-runner:7.3
@@ -25,9 +23,7 @@ jobs:
         fetch-depth: 1
     - name: Install composer dependencies
       working-directory: ./backend
-      run: |
-            composer install --no-scripts
-      
+      run: composer install --no-scripts
     - name: Run PHPUnit tests 
       working-directory: ./backend
       env:
