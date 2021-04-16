@@ -59,7 +59,6 @@ jobs:
       run: |
             pwd
             composer install
-      working-directory: ./backend
 
     - name: Run PHPUnit tests 
       run: vendor/bin/phpunit --no-coverage
@@ -69,4 +68,4 @@ jobs:
         DB_HOST: localhost
         DB_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       # run: docker exec -i canie-api vendor/bin/phpunit
-      working-directory: ./backend
+#       working-directory: ./backend
