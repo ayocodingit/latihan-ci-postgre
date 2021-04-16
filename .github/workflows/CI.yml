@@ -37,7 +37,7 @@ jobs:
   vm-job:
     runs-on: ubuntu-18.04
     container:
-      image: jguyomard/laravel-php:7.3 
+      image: jguyomard/laravel-php:7.3
     services:
       postgres:
         image: mdillon/postgis:10
