@@ -5,8 +5,6 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-18.04
-    env: 
-      working-directory: ./backend
 
     # runs all of the steps inside the specified continer rather than on the VM host.  
     # Because of this the network configuration changes from host based network to a container network.
@@ -38,6 +36,8 @@ jobs:
   # The service containers will use host port binding instead of container networking so you access them via localhost rather than the service name
   vm-job:
     runs-on: ubuntu-18.04
+    env: 
+      working-directory: ./backend
     services:
       postgres:
         image: mdillon/postgis:10
