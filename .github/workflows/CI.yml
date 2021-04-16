@@ -4,6 +4,8 @@ on:
     branches: [ master ]
 jobs:
   tests:
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.4
     runs-on: ubuntu-latest
     services:
       postgres:
