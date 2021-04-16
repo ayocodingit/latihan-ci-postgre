@@ -21,19 +21,16 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
     - uses: actions/checkout@v2
-      with: 
-        php-version: '7.2'
     - name: Install composer dependencies
       working-directory: ./backend
       run: composer install
     - name: Run PHPUnit tests 
       working-directory: ./backend
       env:
-        APP_ENV: local
         DB_CONNECTION: pgsql
         DB_HOST: postgres
         DB_PORT: 5432
         DB_DATABASE: test
         DB_USERNAME: postgres
         DB_PASSWORD: postgres
-      run: vendor/bin/phpunit --no-coverage tests/Feature/Kota      
+      run: vendor/bin/phpunit --no-coverage      
