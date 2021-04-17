@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  ci-run:
+  tests:
     runs-on: ubuntu-16.04
     container:
       image: kirschbaumdevelopment/laravel-test-runner:7.3
