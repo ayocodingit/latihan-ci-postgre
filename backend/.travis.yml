@@ -3,7 +3,7 @@ language: php
 # Keep the cache between builds to speed up installs
 cache:
     directories:
-        - $HOME/backend/.composer/cache
+        - $HOME/.composer/cache
 
 php:
     - 7.4
