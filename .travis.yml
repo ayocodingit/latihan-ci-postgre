@@ -5,6 +5,9 @@ php:
 
 addons:
   postgresql: "9.4"
+  code_climate:
+        repo_token:
+           secure: d4f8509cfa85b439fee879980d271b3bec193440aae6a4dc1b4a78e3855542ac
 
 before_script:
     - cd backend
