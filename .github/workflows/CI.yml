@@ -9,7 +9,7 @@ jobs:
       image: kirschbaumdevelopment/laravel-test-runner:7.3
     services:
       postgres:
-        image: postgres:10-alpine
+        image: postgres:9.5-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
