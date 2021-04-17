@@ -22,6 +22,7 @@ env:
   - DB_CONNETION=pgsql   
   - PGPORT=5432
   - PGUSER=postgres
+  - DB_HOST=postgresql
 
 script:
     - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
