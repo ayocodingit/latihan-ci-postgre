@@ -35,7 +35,6 @@ jobs:
     - name: Install Code Climate reporter
       working-directory: ./backend
       run: |
-        export GIT_BRANCH="${GITHUB_REF/refs\/heads\//}"
         sudo curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         sudo chmod +x ./cc-test-reporter
     - name: Upload coverage information
