@@ -12,7 +12,6 @@ before_script:
 before_install: cd backend
 
 install:
-    - cd backend
     - cp .env-example .env
     - travis_retry composer install --no-interaction --prefer-dist --no-suggest
     - php artisan key:generate --ansi
