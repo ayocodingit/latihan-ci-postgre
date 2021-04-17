@@ -16,12 +16,12 @@ before_script:
 
 env:
   global:
- - DB_CONNECTION=pgsql
- - DB_HOST=127.0.0.1
- - DB_PORT=5432
- - DB_DATABASE=homestead
- - DB_USERNAME=homestead
- - DB_PASSWORD=secret
+    - DB_CONNECTION=pgsql
+    - DB_HOST=127.0.0.1
+    - DB_PORT=5432
+    - DB_DATABASE=homestead
+    - DB_USERNAME=homestead
+    - DB_PASSWORD=secret
 
 script:
     - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
