@@ -22,9 +22,9 @@ env:
     - DB_HOST=127.0.0.1
     - DB_PORT=5432
     - DB_DATABASE=homestead
-    - DB_USERNAME=homestead
+    - DB_USERNAME=postgres
     - DB_PASSWORD=secret
-    - PGUSER=homestead
+    - PGUSER=postgres
     - PGPASSWORD=secret
 
 script:
