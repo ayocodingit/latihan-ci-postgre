@@ -21,7 +21,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install composer dependencies
       working-directory: ./backend
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: |
+            composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+            composer require codeclimate/php-test-reporter --dev
     - name: Run PHPUnit tests 
       working-directory: ./backend
       env:
@@ -31,22 +33,5 @@ jobs:
         DB_DATABASE: test
         DB_USERNAME: postgres
         DB_PASSWORD: postgres
-      run: vendor/bin/phpunit --no-coverage
-  coverage:
-      needs: [ tests ]
-      name: coverage
-      runs-on: ubuntu-16.04
-      steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: '12'
-      - run: npm install -g yarn
-      - run: yarn install
-      - run: yarn build
-      - uses: paambaati/codeclimate-action@v2.2.4
-        env:
-          CC_TEST_REPORTER_ID: d4f8509cfa85b439fee879980d271b3bec193440aae6a4dc1b4a78e3855542ac
-        with:
-          coverageCommand: yarn coverage
+      run: vendor/bin/phpunit
 
