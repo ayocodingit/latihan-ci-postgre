@@ -3,8 +3,8 @@ language: php
 php:
     - 7.4
 
-services:
-  - postgresql
+addons:
+  postgresql: "9.4"
 
 before_script:
     - cd backend
@@ -20,8 +20,7 @@ before_script:
 env:
   global:
   - DB_CONNETION=pgsql   
-  - PGPORT=5432
-  - PGUSER=postgres
+  - DB_DATABASE=homestead
   - DB_HOST=postgresql
 
 script:
