@@ -11,17 +11,17 @@ before_script:
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
     - ./cc-test-reporter before-build
-    - psql -c 'create database homestead;' -U postgres
-    - cp .env-example .env
-    - cat .env
     - travis_retry composer install --no-interaction --prefer-dist --no-suggest
     - php artisan key:generate --ansi
 
 env:
   global:
-  - DB_CONNETION=pgsql   
-  - DB_DATABASE=homestead
-  - DB_HOST=postgresql
+ - DB_CONNECTION=pgsql
+ - DB_HOST=127.0.0.1
+ - DB_PORT=5432
+ - DB_DATABASE=homestead
+ - DB_USERNAME=homestead
+ - DB_PASSWORD=secret
 
 script:
     - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
