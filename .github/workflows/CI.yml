@@ -31,5 +31,7 @@ jobs:
         DB_DATABASE: test
         DB_USERNAME: postgres
         DB_PASSWORD: postgres
-      run: vendor/bin/phpunit
+      run: |
+          vendor/bin/phpunit --coverage-clover coverage.xml
+          bash <(curl -s https://codecov.io/bash)
 
