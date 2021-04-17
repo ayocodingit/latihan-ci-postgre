@@ -35,6 +35,7 @@ jobs:
     - uses: codecov/codecov-action@v1
       with:
         working-directory: ./backend
+        run: curl -s https://codecov.io/bash -o codecov.bash
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         files: ./coverage.xml # optional
         flags: unittests # optional
