@@ -33,6 +33,7 @@ jobs:
         DB_PASSWORD: postgres
       run: vendor/bin/phpunit --coverage-clover=coverage.xml
     - name: Upload coverage information
+      working-directory: ./backend
       env:
         CC_TEST_REPORTER_ID: d4f8509cfa85b439fee879980d271b3bec193440aae6a4dc1b4a78e3855542ac
       run: |
