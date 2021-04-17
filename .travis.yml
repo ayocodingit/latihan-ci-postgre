@@ -1,0 +1,35 @@
+language: php
+
+php:
+    - 7.4
+
+addons:
+  postgresql: "9.4"
+
+before_script:
+    - cd backend
+    - cp .env-example .env
+    - psql -c 'create database homestead;' -U postgres
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
+    - travis_retry composer install --no-interaction --prefer-dist --no-suggest
+    - php artisan key:generate --ansi
+
+env:
+  global:
+    - DB_CONNECTION=pgsql
+    - DB_HOST=127.0.0.1
+    - DB_PORT=5432
+    - DB_DATABASE=homestead
+    - DB_USERNAME=postgres
+    - DB_PASSWORD=secret
+    - PGUSER=postgres
+    - PGPASSWORD=secret
+
+script:
+    - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
+
+after_script:
+    - cd backend
+    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT || true
