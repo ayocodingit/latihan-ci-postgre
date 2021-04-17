@@ -23,7 +23,7 @@ jobs:
         php-version: '7.4'
     - name: Install composer dependencies
       working-directory: ./backend
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer install --no-scripts --no-progress
     - name: Run PHPUnit tests 
       working-directory: ./backend
       env:
