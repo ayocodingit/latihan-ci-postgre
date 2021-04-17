@@ -4,7 +4,7 @@ on:
     branches: [ master ]
 jobs:
   ci-run:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:7.3
     services:
