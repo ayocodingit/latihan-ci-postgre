@@ -24,6 +24,8 @@ env:
     - DB_DATABASE=homestead
     - DB_USERNAME=homestead
     - DB_PASSWORD=secret
+    - PGUSER=homestead
+    - PGPASSWORD=secret
 
 script:
     - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
