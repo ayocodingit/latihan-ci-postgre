@@ -37,5 +37,6 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: d4f8509cfa85b439fee879980d271b3bec193440aae6a4dc1b4a78e3855542ac
       run: |
-          ./cc-test-reporter after-build -r $CC_TEST_REPORTER_ID
+          dir
+          ./coverage.xml after-build -r $CC_TEST_REPORTER_ID
 
