@@ -6,7 +6,7 @@ jobs:
   tests:
     runs-on: ubuntu-16.04
     container:
-        image: circleci/php:7.3-node-browsers
+        image: circleci/php:7.3
     services:
       postgres:
         image: postgres:9.5-alpine
