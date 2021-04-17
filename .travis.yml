@@ -26,10 +26,10 @@ env:
     - DB_PASSWORD=secret
     - PGUSER=postgres
     - PGPASSWORD=secret
-    - CC_TEST_REPORTER_ID=d4f8509cfa85b439fee879980d271b3bec193440aae6a4dc1b4a78e3855542ac
 
 script:
     - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
+    - cd backend
     - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT || true
