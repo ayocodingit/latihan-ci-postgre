@@ -31,15 +31,24 @@ jobs:
         DB_DATABASE: test
         DB_USERNAME: postgres
         DB_PASSWORD: postgres
-      run: vendor/bin/phpunit --coverage-clover coverage.xml 
-    - uses: codecov/codecov-action@v1
+      run: vendor/bin/phpunit
+
+  coverage:
+    needs: [ tests ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
       with:
-        working-directory: ./backend
-        run: curl -s https://codecov.io/bash -o codecov.bash
-        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        files: ./coverage.xml # optional
-        flags: unittests # optional
-        name: codecov-umbrella # optional
-        fail_ci_if_error: true # optional (default = false)
-        verbose: true # optional (default = false)
+        node-version: '12'
+    - run: npm install -g yarn
+    - run: yarn install
+    - run: yarn build
+    - uses: paambaati/codeclimate-action@v2.2.4
+      env:
+        CC_TEST_REPORTER_ID: d4f8509cfa85b439fee879980d271b3bec193440aae6a4dc1b4a78e3855542ac
+      with:
+        coverageCommand: yarn coverage
+
 
