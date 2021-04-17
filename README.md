@@ -1,6 +1,7 @@
 # pikobar-labkes.
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/d51b63e7a52d0670ed93/maintainability)](https://codeclimate.com/github/jabardigitalservice/pikobar-labkes/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/48dc1508fd73c0af9687/maintainability)](https://codeclimate.com/github/ayocodingit/latihan-ci-postgre/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/48dc1508fd73c0af9687/test_coverage)](https://codeclimate.com/github/ayocodingit/latihan-ci-postgre/test_coverage)
 
 # pikobar-app-boilerplate
 
