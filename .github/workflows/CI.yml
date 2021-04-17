@@ -6,7 +6,7 @@ jobs:
   tests:
     runs-on: ubuntu-16.04
     container:
-      image: kirschbaumdevelopment/laravel-test-runner:8.0
+        image: circleci/php:7.3-node-browsers
     services:
       postgres:
         image: postgres:9.5-alpine
@@ -18,7 +18,7 @@ jobs:
         - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-    - uses: checkout@v1
+    - uses: actions/checkout@v2
     - name: Install composer dependencies
       working-directory: ./backend
       run: composer install --no-scripts --no-progress
