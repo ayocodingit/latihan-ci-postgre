@@ -5,8 +5,8 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-16.04
-    container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.3
+#     container:
+#       image: kirschbaumdevelopment/laravel-test-runner:7.3
     services:
       postgres:
         image: postgres:9.5-alpine
@@ -18,7 +18,9 @@ jobs:
         - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-    - uses: actions/checkout@v2
+    - uses: shivammathur/setup-php@b7d1d9c9a92d8d8463ce36d7f60da34d461724f8
+      with:
+        php-version: '7.4'
     - name: Install composer dependencies
       working-directory: ./backend
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
