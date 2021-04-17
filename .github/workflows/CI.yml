@@ -31,5 +31,5 @@ jobs:
         DB_DATABASE: test
         DB_USERNAME: postgres
         DB_PASSWORD: postgres
-      run: vendor/bin/phpunit --coverage-clover coverage.xml
+      run: vendor/bin/phpunit --coverage-clover coverage.xml 
 
