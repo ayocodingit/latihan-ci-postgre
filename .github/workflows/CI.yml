@@ -6,7 +6,7 @@ jobs:
   tests:
     runs-on: ubuntu-16.04
     container:
-        image: kirschbaumdevelopment/laravel-test-runner:8.0
+        image: kirschbaumdevelopment/laravel-test-runner:7.2
     services:
       postgres:
         image: postgres:9.5-alpine
