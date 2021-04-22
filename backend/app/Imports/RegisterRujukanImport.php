@@ -83,13 +83,12 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
     private function mappingData($row)
     {
         return [
-            'no' => $row->get('no'),
             'sumber_pasien' => $row->get('kategori'),
             'kunjungan_ke' => $row->get('kunjungan'),
             'tanggal_kunjungan' => $row->get('tanggal_kunjungan'),
             'rs_kunjungan' => $row->get('rs_kunjungan'),
             'fasyankes_id' => $row->get('id_fasyankes'),
-            'fasyankes_nama' => optional(Fasyankes::where('id', $row->get('id_fasyankes'))->first())->nama,
+            'fasyankes_nama' => Fasyankes::where('id', $row->get('id_fasyankes'))->value('nama'),
             'nama_dokter' => $row->get('dokter'),
             'no_telp' => $row->get('telp_fasyankes'),
             'nik' => $row->get('nik'),
@@ -100,7 +99,7 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
             'tempat_lahir' => $row->get('tempat_lahir'),
             'provinsi_id' => $row->get('provinsi_id'),
             'kota_id' => $row->get('kota_id'),
-            'kota_nama' => optional(Kota::where('id', $row->get('kota_id'))->first())->nama,
+            'kota_nama' => Kota::where('id', $row->get('kota_id'))->value('nama'),
             'kecamatan_id' => $row->get('kecamatan_id'),
             'kelurahan_id' => $row->get('kelurahan_id'),
             'no_hp' => $row->get('no_hp'),

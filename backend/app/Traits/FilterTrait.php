@@ -96,6 +96,9 @@ trait FilterTrait
         $query->when(in_array($key, ['is_musnah_ekstraksi', 'is_musnah_pcr']), function ($query) use ($key, $value) {
             $query->where("sampel.$key", $value);
         });
+        $query->when($key == 'petugas_pengambil', function ($query) use ($value) {
+            $query->where("sampel.petugas_pengambilan_sampel", $value);
+        });
         $query->when($key == 'status_pemeriksaan', function ($query) use ($value) {
             $query->when(!in_array($value, ['extraction_sample_sent', 'extraction_sent', 'semua']), function ($query) use ($value) {
                 $query->where('sampel.sampel_status', $value);
@@ -104,7 +107,7 @@ trait FilterTrait
         $query->when($key == 'jenis_sampel_nama', function ($query) use ($value) {
             $isValueInt = filter_var($value, FILTER_VALIDATE_INT);
             $query->when($isValueInt, function ($query) use ($value) {
-                $query->where('sampel.jenis_sampel_id',(int) $value);
+                $query->where('sampel.jenis_sampel_id', (int) $value);
             }, function ($query) use ($value) {
                 $query->where('sampel.jenis_sampel_nama', 'ilike', '%' . $value . '%');
             });

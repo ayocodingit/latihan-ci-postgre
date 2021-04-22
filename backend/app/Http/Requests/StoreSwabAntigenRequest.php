@@ -12,7 +12,6 @@ use App\Enums\KondisiPasienEnum;
 use App\Enums\TujuanPemeriksaanEnum;
 use App\Models\SwabAntigen;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Spatie\Enum\Laravel\Rules\EnumIndexRule;
 use Spatie\Enum\Laravel\Rules\EnumRule;
 
@@ -36,7 +35,7 @@ class StoreSwabAntigenRequest extends FormRequest
     public function rules()
     {
         $roleNoIdentitas = ['min:6', 'max:16'];
-        if ($this->input('jenis_identitas') == JenisIdentitasEnum::ktp()->getValue()) {
+        if ($this->input('jenis_identitas') == JenisIdentitasEnum::ktp()) {
             $roleNoIdentitas = ['digits:16'];
         }
 
@@ -54,7 +53,7 @@ class StoreSwabAntigenRequest extends FormRequest
                 'required',
                 new EnumRule(KewarganegaraanEnum::class),
             ],
-            'negara_asal' => 'required_if:warganegara,' . KewarganegaraanEnum::WNA()->getValue(),
+            'negara_asal' => 'required_if:warganegara,' . KewarganegaraanEnum::WNA(),
             'jenis_identitas' => [
                 'required',
                 new EnumRule(JenisIdentitasEnum::class),

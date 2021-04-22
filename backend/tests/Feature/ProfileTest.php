@@ -3,14 +3,13 @@
 namespace Tests\Feature;
 
 use App\User;
-
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
-    use WithoutMiddleware;
+    use WithFaker;
 
     public function setUp(): void
     {
@@ -21,8 +20,8 @@ class ProfileTest extends TestCase
     public function testUpdateProfile()
     {
         $data = [
-            'name'  => 'tester 01',
-            'email' => 'example@mail.com',
+            'name'  => $this->faker->name(),
+            'email' => $this->faker->email(),
         ];
 
         $this->actingAs($this->user)->patchJson('/api/settings/profile', $data)
@@ -42,8 +41,8 @@ class ProfileTest extends TestCase
     public function testUpdateProfileInvalidEmail()
     {
         $data = [
-            'name'  => 'tester 01',
-            'email' => 'emailtester',
+            'name'  => $this->faker->name(),
+            'email' => $this->faker->city(),
         ];
 
         $this->actingAs($this->user)->patchJson('/api/settings/profile', $data)

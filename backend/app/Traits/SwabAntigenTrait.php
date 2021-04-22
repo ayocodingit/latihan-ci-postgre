@@ -16,22 +16,28 @@ trait SwabAntigenTrait
     private $bulan;
     private $tahun;
 
-    public function generateNomor(): string
+    public function generateNomor(): int
     {
         $this->bulan = Carbon::now()->format('m');
         $this->tahun = Carbon::now()->format('Y');
-        $nomorRegistrasi = SwabAntigen::whereMonth('created_at', $this->bulan)
-                                        ->whereYear('created_at', $this->tahun)
-                                        ->withTrashed()
-                                        ->count('nama_pasien');
-        return str_pad(++$nomorRegistrasi, 4, "0", STR_PAD_LEFT);
+        return SwabAntigen::whereMonth('created_at', $this->bulan)
+                          ->whereYear('created_at', $this->tahun)
+                          ->withTrashed()
+                          ->count('nama_pasien') + 1;
     }
 
     public function generateNomorRegister()
     {
-        $generateNomor = $this->generateNomor();
-        $tahunBulan = $this->bulan . "/" . $this->tahun;
-        return "{$generateNomor}/RAR/Lab.COVID/{$tahunBulan}";
+        return $this->getUniqueNomorRegister($this->generateNomor());
+    }
+
+    protected function getUniqueNomorRegister($nextnum)
+    {
+        do {
+            $nomorRegistrasi = str_pad($nextnum, 4, "0", STR_PAD_LEFT) . "/RAR/Lab.COVID/{$this->bulan}/{$this->tahun}";
+            $nextnum++;
+        } while (SwabAntigen::where('nomor_registrasi', 'ilike', $nomorRegistrasi . '%')->withTrashed()->exists());
+        return $nomorRegistrasi;
     }
 
     protected function swabAntigenLogs($origin, $changes)
@@ -46,6 +52,9 @@ trait SwabAntigenTrait
                 $swabAntigenLogs[$key]["to"] = optional($this->convertTujuanPemeriksaanEnum($value))->getValue();
             } elseif (in_array($key, ['kode_provinsi', 'kode_kota_kabupaten', 'kode_kecamatan', 'kode_kelurahan'])) {
                 $swabAntigenLogs = $this->translateWilayah($swabAntigenLogs, $origin, $key, $value);
+            } elseif (in_array($key, ['tanggal_lahir', 'tanggal_periksa', 'tanggal_gejala'])) {
+                $swabAntigenLogs[$key]["from"] = Carbon::parse($origin[$key])->translatedFormat('d F Y');
+                $swabAntigenLogs[$key]["to"] = Carbon::parse($value)->translatedFormat('d F Y');
             } else {
                 $swabAntigenLogs[$key]["from"] = $origin[$key];
                 $swabAntigenLogs[$key]["to"] = $value;

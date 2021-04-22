@@ -14,14 +14,15 @@ use App\Models\Fasyankes;
 use App\Models\Sampel;
 use App\Models\Register;
 use App\Models\Pasien;
-use Faker\Factory;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class RegisterMandiriTest extends TestCase
 {
+    use WithFaker;
+
     public function setUp(): void
     {
         parent::setUp();
-        $faker = Factory::create();
 
         $this->artisan('db:seed --class=StatusSampelSeeder');
         $this->kota = factory(Kota::class)->create();
@@ -43,13 +44,13 @@ class RegisterMandiriTest extends TestCase
 
         $this->data = [
             'reg_no' => 'L202102150002',
-            'reg_kewarganegaraan' => $faker->randomElement(KewarganegaraanEnum::getAll()),
+            'reg_kewarganegaraan' => $this->faker->randomElement(KewarganegaraanEnum::getAll()),
             'reg_sumberpasien' => 'Umum',
-            'reg_nama_pasien' => $faker->name,
-            'reg_alamat' => $faker->address,
+            'reg_nama_pasien' => $this->faker->name,
+            'reg_alamat' => $this->faker->address,
             'reg_nohp' => rand(),
             'reg_sampel' => 'l1234567890',
-            'status' => $faker->randomElement(StatusPasienEnum::getIndices()),
+            'status' => $this->faker->randomElement(StatusPasienEnum::getIndices()),
             'reg_kota_id' => $this->kota->id,
             'reg_provinsi_id' => $this->kota->provinsi_id,
         ];
@@ -183,6 +184,13 @@ class RegisterMandiriTest extends TestCase
         ]);
     }
 
+    public function testStoreNullData()
+    {
+        $this->actingAs($this->user)->postJson('/api/v1/register/mandiri', [])
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['message']);
+    }
+
     public function testUpdate()
     {
         $this->data += [
@@ -208,6 +216,14 @@ class RegisterMandiriTest extends TestCase
         ]);
     }
 
+    public function testUpdateNullData()
+    {
+        $this->actingAs($this->user)
+            ->postJson("/api/v1/register/mandiri/update/{$this->register->id}/{$this->pasien->id}", [])
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['message']);
+    }
+
     public function testDelete()
     {
         $this->actingAs($this->user)
@@ -215,6 +231,14 @@ class RegisterMandiriTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['message']);
         $this->assertSoftDeleted('register', ['id' => $this->register->id]);
+    }
+
+    public function testDeleteInvalidId()
+    {
+        $this->actingAs($this->user)
+            ->deleteJson("/api/v1/register/mandiri/0/0")
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJsonStructure(['error']);
     }
 
     public function testExportMandiri()

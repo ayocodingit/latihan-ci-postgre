@@ -39,7 +39,7 @@ class SwabAntigenExport implements
             $model->warganegara,
             $model->negara_asal,
             $model->jenis_identitas,
-            $model->no_identitas,
+            $model->no_identitas . ' ',
             $model->kategori,
             $model->alamat,
             $model->provinsi->nama,
