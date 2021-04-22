@@ -40,10 +40,10 @@ class RegisterMandiriRequest extends FormRequest
             'reg_nama_pasien' => 'required',
             'reg_nik' => 'max:16',
             'reg_nohp' => 'nullable',
-            'reg_provinsi_id' => 'required|numeric|exists:kota,id',
+            'reg_provinsi_id' => 'required|numeric|exists:provinsi,id',
             'reg_kota_id' => 'required|numeric|exists:kota,id',
-            'reg_kecamatan_id' => 'nullable|numeric|exists:kota,id',
-            'reg_kelurahan_id' => 'nullable|numeric|exists:kota,id',
+            'reg_kecamatan_id' => 'nullable|numeric|exists:kecamatan,id',
+            'reg_kelurahan_id' => 'nullable|numeric|exists:kelurahan,id',
             'reg_alamat' => 'required',
             'reg_jk' => [
                 'nullable',

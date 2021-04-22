@@ -29,8 +29,10 @@ class ReagenPCRController extends Controller
         $record = ReagenPCR::query();
         $record->when($search, function ($query) use ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('nama', 'ilike', '%' . $search . '%')
-                    ->orWhere('ct_normal', $search);
+                $query->where('nama', 'ilike', '%' . $search . '%');
+                if (filter_var($search, FILTER_VALIDATE_INT)) {
+                    $query->orWhere('ct_normal', (int) $search);
+                }
             });
         });
         $isAllowedOrder = ['nama', 'ct_normal'];

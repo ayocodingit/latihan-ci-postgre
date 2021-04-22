@@ -42,7 +42,7 @@ class ValidasiExport implements
             $model->sumber_pasien,
             optional($this->convertEnumStatusPasien($model->status))->getValue(),
             $model->nama_lengkap,
-            $model->nik,
+            $model->nik . ' ',
             usiaPasien($model->tanggal_lahir, $model->usia_tahun),
             'Tahun',
             $model->tempat_lahir,
@@ -60,7 +60,7 @@ class ValidasiExport implements
             $this->getHasilDeteksiTerkecil($model->hasil_deteksi),
             optional($this->convertEnumKesimpulanPemeriksaan($model->kesimpulan_pemeriksaan))->getValue(),
             Carbon::parse($model->created_at)->format('Y-m-d'),
-            $model->waktu_sample_taken->format('Y-m-d'),
+            optional($model->waktu_sample_taken)->format('Y-m-d'),
             $model->tanggal_input_hasil,
             optional($model->waktu_sample_valid)->format('Y-m-d'),
         ];

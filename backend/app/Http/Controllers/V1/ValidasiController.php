@@ -115,7 +115,7 @@ class ValidasiController extends Controller
                         $this->sendSampleValidPositif($sampel);
                         $this->updateSampel($sampel, $request, $sampel);
                     }
-            });
+                  });
             DB::commit();
             return response()->json(['message' => 'success']);
         } catch (\Throwable $th) {

@@ -13,14 +13,15 @@ use App\Models\Sampel;
 use App\Models\Register;
 use App\Models\Pasien;
 use App\Models\PasienRegister;
-use Faker\Factory;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class RegisterRujukanTest extends TestCase
 {
+    use WithFaker;
+
     public function setUp(): void
     {
         parent::setUp();
-        $faker = Factory::create();
         $this->artisan('db:seed --class=StatusSampelSeeder');
         $this->kota = factory(Kota::class)->create();
         $this->user = factory(User::class)->create();
@@ -38,16 +39,16 @@ class RegisterRujukanTest extends TestCase
 
         $this->data = [
             "reg_kota_id" => $this->kota->id,
-            "reg_kewarganegaraan" => $faker->randomElement(KewarganegaraanEnum::getAll()),
+            "reg_kewarganegaraan" => $this->faker->randomElement(KewarganegaraanEnum::getAll()),
             "reg_sumberpasien" => "Rujukan",
             "reg_sumberpasien_isian" => "Rujukan",
-            "reg_nama_pasien" => $faker->name,
-            "reg_alamat" => $faker->address,
+            "reg_nama_pasien" => $this->faker->name,
+            "reg_alamat" => $this->faker->address,
             "reg_nohp" => rand(),
             "reg_fasyankes_pengirim" => "1",
             "reg_no" => "R1996",
             "reg_fasyankes_id" => $this->fasyankes->id,
-            "reg_nama_rs" => $faker->name,
+            "reg_nama_rs" => $this->faker->name,
             "samples"  =>  [
                 [
                     "nomor_sampel" => $this->sampel->nomor_sampel,
@@ -148,6 +149,13 @@ class RegisterRujukanTest extends TestCase
         ]);
     }
 
+    public function testStoreNullData()
+    {
+        $this->actingAs($this->user)->postJson('/api/registrasi-rujukan/store', [])
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['message']);
+    }
+
     public function testUpdate()
     {
         $this->actingAs($this->user)
@@ -169,7 +177,31 @@ class RegisterRujukanTest extends TestCase
             'alamat_lengkap' => $this->data['reg_alamat'],
             'no_hp' => $this->data['reg_nohp']
         ]);
-}
+    }
+
+    public function testUpdateNullData()
+    {
+        $this->actingAs($this->user)
+            ->postJson("/api/registrasi-rujukan/update/{$this->register->id}/{$this->pasien->id}", [])
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['message']);
+    }
+
+    public function testUpdateInvalidRegisterId()
+    {
+        $this->actingAs($this->user)
+            ->postJson("/api/registrasi-rujukan/update/0/{$this->pasien->id}", $this->data)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJsonStructure(['error']);
+    }
+
+    public function testUpdateInvalidPasienId()
+    {
+        $this->actingAs($this->user)
+            ->postJson("/api/registrasi-rujukan/update/{$this->register->id}/0", $this->data)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJsonStructure(['error']);
+    }
 
     public function testShowData()
     {
@@ -239,6 +271,14 @@ class RegisterRujukanTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['message']);
         $this->assertSoftDeleted('register', ['id' => $this->register->id]);
+    }
+
+    public function testDeleteInvalidRegisterId()
+    {
+        $this->actingAs($this->user)
+            ->deleteJson("/api/registrasi-rujukan/delete/0")
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJsonStructure(['error']);
     }
 
     public function testCekDataValidNomorSampel()

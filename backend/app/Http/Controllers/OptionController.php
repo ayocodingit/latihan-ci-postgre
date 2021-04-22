@@ -26,11 +26,6 @@ class OptionController extends Controller
         $models = LabPCR::select('id', 'nama as text')->get();
         return response()->json($models);
     }
-    public function getLabSatelit()
-    {
-        $models = LabSatelit::select('id', 'nama as text')->get();
-        return response()->json($models);
-    }
     public function getValidator()
     {
         $models = Validator::selectRaw('id, concat(nama, \' | NIP \', nip) as text')->get();

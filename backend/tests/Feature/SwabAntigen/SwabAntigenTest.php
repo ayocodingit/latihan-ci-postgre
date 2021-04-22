@@ -21,12 +21,14 @@ use Illuminate\Http\Response;
 use Tests\TestCase;
 use App\User;
 use Carbon\Carbon;
-use Faker\Factory;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class SwabAntigenTest extends TestCase
 {
+    use WithFaker;
+
     protected $getDataJsonStructure = [
         'data' => [
             "0" => [
@@ -150,35 +152,34 @@ class SwabAntigenTest extends TestCase
         $this->kelurahan = factory(Kelurahan::class)->create();
         $this->swab_antigen = factory(SwabAntigen::class)->create();
 
-        $faker = Factory::create();
         $this->data = [
-            "alamat" => $faker->address(),
-            "hasil_periksa" => $faker->randomElement(HasilPeriksaEnum::getValues()),
-            "jenis_antigen" => $faker->randomElement(JenisAntigenEnum::getValues()),
-            "jenis_gejala" => $faker->randomElement(JenisGejalaEnum::getValues()),
-            "jenis_identitas" => $faker->randomElement(JenisIdentitasEnum::getValues()),
-            "jenis_kelamin" => $faker->randomElement(JenisKelaminEnum::getValues()),
-            "kategori" => $faker->randomNumber(),
+            "alamat" => $this->faker->address(),
+            "hasil_periksa" => $this->faker->randomElement(HasilPeriksaEnum::getValues()),
+            "jenis_antigen" => $this->faker->randomElement(JenisAntigenEnum::getValues()),
+            "jenis_gejala" => $this->faker->randomElement(JenisGejalaEnum::getValues()),
+            "jenis_identitas" => $this->faker->randomElement(JenisIdentitasEnum::getValues()),
+            "jenis_kelamin" => $this->faker->randomElement(JenisKelaminEnum::getValues()),
+            "kategori" => $this->faker->randomNumber(),
             "kode_kecamatan" => $this->kelurahan->kecamatan->id,
             "kode_kelurahan" => $this->kelurahan->id,
             "kode_kota_kabupaten" => $this->kelurahan->kecamatan->kota->id,
             "kode_provinsi" => $this->kelurahan->kecamatan->kota->provinsi->id,
-            "kondisi_pasien" => $faker->randomElement(KondisiPasienEnum::getValues()),
-            "nama_pasien" => $faker->name(),
-            "negara_asal" => $faker->country(),
+            "kondisi_pasien" => $this->faker->randomElement(KondisiPasienEnum::getValues()),
+            "nama_pasien" => $this->faker->name(),
+            "negara_asal" => $this->faker->country(),
             "no_hasil" => rand(1000,9999).date('m'),
             "no_identitas" => "1234567890123456",
-            "no_telp" => $faker->randomNumber(),
+            "no_telp" => $this->faker->randomNumber(),
             "rt" => rand(1,999),
             "rw" => rand(1,999),
-            "tanggal_gejala" => $faker->date(),
-            "tanggal_lahir" => $faker->date(),
-            "tanggal_periksa" => $faker->date(),
-            "tujuan_pemeriksaan" => $faker->randomElement(TujuanPemeriksaanEnum::getIndices()),
-            "tujuan_pemeriksaan_lainnya" => $faker->name(),
+            "tanggal_gejala" => $this->faker->date(),
+            "tanggal_lahir" => $this->faker->date(),
+            "tanggal_periksa" => $this->faker->date(),
+            "tujuan_pemeriksaan" => $this->faker->randomElement(TujuanPemeriksaanEnum::getIndices()),
+            "tujuan_pemeriksaan_lainnya" => $this->faker->name(),
             "usia_bulan" => rand(0,11),
             "usia_tahun" => rand(1,60),
-            "warganegara" => $faker->randomElement(KewarganegaraanEnum::getValues())
+            "warganegara" => $this->faker->randomElement(KewarganegaraanEnum::getValues())
         ];
     }
 

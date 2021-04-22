@@ -37,7 +37,7 @@ return [
     'dimensions' => 'Isian :attribute harus merupakan dimensi gambar yang sah.',
     'distinct' => 'Isian :attribute memiliki nilai yang duplikat.',
     'email' => 'Isian :attribute harus berupa alamat surel yang valid.',
-    'exists' => 'Isian :attribute yang dipilih tidak valid.',
+    'exists' => 'Isian :attribute yang dipilih tidak terdaftar.',
     'filled' => 'Isian :attribute wajib diisi.',
     'image' => 'Isian :attribute harus berupa gambar.',
     'in' => 'Isian :attribute yang dipilih tidak valid.',

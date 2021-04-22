@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Register;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -38,7 +39,16 @@ trait RegisterTrait
         if (count($res)) {
             $nextnum = $res[0]->val + 1;
         }
-        return $kodeRegistrasi . $date . str_pad($nextnum, 4, "0", STR_PAD_LEFT);
+        return $this->getUniqueNomorRegister($kodeRegistrasi, $date, $nextnum);
+    }
+
+    protected function getUniqueNomorRegister($kodeRegistrasi, $date, $nextnum)
+    {
+        do {
+            $nomorRegister = $kodeRegistrasi . $date . str_pad($nextnum, 4, "0", STR_PAD_LEFT);
+            $nextnum++;
+        } while (Register::where('nomor_register', 'ilike', $nomorRegister . '%')->withTrashed()->exists());
+        return $nomorRegister;
     }
 
     protected function getRequestRegister($request)

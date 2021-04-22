@@ -4,3 +4,5 @@ exclude_patterns:
 - "backend/public"
 - "backend/database"
 - "backend/app/Console"
+- "backend/tests"
+

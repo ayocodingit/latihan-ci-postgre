@@ -36,7 +36,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('kota', 'KotaController');
     Route::get('roles-option', 'OptionController@getRoles');
     Route::get('lab-pcr-option', 'OptionController@getLabPCR');
-    Route::get('lab-satelit-option', 'OptionController@getLabSatelit');
     Route::get('jenis-sampel-option', 'OptionController@getJenisSampel');
     Route::get('jenis-vtm', 'OptionController@getJenisVTM');
     Route::get('validator-option', 'OptionController@getValidator');
@@ -82,6 +81,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('/terima', 'PCRController@terima');
             Route::post('/invalid/{id}', 'PCRController@invalid');
             Route::post('/input/{id}', 'PCRController@input');
+            Route::post('/musnahkan/{id}', 'PCRController@musnahkan');
             Route::post('/import-hasil-pemeriksaan', 'ImportPemeriksaanSampelController@importHasilPemeriksaan');
             Route::post('/import-data-hasil-pemeriksaan', 'ImportPemeriksaanSampelController@importDataHasilPemeriksaan');
         });
