@@ -20,7 +20,7 @@ class ProfileTest extends TestCase
     public function testUpdateProfile()
     {
         $data = [
-            'name'  => $this->faker->name(),
+            'name' => $this->faker->name(),
             'email' => $this->faker->email(),
         ];
 
@@ -28,20 +28,20 @@ class ProfileTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['id', 'name', 'email', 'username', 'role_id', 'email_verified_at'])
             ->assertJson([
-                'name'  => $data['name'],
-                'email' => $data['email']
+                'name' => $data['name'],
+                'email' => $data['email'],
             ]);
 
         $this->assertDatabaseHas('users', [
             'email' => $data['email'],
-            'name'  => $data['name']
+            'name' => $data['name'],
         ]);
     }
 
     public function testUpdateProfileInvalidEmail()
     {
         $data = [
-            'name'  => $this->faker->name(),
+            'name' => $this->faker->name(),
             'email' => $this->faker->city(),
         ];
 
@@ -50,7 +50,7 @@ class ProfileTest extends TestCase
             ->assertJsonStructure(['message', 'errors']);
 
         $this->assertDatabaseHas('users', [
-            'email' => $this->user->email
+            'email' => $this->user->email,
         ]);
     }
 
@@ -58,7 +58,7 @@ class ProfileTest extends TestCase
     {
         $data = [
             'password' => '12345679',
-            'password_confirmation' => '12345679'
+            'password_confirmation' => '12345679',
         ];
 
         $this->actingAs($this->user)->patchJson('/api/settings/password', $data)->assertStatus(Response::HTTP_OK);
@@ -68,7 +68,7 @@ class ProfileTest extends TestCase
     {
         $data = [
             'password' => '12345679',
-            'password_confirmation' => '123123123'
+            'password_confirmation' => '123123123',
         ];
 
         $this->actingAs($this->user)->patchJson('/api/settings/password', $data)
@@ -80,7 +80,7 @@ class ProfileTest extends TestCase
     {
         $data = [
             'password' => '123',
-            'password_confirmation' => '123'
+            'password_confirmation' => '123',
         ];
 
         $this->actingAs($this->user)->patchJson('/api/settings/password', $data)

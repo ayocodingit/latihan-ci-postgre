@@ -5,16 +5,16 @@ namespace Tests\Feature\Register;
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KewarganegaraanEnum;
 use App\Enums\StatusPasienEnum;
+use App\Models\Fasyankes;
+use App\Models\Kota;
+use App\Models\Pasien;
+use App\Models\PasienRegister;
+use App\Models\Register;
+use App\Models\Sampel;
 use App\User;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
-use App\Models\Kota;
-use App\Models\PasienRegister;
-use App\Models\Fasyankes;
-use App\Models\Sampel;
-use App\Models\Register;
-use App\Models\Pasien;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class RegisterMandiriTest extends TestCase
 {
@@ -30,12 +30,12 @@ class RegisterMandiriTest extends TestCase
         $this->fasyankes = factory(Fasyankes::class)->create();
         $this->register = factory(Register::class)->create([
             'creator_user_id' => $this->user->id,
-            'jenis_registrasi' => JenisRegistrasiEnum::mandiri()
+            'jenis_registrasi' => JenisRegistrasiEnum::mandiri(),
         ]);
         $this->pasien = factory(Pasien::class)->create();
         factory(PasienRegister::class)->create([
             'register_id' => $this->register->id,
-            'pasien_id' => $this->pasien->id
+            'pasien_id' => $this->pasien->id,
         ]);
         $this->sampel = factory(Sampel::class)->create([
             'nomor_register' => $this->register->nomor_register,
@@ -56,6 +56,13 @@ class RegisterMandiriTest extends TestCase
         ];
     }
 
+    public function testRequestNomorRegistrasi()
+    {
+        $this->actingAs($this->user)->getJson('/api/v1/register/noreg', ['tipe' => 'mandiri'])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['result']);
+    }
+
     public function testGetData()
     {
         $params = [
@@ -64,7 +71,7 @@ class RegisterMandiriTest extends TestCase
             'perpage' => 20,
             'search' => null,
             'order' => 'tgl_input',
-            'order_direction' => 'desc'
+            'order_direction' => 'desc',
         ];
         $this->actingAs($this->user)
             ->json('GET', '/api/registrasi-mandiri', $params)
@@ -103,7 +110,7 @@ class RegisterMandiriTest extends TestCase
                         "created_at",
                         "deskripsi",
                         "fasyankes_nama",
-                    ]
+                    ],
                 ],
                 "links" => [
                     "first",
@@ -118,8 +125,8 @@ class RegisterMandiriTest extends TestCase
                     "path",
                     "per_page",
                     "to",
-                    "total"
-                ]
+                    "total",
+                ],
             ]);
     }
 
@@ -161,7 +168,7 @@ class RegisterMandiriTest extends TestCase
                     "tempat_lahir",
                     "usia_bulan",
                     "usia_tahun",
-                ]
+                ],
             ]);
     }
 
@@ -173,14 +180,14 @@ class RegisterMandiriTest extends TestCase
 
         $this->assertDatabaseHas('register', [
             'creator_user_id' => $this->user->id,
-            'sumber_pasien'  => $this->data['reg_sumberpasien'],
+            'sumber_pasien' => $this->data['reg_sumberpasien'],
         ]);
 
         $this->assertDatabaseHas('pasien', [
             'nama_lengkap' => $this->data['reg_nama_pasien'],
             'kewarganegaraan' => $this->data['reg_kewarganegaraan'],
             'alamat_lengkap' => $this->data['reg_alamat'],
-            'no_hp' => $this->data['reg_nohp']
+            'no_hp' => $this->data['reg_nohp'],
         ]);
     }
 
@@ -205,14 +212,14 @@ class RegisterMandiriTest extends TestCase
 
         $this->assertDatabaseHas('register', [
             'creator_user_id' => $this->user->id,
-            'sumber_pasien'  => $this->data['reg_sumberpasien'],
+            'sumber_pasien' => $this->data['reg_sumberpasien'],
         ]);
 
         $this->assertDatabaseHas('pasien', [
             'nama_lengkap' => $this->data['reg_nama_pasien'],
             'kewarganegaraan' => $this->data['reg_kewarganegaraan'],
             'alamat_lengkap' => $this->data['reg_alamat'],
-            'no_hp' => $this->data['reg_nohp']
+            'no_hp' => $this->data['reg_nohp'],
         ]);
     }
 

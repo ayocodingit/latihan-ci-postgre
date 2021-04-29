@@ -11,9 +11,9 @@ use App\Models\ReagenEkstraksi;
 use App\Models\ReagenPCR;
 use App\Models\Validator;
 use App\Role;
+use App\User;
 use Illuminate\Http\Response;
 use Tests\TestCase;
-use App\User;
 
 class OptionTest extends TestCase
 {
@@ -105,8 +105,8 @@ class OptionTest extends TestCase
                 '0' => [
                     'id',
                     'nama',
-                    'metode_ekstraksi'
-                ]
+                    'metode_ekstraksi',
+                ],
             ]);
     }
 
@@ -119,8 +119,8 @@ class OptionTest extends TestCase
                 '0' => [
                     'id',
                     'nama',
-                    'ct_normal'
-                ]
+                    'ct_normal',
+                ],
             ]);
     }
 }

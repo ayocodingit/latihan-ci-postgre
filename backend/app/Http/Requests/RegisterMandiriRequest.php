@@ -57,6 +57,7 @@ class RegisterMandiriRequest extends FormRequest
                 'required',
                 'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/',
                 new UniqueSampel(optional($this)->sampel_id),
+                'unique:tes_masif,nomor_sampel',
             ],
             'reg_tgllahir' => 'nullable|date',
             'reg_usia_bulan' => 'nullable|numeric',

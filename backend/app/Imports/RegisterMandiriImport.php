@@ -2,142 +2,82 @@
 
 namespace App\Imports;
 
+use App\Enums\JenisKelaminEnum;
+use App\Enums\JenisRegistrasiEnum;
+use App\Enums\KewarganegaraanEnum;
+use App\Enums\StatusPasienEnum;
 use App\Models\Pasien;
 use App\Models\Register;
 use App\Models\Sampel;
-use App\Rules\ExistsWilayah;
 use App\Rules\UniqueSampel;
+use App\Traits\ImportExcelTrait;
 use App\Traits\RegisterTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Spatie\Enum\Laravel\Rules\EnumRule;
+use Spatie\Enum\Laravel\Rules\EnumValueRule;
 
-class RegisterMandiriImport implements ToCollection, WithHeadingRow
+class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkReading
 {
     use RegisterTrait;
+    use Importable;
+    use ImportExcelTrait;
+
+    const RULES = [
+        'tanggal_kunjungan' => 'nullable|date|date_format:Y-m-d',
+        'nik' => 'nullable|digits:16',
+        'nama_pasien' => 'required|min:3',
+        'kategori' => 'nullable',
+        'alamat' => 'required|max:255',
+        'tanggal_lahir' => 'nullable|date|date_format:Y-m-d',
+        'tempat_lahir' => 'nullable',
+        'provinsi_id' => 'nullable|numeric|exists:provinsi,id',
+        'kota_id' => 'required|numeric|exists:kota,id',
+        'kecamatan_id' => 'nullable|numeric|exists:kecamatan,id',
+        'kelurahan_id' => 'nullable|numeric|exists:kelurahan,id',
+        'kategori' => 'nullable',
+        'kewarganegaraan' => 'nullable',
+        'suhu' => ['nullable', 'regex:/^[0-9]+(\.[0-9]->-?)?$/'],
+        'hasil_rdt' => 'nullable',
+        'kunjungan' => 'nullable|integer|min:1|max:10',
+        'rs_kunjungan' => 'nullable',
+        'rt' => 'nullable',
+        'rw' => 'nullable',
+        'no_hp' => 'nullable',
+        'keterangan' => 'nullable',
+        'usia_tahun' => 'nullable|integer',
+        'usia_bulan' => 'nullable|integer',
+    ];
 
     public function collection(Collection $rows)
     {
-        DB::beginTransaction();
-        $rows = (array)json_decode($rows);
-        $data = [];
+        $this->setMessage('Sukses import data.');
         foreach ($rows as $key => $row) {
-            if (empty($rows[$key]->no)) {
+            if (!$row->get('no')) {
                 continue;
             }
-            $rows[$key]->kriteria = strtolower($row->kriteria);
-            $rows[$key]->nomor_sampel = trim(strtoupper($row->nomor_sampel));
-            $data[] = (array) $rows[$key];
+            $this->result['number_row'][] = $key + 1;
+            $row->kriteria = strtolower($row->get('kriteria'));
+            $row->nomor_sampel = trim(strtoupper($row->get('nomor_sampel')));
+            $this->validated($row->toArray(), $key);
         }
-        $validator = Validator::make(
-            $data,
-            [
-                '*.tanggal_kunjungan' => 'nullable|date|date_format:Y-m-d',
-                '*.nik' => 'nullable|digits:16',
-                '*.nama_pasien' => 'required|min:3',
-                '*.kategori' => 'nullable',
-                '*.alamat' => 'required',
-                '*.tanggal_lahir' => 'nullable|date|date_format:Y-m-d',
-                '*.provinsi_id' => [
-                    'nullable',
-                    'exists:provinsi,id',
-                ],
-                '*.kota_id' => [
-                    'required',
-                    'exists:kota,id',
-                ],
-                '*.kecamatan_id' => [
-                    'nullable',
-                    'exists:kecamatan,id',
-                ],
-                '*.kelurahan_id' => [
-                    'nullable',
-                    'exists:kelurahan,id',
-                ],
-                '*.kategori' => 'nullable',
-                '*.kewarganegaraan' => 'nullable',
-                '*.jenis_kelamin' => 'nullable|in:L,P',
-                '*.suhu' => ['nullable', 'regex:/^[0-9]+(\.[0-9]->-?)?$/'],
-                '*.kriteria' => Rule::in(array_map('strtolower', Pasien::STATUSES)),
-                '*.nomor_sampel' => [
-                    'required',
-                    'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/',
-                    new UniqueSampel(),
-                    'distinct',
 
-                ],
-            ]
-        );
-        if ($validator->fails()) {
-            $messages = [];
-            foreach ($validator->errors()->messages() as $key => $message) {
-                $attribute = explode(".", $key);
-                $messages[$data[$attribute[0]]['no']][] = $message;
-            }
-            abort(response()->json(['error' => $messages, 'code' => 422], 422));
+        if ($this->result['errors_count'] === 0) {
+            $this->mappingData($rows);
         }
+    }
+
+    public function mappingData($rows)
+    {
+        DB::beginTransaction();
         try {
-            foreach ($data as $key => $row) {
-                //create register
-                $registerData = [
-                    'sumber_pasien' => $row['kategori'],
-                    'register_uuid' => (string) \Illuminate\Support\Str::uuid(),
-                    'jenis_registrasi' => 'mandiri',
-                    'nomor_register' => $this->generateNomorRegister(),
-                    'creator_user_id' => auth()->user()->id,
-                    'hasil_rdt' => $row['hasil_rdt'],
-                    'kunjungan_ke' => $row['kunjungan'],
-                    'tanggal_kunjungan' => $row['tanggal_kunjungan'],
-                    'rs_kunjungan' => $row['rs_kunjungan'],
-                ];
-
-                $register = Register::create($registerData);
-
-                //create pasien
-                $pasienData = [
-                    'nik' => $this->parseNIK($row['nik']),
-                    'nama_lengkap' => $row['nama_pasien'],
-                    'kewarganegaraan' => $row['kewarganegaraan'],
-                    'jenis_kelamin' => $row['jenis_kelamin'],
-                    'tanggal_lahir' => $row['tanggal_lahir'],
-                    'tempat_lahir' => $row['tempat_lahir'],
-                    'provinsi_id' => getConvertCodeDagri($row['provinsi_id']),
-                    'kota_id' => getConvertCodeDagri($row['kota_id']),
-                    'kecamatan_id' => getConvertCodeDagri($row['kecamatan_id']),
-                    'kelurahan_id' => getConvertCodeDagri($row['kelurahan_id']),
-                    'no_rw' => $row['rw'],
-                    'no_rt' => $row['rt'],
-                    'no_hp' => $row['no_hp'],
-                    'alamat_lengkap' => $row['alamat'],
-                    'keterangan_lain' => $row['keterangan'],
-                    'suhu' => $row['suhu'],
-                    'sumber_pasien' => $registerData['sumber_pasien'],
-                    'usia_tahun' => $row['usia_tahun'],
-                    'usia_bulan' => $row['usia_bulan'],
-                    'status' => $row['kriteria'] ? array_search($row['kriteria'], array_map('strtolower', Pasien::STATUSES)) : defaultStatus,
-                ];
-
-                $pasien = Pasien::create($pasienData);
-
-                //attach pasien to register
-                $register->pasiens()->attach($pasien);
-
-
-                $sampelData = [
-                    'nomor_sampel' => $row['nomor_sampel'],
-                    'nomor_register' => $register->getAttribute('nomor_register'),
-                    'jenis_sampel_id',
-                    'sampel_status' => 'waiting_sample',
-                    'creator_user_id' => auth()->user()->id,
-                    'waktu_waiting_sample' => now(),
-                ];
-
-                $sampel = Sampel::create($sampelData);
-
-                $register->sampel()->save($sampel);
+            foreach ($rows as $row) {
+                $this->saveData($row);
             }
             DB::commit();
         } catch (\Throwable $th) {
@@ -146,16 +86,46 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow
         }
     }
 
-    private function parseNIK($nik)
+    public function saveData($rows)
     {
-        if (!$nik) {
-            return null;
+        foreach ($rows->toArray() as $row) {
+            $row['kunjungan_ke'] = $row['kunjungan'];
+            $row['register_uuid'] = Str::uuid();
+            $row['creator_user_id'] = auth()->user()->id;
+            $row['sumber_pasien'] = $row['kategori'];
+            $row['nomor_register'] = $this->generateNomorRegister();
+            $row['jenis_registrasi'] = JenisRegistrasiEnum::mandiri();
+            $register = Register::create($row);
+            $row['nama_lengkap'] = $row['nama_pasien'];
+            $row['alamat_lengkap'] = $row['alamat'];
+            $row['keterangan_lain'] = $row['keterangan'];
+            $row['status'] = $row['kriteria'];
+            $pasien = Pasien::create($row);
+            $register->pasiens()->attach($pasien);
+            $row['sampel_status'] = 'waiting_sample';
+            $row['waktu_waiting_sample'] = now();
+            $row['register_id'] = $register->id;
+            Sampel::create($row);
         }
+    }
 
-        if ($separated = explode("'", $nik)) {
-            return count($separated) > 1 ? $separated[1] : (string)$nik;
-        }
+    public function rules(): array
+    {
+        return array_merge(self::RULES, [
+            'kriteria' => new EnumValueRule(StatusPasienEnum::class),
+            'nomor_sampel' => [
+                'required',
+                'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/',
+                new UniqueSampel(),
+                'unique:tes_masif,nomor_sampel',
+            ],
+            'kewarganeraan' => ['nullable', new EnumRule(KewarganegaraanEnum::class)],
+            'jenis_kelamin' => ['nullable', new EnumRule(JenisKelaminEnum::class)],
+        ]);
+    }
 
-        return (string)$nik;
+    public function chunkSize(): int
+    {
+        return 100;
     }
 }

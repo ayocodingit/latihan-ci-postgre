@@ -7,8 +7,8 @@ use App\Models\Fasyankes;
 use App\Models\Kota;
 use App\Models\Sampel;
 use App\Models\TesMasif;
+use App\Rules\ExistsSampel;
 use App\Rules\TesMasifRujukanExistsRule;
-use App\Rules\UniqueSampel;
 use App\Traits\ImportExcelTrait;
 use App\Traits\RegisterTrait;
 use Illuminate\Support\Collection;
@@ -86,7 +86,7 @@ class RegisterRujukanTesMasifImport implements ToCollection, WithHeadingRow
             'nomor_sampel_labkes' => [
                 'required',
                 'regex:/^' . Sampel::NUMBER_FORMAT_RUJUKAN . '$/',
-                new UniqueSampel()
+                new ExistsSampel()
             ],
         ];
     }

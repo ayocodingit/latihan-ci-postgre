@@ -48,7 +48,7 @@ class RegistrasiRujukanController extends Controller
             $pasienRegister->save();
             $sampel = Arr::first($request->input('samples'));
             $sampel = Sampel::find($sampel['id']);
-            $sampel->fill(['register_id' => $register->id, 'nomor_register' => $register->nomor_register]);
+            $sampel->fill(['register_id' => $register->id, 'nomor_register' => $register->nomor_register, 'waktu_sample_taken' => now()]);
             $sampel->save();
             DB::commit();
             return response()->json(['message' => 'Proses Registrasi Rujukan Berhasil Ditambahkan'], Response::HTTP_CREATED);

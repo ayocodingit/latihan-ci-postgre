@@ -4,16 +4,16 @@ namespace Tests\Feature\Register;
 
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KewarganegaraanEnum;
-use Illuminate\Http\Response;
-use Tests\TestCase;
-use App\User;
 use App\Models\Fasyankes;
 use App\Models\Kota;
-use App\Models\Sampel;
-use App\Models\Register;
 use App\Models\Pasien;
 use App\Models\PasienRegister;
+use App\Models\Register;
+use App\Models\Sampel;
+use App\User;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
+use Tests\TestCase;
 
 class RegisterRujukanTest extends TestCase
 {
@@ -28,7 +28,7 @@ class RegisterRujukanTest extends TestCase
         $this->fasyankes = factory(Fasyankes::class)->create();
         $this->register = factory(Register::class)->create([
             'creator_user_id' => $this->user->id,
-            'jenis_registrasi' => JenisRegistrasiEnum::rujukan()
+            'jenis_registrasi' => JenisRegistrasiEnum::rujukan(),
         ]);
         $this->pasien = factory(Pasien::class)->create();
         factory(PasienRegister::class)->create(['register_id' => $this->register->id, 'pasien_id' => $this->pasien->id]);
@@ -49,15 +49,22 @@ class RegisterRujukanTest extends TestCase
             "reg_no" => "R1996",
             "reg_fasyankes_id" => $this->fasyankes->id,
             "reg_nama_rs" => $this->faker->name,
-            "samples"  =>  [
+            "samples" => [
                 [
                     "nomor_sampel" => $this->sampel->nomor_sampel,
                     "id" => $this->sampel->id,
-                    "jenis_sampel" =>  null,
-                    "kondisi_sampel" =>  null
-                ]
-            ]
+                    "jenis_sampel" => null,
+                    "kondisi_sampel" => null,
+                ],
+            ],
         ];
+    }
+
+    public function testRequestNomorRegistrasi()
+    {
+        $this->actingAs($this->user)->getJson('/api/v1/register/noreg', ['tipe' => 'rujukan'])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['result']);
     }
 
     public function testGetData()
@@ -68,7 +75,7 @@ class RegisterRujukanTest extends TestCase
             'perpage' => 20,
             'search' => null,
             'order' => 'tgl_input',
-            'order_direction' => 'desc'
+            'order_direction' => 'desc',
         ];
         $this->actingAs($this->user)
             ->json('GET', '/api/registrasi-mandiri', $params)
@@ -107,7 +114,7 @@ class RegisterRujukanTest extends TestCase
                         "created_at",
                         "deskripsi",
                         "fasyankes_nama",
-                    ]
+                    ],
                 ],
                 "links" => [
                     "first",
@@ -122,8 +129,8 @@ class RegisterRujukanTest extends TestCase
                     "path",
                     "per_page",
                     "to",
-                    "total"
-                ]
+                    "total",
+                ],
             ]);
     }
 
@@ -135,7 +142,7 @@ class RegisterRujukanTest extends TestCase
 
         $this->assertDatabaseHas('register', [
             'creator_user_id' => $this->user->id,
-            'sumber_pasien'  => $this->data['reg_sumberpasien'],
+            'sumber_pasien' => $this->data['reg_sumberpasien'],
             'fasyankes_pengirim' => $this->data['reg_fasyankes_pengirim'],
             'fasyankes_id' => $this->data['reg_fasyankes_id'],
             'nama_rs' => $this->fasyankes->nama,
@@ -145,7 +152,7 @@ class RegisterRujukanTest extends TestCase
             'nama_lengkap' => $this->data['reg_nama_pasien'],
             'kewarganegaraan' => $this->data['reg_kewarganegaraan'],
             'alamat_lengkap' => $this->data['reg_alamat'],
-            'no_hp' => $this->data['reg_nohp']
+            'no_hp' => $this->data['reg_nohp'],
         ]);
     }
 
@@ -165,7 +172,7 @@ class RegisterRujukanTest extends TestCase
 
         $this->assertDatabaseHas('register', [
             'creator_user_id' => $this->user->id,
-            'sumber_pasien'  => $this->data['reg_sumberpasien'],
+            'sumber_pasien' => $this->data['reg_sumberpasien'],
             'fasyankes_pengirim' => $this->data['reg_fasyankes_pengirim'],
             'fasyankes_id' => $this->data['reg_fasyankes_id'],
             'nama_rs' => $this->fasyankes->nama,
@@ -175,7 +182,7 @@ class RegisterRujukanTest extends TestCase
             'nama_lengkap' => $this->data['reg_nama_pasien'],
             'kewarganegaraan' => $this->data['reg_kewarganegaraan'],
             'alamat_lengkap' => $this->data['reg_alamat'],
-            'no_hp' => $this->data['reg_nohp']
+            'no_hp' => $this->data['reg_nohp'],
         ]);
     }
 
@@ -236,7 +243,7 @@ class RegisterRujukanTest extends TestCase
                             "sampel_status",
                             "nomor_sampel",
                             "id",
-                        ]
+                        ],
                     ],
                     "reg_keterangan",
                     "reg_jk",
@@ -259,8 +266,8 @@ class RegisterRujukanTest extends TestCase
                     "fasyankes_pengirim",
                     "status",
                     "pelaporan_id",
-                    "pelaporan_id_case"
-                ]
+                    "pelaporan_id_case",
+                ],
             ]);
     }
 
@@ -289,7 +296,7 @@ class RegisterRujukanTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJson(['result' => [
                 'id' => $sampel->id,
-                'nomor_sampel' => $sampel->nomor_sampel
+                'nomor_sampel' => $sampel->nomor_sampel,
             ]]);
     }
 
@@ -305,7 +312,7 @@ class RegisterRujukanTest extends TestCase
     {
         $register = factory(Register::class)->create([
             'creator_user_id' => $this->user->id,
-            'jenis_registrasi' => JenisRegistrasiEnum::rujukan()
+            'jenis_registrasi' => JenisRegistrasiEnum::rujukan(),
         ]);
         $nomorSampel = factory(Sampel::class)->create(['register_id' => $register->id])->nomor_sampel;
         $data = ['nomor_sampel' => $nomorSampel];
@@ -317,7 +324,7 @@ class RegisterRujukanTest extends TestCase
     public function testExportRujukan()
     {
         $this->actingAs($this->user)
-                ->getJson("/api/registrasi-rujukan/export-excel-rujukan?jenis_registrasi=rujukan")
-                ->assertStatus(Response::HTTP_OK);
+            ->getJson("/api/registrasi-rujukan/export-excel-rujukan?jenis_registrasi=rujukan")
+            ->assertStatus(Response::HTTP_OK);
     }
 }

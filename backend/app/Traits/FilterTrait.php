@@ -99,6 +99,9 @@ trait FilterTrait
         $query->when($key == 'petugas_pengambil', function ($query) use ($value) {
             $query->where("sampel.petugas_pengambilan_sampel", $value);
         });
+        $query->when($key == 'nomor_register_sampel', function ($query) use ($value) {
+            $query->where("sampel.nomor_register", $value);
+        });
         $query->when($key == 'status_pemeriksaan', function ($query) use ($value) {
             $query->when(!in_array($value, ['extraction_sample_sent', 'extraction_sent', 'semua']), function ($query) use ($value) {
                 $query->where('sampel.sampel_status', $value);

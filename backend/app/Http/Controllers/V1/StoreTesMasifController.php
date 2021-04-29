@@ -4,8 +4,6 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BulkTesMasifRequest;
-use App\Models\Kecamatan;
-use App\Models\Kelurahan;
 use App\Models\TesMasif;
 use App\Traits\TesMasifTrait;
 use Illuminate\Http\Response;
@@ -29,8 +27,6 @@ class StoreTesMasifController extends Controller
                 if (!$this->isValidTesMasif($row)) {
                     continue;
                 }
-                $row['kecamatan_id'] = Kecamatan::where('nama', strtoupper($row['kecamatan_id']))->value('nama');
-                $row['kelurahan_id'] = Kelurahan::where('nama', strtoupper($row['kelurahan_id']))->value('nama');
                 $row['kewarganeraan'] = $row['kewarganegaraan'];
                 TesMasif::create($row);
                 $this->berhasil[] = $row['nomor_sampel'];

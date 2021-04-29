@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\User;
-use Tests\TestCase;
 use Illuminate\Http\Response;
+use Tests\TestCase;
 
 class AuthTest extends TestCase
 {

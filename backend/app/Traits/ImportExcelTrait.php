@@ -14,7 +14,8 @@ trait ImportExcelTrait
         'message' => 'Sukses membaca file import excel',
         'data' => [],
         'errors' => [],
-        'errors_count' => 0
+        'errors_count' => 0,
+        'number_row' => []
     ];
 
     private $sampel = [];
@@ -87,5 +88,10 @@ trait ImportExcelTrait
     public function getSampel($rows)
     {
         return $rows['nomor_sampel_labkes'] ?? $rows['nomor_sampel'] ?? null;
+    }
+
+    public function setMessage($message)
+    {
+        $this->result['message'] = $message;
     }
 }

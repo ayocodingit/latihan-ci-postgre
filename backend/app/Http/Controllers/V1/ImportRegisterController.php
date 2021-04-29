@@ -14,11 +14,9 @@ use App\Models\Register;
 use App\Models\Sampel;
 use App\Models\TesMasif;
 use App\Traits\RegisterTrait;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
 
 class ImportRegisterController extends Controller
 {
@@ -30,8 +28,9 @@ class ImportRegisterController extends Controller
      */
     public function importRegisterMandiri(ImportExcelRequest $request)
     {
-        Excel::import(new RegisterMandiriImport(), $request->file('register_file'));
-        return response()->json(['message' => 'Sukses import data.']);
+        $import = new RegisterMandiriImport();
+        $import->import($request->file('register_file'));
+        return response()->json($import->result, $import->getStatusCodeResponse());
     }
 
     /**

@@ -4,11 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Validator;
 use App\Role;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\User;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use Tests\TestCase;
 
 class PenggunaTest extends TestCase
 {
@@ -39,7 +38,7 @@ class PenggunaTest extends TestCase
             'role_id' => factory(Role::class)->create()->id,
             'validator_id' => factory(Validator::class)->create()->id,
             'password' => '123123',
-            'password_confirmation' => '123123'
+            'password_confirmation' => '123123',
         ];
     }
 
@@ -49,8 +48,8 @@ class PenggunaTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 "data" => [
-                    "*" => $this->responseData
-                ]
+                    "*" => $this->responseData,
+                ],
             ]);
     }
 
@@ -60,8 +59,8 @@ class PenggunaTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 "data" => [
-                    "*" => $this->responseData
-                ]
+                    "*" => $this->responseData,
+                ],
             ]);
     }
 
