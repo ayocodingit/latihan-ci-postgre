@@ -54,6 +54,8 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
         'usia_bulan' => 'nullable|integer',
     ];
 
+    public $data = [];
+
     public function collection(Collection $rows)
     {
         $this->setMessage('Sukses import data.');
@@ -62,13 +64,14 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
                 continue;
             }
             $this->result['number_row'][] = $key + 1;
-            $row->kriteria = strtolower($row->get('kriteria'));
-            $row->nomor_sampel = trim(strtoupper($row->get('nomor_sampel')));
+            $row['kriteria'] = strtolower($row->get('kriteria'));
+            $row['nomor_sampel'] = trim(strtoupper($row->get('nomor_sampel')));
             $this->validated($row->toArray(), $key);
+            $this->data[] = $row->toArray();
         }
 
         if ($this->result['errors_count'] === 0) {
-            $this->mappingData($rows);
+            $this->mappingData($this->data);
         }
     }
 
@@ -77,7 +80,7 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
         DB::beginTransaction();
         try {
             foreach ($rows as $row) {
-                $this->saveData($row);
+                $this->saveData(collect($row));
             }
             DB::commit();
         } catch (\Throwable $th) {
@@ -86,27 +89,27 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
         }
     }
 
-    public function saveData($rows)
+    public function saveData($row)
     {
-        foreach ($rows->toArray() as $row) {
-            $row['kunjungan_ke'] = $row['kunjungan'];
-            $row['register_uuid'] = Str::uuid();
-            $row['creator_user_id'] = auth()->user()->id;
-            $row['sumber_pasien'] = $row['kategori'];
-            $row['nomor_register'] = $this->generateNomorRegister();
-            $row['jenis_registrasi'] = JenisRegistrasiEnum::mandiri();
-            $register = Register::create($row);
-            $row['nama_lengkap'] = $row['nama_pasien'];
-            $row['alamat_lengkap'] = $row['alamat'];
-            $row['keterangan_lain'] = $row['keterangan'];
-            $row['status'] = $row['kriteria'];
-            $pasien = Pasien::create($row);
-            $register->pasiens()->attach($pasien);
-            $row['sampel_status'] = 'waiting_sample';
-            $row['waktu_waiting_sample'] = now();
-            $row['register_id'] = $register->id;
-            Sampel::create($row);
-        }
+        $row['kunjungan_ke'] = $row->get('kunjungan');
+        $row['register_uuid'] = Str::uuid();
+        $row['creator_user_id'] = auth()->user()->id;
+        $row['sumber_pasien'] = $row->get('kategori');
+        $row['nomor_register'] = $this->generateNomorRegister();
+        $row['jenis_registrasi'] = JenisRegistrasiEnum::mandiri();
+        $register = Register::create($row->toArray());
+        $row['nama_lengkap'] = $row->get('nama_pasien');
+        $row['alamat_lengkap'] = $row->get('alamat');
+        $row['keterangan_lain'] = $row->get('keterangan');
+        $row['status'] = $row->get('kriteria');
+        $row['no_rt'] = $row->get('rt');
+        $row['no_rw'] = $row->get('rw');
+        $pasien = Pasien::create($row->toArray());
+        $register->pasiens()->attach($pasien);
+        $row['sampel_status'] = 'waiting_sample';
+        $row['waktu_waiting_sample'] = now();
+        $row['register_id'] = $register->id;
+        Sampel::create($row->toArray());
     }
 
     public function rules(): array

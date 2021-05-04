@@ -28,9 +28,42 @@ class ValidasiExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
+    public $header = [
+        'No',
+        'No Registrasi',
+        'Kode Sampel',
+        'Kategori',
+        'Status',
+        'Nama Pasien',
+        'NIK',
+        'Usia',
+        'Satuan',
+        'Tempat Lahir',
+        'Tanggal Lahir',
+        'Jenis Kelamin',
+        'Domisili',
+        'Alamat',
+        'RT',
+        'RW',
+        'No Telp',
+        'Instansi Pengirim',
+        'Nama Fasyankes/Dinkes',
+        'Tipe Sampel',
+        'Parameter Lab',
+        'CT Hasil',
+        'Hasil',
+        'Tanggal Registrasi',
+        'Tanggal Terima Sampel',
+        'Tanggal Pemeriksaan',
+        'Tanggal Validasi',
+    ];
+
+    const TITLE = "Validasi";
+    const CELLRANGE = "AA";
+
     public function __construct($models, $number)
     {
-        $this->setUp($models, $number);
+        $this->setUp($models, $number, self::TITLE, self::CELLRANGE);
     }
 
     public function map($model): array
@@ -71,49 +104,6 @@ class ValidasiExport implements
         return [
             'G' => NumberFormat::FORMAT_NUMBER,
             'Q' => NumberFormat::FORMAT_NUMBER,
-        ];
-    }
-
-    public function setTitle()
-    {
-        $this->title = "Validasi";
-    }
-
-    public function setCellRange()
-    {
-        $this->cellRange = "AA";
-    }
-
-    public function setHeader()
-    {
-        $this->header = [
-            'No',
-            'No Registrasi',
-            'Kode Sampel',
-            'Kategori',
-            'Status',
-            'Nama Pasien',
-            'NIK',
-            'Usia',
-            'Satuan',
-            'Tempat Lahir',
-            'Tanggal Lahir',
-            'Jenis Kelamin',
-            'Domisili',
-            'Alamat',
-            'RT',
-            'RW',
-            'No Telp',
-            'Instansi Pengirim',
-            'Nama Fasyankes/Dinkes',
-            'Tipe Sampel',
-            'Parameter Lab',
-            'CT Hasil',
-            'Hasil',
-            'Tanggal Registrasi',
-            'Tanggal Terima Sampel',
-            'Tanggal Pemeriksaan',
-            'Tanggal Validasi',
         ];
     }
 }

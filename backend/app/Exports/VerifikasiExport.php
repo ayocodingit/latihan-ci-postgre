@@ -28,9 +28,43 @@ class VerifikasiExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
+    public $header = [
+        'No',
+        'No Registrasi',
+        'Kode Sampel',
+        'Kategori',
+        'Status',
+        'Nama Pasien',
+        'NIK',
+        'Usia',
+        'Satuan',
+        'Tempat Lahir',
+        'Tanggal Lahir',
+        'Jenis Kelamin',
+        'Domisili',
+        'Alamat',
+        'RT',
+        'RW',
+        'No Telp',
+        'Instansi Pengirim',
+        'Nama Fasyankes/Dinkes',
+        'Tipe Sampel',
+        'Parameter Lab',
+        'CT Hasil',
+        'Hasil',
+        'Tanggal Registrasi',
+        'Tanggal Terima Sampel',
+        'Tanggal Pemeriksaan',
+        'Tanggal Mulai Ekstraksi',
+        'Tanggal Validasi',
+    ];
+
+    const TITLE = "Verifikasi";
+    const CELLRANGE = "AB";
+
     public function __construct($models, $number)
     {
-        $this->setUp($models, $number);
+        $this->setUp($models, $number, self::TITLE, self::CELLRANGE);
     }
 
     public function map($model): array
@@ -72,50 +106,6 @@ class VerifikasiExport implements
         return [
             'G' => NumberFormat::FORMAT_NUMBER,
             'R' => NumberFormat::FORMAT_NUMBER,
-        ];
-    }
-
-    public function setTitle()
-    {
-        $this->title = "Verifikasi";
-    }
-
-    public function setCellRange()
-    {
-        $this->cellRange = "AB";
-    }
-
-    public function setHeader()
-    {
-        $this->header = [
-            'No',
-            'No Registrasi',
-            'Kode Sampel',
-            'Kategori',
-            'Status',
-            'Nama Pasien',
-            'NIK',
-            'Usia',
-            'Satuan',
-            'Tempat Lahir',
-            'Tanggal Lahir',
-            'Jenis Kelamin',
-            'Domisili',
-            'Alamat',
-            'RT',
-            'RW',
-            'No Telp',
-            'Instansi Pengirim',
-            'Nama Fasyankes/Dinkes',
-            'Tipe Sampel',
-            'Parameter Lab',
-            'CT Hasil',
-            'Hasil',
-            'Tanggal Registrasi',
-            'Tanggal Terima Sampel',
-            'Tanggal Pemeriksaan',
-            'Tanggal Mulai Ekstraksi',
-            'Tanggal Validasi',
         ];
     }
 }

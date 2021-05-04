@@ -202,4 +202,9 @@ class Sampel extends Model
     {
         return optional($this->pemeriksaanSampel)->hasil_deteksi;
     }
+
+    public function jenisSampel()
+    {
+        return $this->belongsTo(JenisSampel::class);
+    }
 }

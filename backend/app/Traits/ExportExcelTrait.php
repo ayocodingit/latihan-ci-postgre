@@ -10,23 +10,16 @@ trait ExportExcelTrait
     private $cellRange;
     private $total;
     private $models = [];
-    private $header = [];
     private $number;
     private $title;
 
-    public function setUp($models, $number)
+    public function setUp($models, $number, $title, $cellRange)
     {
         $this->models = $models;
         $this->number = $number;
-        $this->setTotal($models->count());
-        $this->setTitle();
-        $this->setHeader();
-        $this->setCellRange();
-    }
-
-    public function setTotal($total)
-    {
-        $this->total = ++$total;
+        $this->total = $models->count() + 1;
+        $this->title = $title;
+        $this->cellRange = $cellRange;
     }
 
     public function title(): string
@@ -69,8 +62,8 @@ trait ExportExcelTrait
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12);
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setBold(true);
                 $event->sheet->getDelegate()
-                                ->getStyle("A1:{$this->cellRange}{$this->total}")
-                                ->applyFromArray($this->styleArray());
+                             ->getStyle("A1:{$this->cellRange}{$this->total}")
+                             ->applyFromArray($this->styleArray());
             },
         ];
     }

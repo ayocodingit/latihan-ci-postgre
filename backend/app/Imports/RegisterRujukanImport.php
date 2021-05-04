@@ -73,8 +73,8 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
             if (!$row->get('no')) {
                 continue;
             }
-            $row->kriteria = strtolower($row->get('kriteria'));
-            $row->nomor_sampel = trim($row->get('nomor_sampel'));
+            $row['kriteria'] = strtolower($row->get('kriteria'));
+            $row['nomor_sampel'] = trim($row->get('nomor_sampel'));
             $this->validated($row->toArray(), $key);
             $this->setData($this->mappingData($row));
         }

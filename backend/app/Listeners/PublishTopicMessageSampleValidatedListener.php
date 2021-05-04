@@ -91,9 +91,9 @@ class PublishTopicMessageSampleValidatedListener
     {
         return [
             'last_date_status_patient' => $sampel->waktu_sample_valid,
-            'specimens_type' => $sampel->jenis_sampel_nama,
-            'inspection_date' => $sampel->waktu_sample_taken,
-            'get_specimens_to' => optional($sampel->register)->kunjungan_ke,
+            'specimens_type' => optional($sampel->jenisSampel)->nama,
+            'inspection_date' => $sampel->created_at,
+            'get_specimens_to' => null,
             'inspection_result' => $pemeriksaanSampel->kesimpulan_pemeriksaan,
             'id_fasyankes_pelaporan' => optional($fasyankes)->id_fasyankes_pelaporan,
             'nama_fasyankes_pelaporan' => optional($fasyankes)->nama_fasyankes_pelaporan,

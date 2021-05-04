@@ -274,7 +274,7 @@ class RegisterRujukanTest extends TestCase
     public function testDelete()
     {
         $this->actingAs($this->user)
-            ->deleteJson("/api/registrasi-rujukan/delete/{$this->register->id}")
+            ->deleteJson("/api/registrasi-rujukan/delete/{$this->register->id}/{$this->pasien->id}")
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['message']);
         $this->assertSoftDeleted('register', ['id' => $this->register->id]);

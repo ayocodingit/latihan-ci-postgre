@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/cek', 'RegistrasiRujukanController@cekData');
         Route::post('/store', 'RegistrasiRujukanController@store');
         Route::get('/export-excel-rujukan', 'RegistrasiMandiri@exportRujukan')->middleware('can:isAdmin');
-        Route::delete('/delete/{register}', 'RegistrasiRujukanController@destroy');
+        Route::delete('/delete/{register}/{pasien}', 'RegistrasiRujukanController@destroy');
         Route::post('update/{register}/{pasien}', 'RegistrasiRujukanController@update');
         Route::get('update/{register}/{pasien}', 'RegistrasiRujukanController@show');
     });

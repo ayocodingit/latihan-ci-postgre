@@ -28,9 +28,41 @@ class RujukanExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
+    public $header = [
+        'No',
+        'No Registrasi',
+        'Kode Sampel',
+        'Kategori',
+        'Status',
+        'Nama Pasien',
+        'NIK',
+        'Usia',
+        'Satuan',
+        'Tempat Lahir',
+        'Tanggal Lahir',
+        'Jenis Kelamin',
+        'Provinsi',
+        'Kota',
+        'Kecamatan',
+        'Kelurahan',
+        'Alamat',
+        'RT',
+        'RW',
+        'No. HP',
+        'Instansi Pengirim',
+        'Nama Fasyankes/Dinkes',
+        'Dokter',
+        'Telp Fasyankes',
+        'Kunjungan Ke',
+        'Tanggal Registrasi',
+    ];
+
+    const TITLE = "Registrasi Rujukan";
+    const CELLRANGE = "Z";
+
     public function __construct($models, $number)
     {
-        $this->setUp($models, $number);
+        $this->setUp($models, $number, self::TITLE, self::CELLRANGE);
     }
 
     public function map($model): array
@@ -70,48 +102,6 @@ class RujukanExport implements
         return [
             'G' => NumberFormat::FORMAT_NUMBER,
             'T' => NumberFormat::FORMAT_NUMBER,
-        ];
-    }
-
-    public function setTitle()
-    {
-        $this->title = "Registrasi Rujukan";
-    }
-
-    public function setCellRange()
-    {
-        $this->cellRange = "Z";
-    }
-
-    public function setHeader()
-    {
-        $this->header = [
-            'No',
-            'No Registrasi',
-            'Kode Sampel',
-            'Kategori',
-            'Status',
-            'Nama Pasien',
-            'NIK',
-            'Usia',
-            'Satuan',
-            'Tempat Lahir',
-            'Tanggal Lahir',
-            'Jenis Kelamin',
-            'Provinsi',
-            'Kota',
-            'Kecamatan',
-            'Kelurahan',
-            'Alamat',
-            'RT',
-            'RW',
-            'No. HP',
-            'Instansi Pengirim',
-            'Nama Fasyankes/Dinkes',
-            'Dokter',
-            'Telp Fasyankes',
-            'Kunjungan Ke',
-            'Tanggal Registrasi',
         ];
     }
 }

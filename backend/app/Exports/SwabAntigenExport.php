@@ -23,9 +23,41 @@ class SwabAntigenExport implements
 {
     use ExportExcelTrait;
 
+    public $header = [
+        'No',
+        'Nama Pasien',
+        'Tanggal Lahir',
+        'Jenis Kelamin',
+        'No Telp',
+        'Warganegara',
+        'Negara Asal',
+        'Jenis Identitas',
+        'No Identitas',
+        'Kategori',
+        'Alamat',
+        'Provinsi',
+        'Kabupaten',
+        'Kecamatan',
+        'Kelurahan',
+        'RT',
+        'RW',
+        'Kondisi Pasien',
+        'Tanggal Gejala',
+        'Jenis Gejala',
+        'Tujuan Pemeriksaan',
+        'Tujuan Pemeriksaan Lainnya',
+        'Jenis Antigen',
+        'No Hasil',
+        'Tanggal Periksa',
+        'Hasil Periksa',
+    ];
+
+    const TITLE = "Swab Antigen";
+    const CELLRANGE = "Z";
+
     public function __construct($models, $number)
     {
-        $this->setUp($models, $number);
+        $this->setUp($models, $number, self::TITLE, self::CELLRANGE);
     }
 
     public function map($model): array
@@ -65,48 +97,6 @@ class SwabAntigenExport implements
         return [
             'E' => NumberFormat::FORMAT_NUMBER,
             'I' => NumberFormat::FORMAT_NUMBER,
-        ];
-    }
-
-    public function setTitle()
-    {
-        $this->title = "Swab Antigen";
-    }
-
-    public function setCellRange()
-    {
-        $this->cellRange = "Z";
-    }
-
-    public function setHeader()
-    {
-        $this->header = [
-            'No',
-            'Nama Pasien',
-            'Tanggal Lahir',
-            'Jenis Kelamin',
-            'No Telp',
-            'Warganegara',
-            'Negara Asal',
-            'Jenis Identitas',
-            'No Identitas',
-            'Kategori',
-            'Alamat',
-            'Provinsi',
-            'Kabupaten',
-            'Kecamatan',
-            'Kelurahan',
-            'RT',
-            'RW',
-            'Kondisi Pasien',
-            'Tanggal Gejala',
-            'Jenis Gejala',
-            'Tujuan Pemeriksaan',
-            'Tujuan Pemeriksaan Lainnya',
-            'Jenis Antigen',
-            'No Hasil',
-            'Tanggal Periksa',
-            'Hasil Periksa',
         ];
     }
 }

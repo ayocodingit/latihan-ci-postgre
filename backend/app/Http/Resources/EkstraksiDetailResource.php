@@ -14,16 +14,20 @@ class EkstraksiDetailResource extends JsonResource
      */
     public function toArray($request)
     {
+        $statusSampel = ['extraction_sample_extracted', 'extraction_sample_sent', 'extraction_sample_reextract'];
+        $logsEkstraksi = $this->logs()
+                              ->whereIn('sampel_status', $statusSampel)
+                              ->orderByDesc('created_at')
+                              ->take(5)
+                              ->get();
         $sampel = parent::toArray($request);
         return [
             'data' => $sampel + [
+                'jenis_sampel' => $this->jenisSampel,
                 'ekstraksi' => $this->ekstraksi,
                 'status' => $this->status,
-                'log_ekstraksi' => $this->logs()
-                ->whereIn('sampel_status', ['extraction_sample_extracted', 'extraction_sample_sent', 'extraction_sample_reextract'])
-                ->orderByDesc('created_at')
-                ->get(),
-
+                'log_ekstraksi' => $logsEkstraksi,
+                'pengambilan_sampel' => $this->pengambilanSampel,
             ],
         ];
     }

@@ -33,7 +33,7 @@ class RegisterRujukanTesMasifImport implements ToCollection, WithHeadingRow
                                 ->where('available', true)
                                 ->where('jenis_registrasi', JenisRegistrasiEnum::rujukan())
                                 ->first();
-            $row->nomor_sampel_labkes = trim($row->get('nomor_sampel_labkes'));
+            $row['nomor_sampel_labkes'] = trim($row->get('nomor_sampel_labkes'));
             $this->validated($row->toArray(), $key);
             $this->setData($this->mappingData($tesMasif, $row));
         }
