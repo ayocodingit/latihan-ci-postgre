@@ -86,6 +86,8 @@ class SampleController extends Controller
             if ($sampel->sampel_status == 'waiting_sample') {
                 $this->updateState($sampel, 'sample_taken', $sampel, 'Data Sampel Teregistrasi');
             }
+            $sampel->pengambilan_sampel_id = $pengambilanSampel->id;
+            $sampel->save();
             DB::commit();
             return response()->json(['message' => 'Berhasil menambahkan sampel'], Response::HTTP_CREATED);
         } catch (\Throwable $th) {

@@ -47,15 +47,15 @@ class SampelDetailResource extends JsonResource
         foreach ($logs as $key => $log) {
             if ($log->description == 'Receive PCR') {
                 $receive_pcr_count++;
-                if ($receive_pcr_count >= 2) {
-                    $logs[$key]['re_pcr'] = 're-pcr';
-                }
             }
             if ($log->description == 'Receive Extraction') {
                 $receive_extraction_count++;
-                if ($receive_extraction_count >= 2) {
-                    $logs[$key]['re_extraction'] = 're-extraction';
-                }
+            }
+            if ($receive_pcr_count >= 2) {
+                $logs[$key]['re_pcr'] = 're-pcr';
+            }
+            if ($receive_extraction_count >= 2) {
+                $logs[$key]['re_extraction'] = 're-extraction';
             }
         }
         return $logs;
