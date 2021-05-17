@@ -105,8 +105,8 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1')->group(function () 
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/register')->group(function () {
     Route::post('mandiri', 'RegisterController@storeMandiri');
-    Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate');
     Route::get('mandiri/{register_id}/{pasien_id}', 'RegisterController@getById');
+    Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate');
     Route::get('logs/{register_id}', 'RegisterController@logs');
     Route::delete('mandiri/{register}/{pasien}', 'RegisterController@delete');
     Route::get('noreg', 'RegisterController@requestNomor');
