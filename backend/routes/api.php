@@ -118,36 +118,36 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/register')->group(fun
     Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan');
 });
 
-// Route::middleware(['auth:api', 'can:isAdminVerifikator'])->namespace('V1')->prefix('v1/verifikasi')->group(function () {
-//     Route::post('mandiri', 'RegisterController@storeMandiri');
-//     Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate');
-//     Route::get('mandiri/{register_id}/{pasien_id}', 'RegisterController@getById');
-//     Route::get('logs/{register_id}', 'RegisterController@logs');
-//     Route::delete('mandiri/{register}/{pasien}', 'RegisterController@delete');
-//     Route::get('noreg', 'RegisterController@requestNomor');
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/verifikasi')->group(function () {
+    Route::post('mandiri', 'RegisterController@storeMandiri')->middleware('can:isAdminVerifikator');
+    Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate')->middleware('can:isAdminVerifikator');
+    Route::get('mandiri/{register_id}/{pasien_id}', 'RegisterController@getById')->middleware('can:isAdminVerifikator');
+    Route::get('logs/{register_id}', 'RegisterController@logs')->middleware('can:isAdminVerifikator');
+    Route::delete('mandiri/{register}/{pasien}', 'RegisterController@delete')->middleware('can:isAdminVerifikator');
+    Route::get('noreg', 'RegisterController@requestNomor')->middleware('can:isAdminVerifikator');
 
-//     Route::post('import-mandiri', 'ImportRegisterController@importRegisterMandiri');
-//     Route::post('import-rujukan', 'ImportRegisterController@importRegisterRujukan');
-//     Route::post('import-rujukan-tes-masif', 'ImportRegisterController@importRegisterRujukanTesMasif');
-//     Route::post('import-data-rujukan', 'ImportRegisterController@importDataRegisterRujukan');
-//     Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan');
-// });
+    Route::post('import-mandiri', 'ImportRegisterController@importRegisterMandiri')->middleware('can:isAdminVerifikator');
+    Route::post('import-rujukan', 'ImportRegisterController@importRegisterRujukan')->middleware('can:isAdminVerifikator');
+    Route::post('import-rujukan-tes-masif', 'ImportRegisterController@importRegisterRujukanTesMasif')->middleware('can:isAdminVerifikator');
+    Route::post('import-data-rujukan', 'ImportRegisterController@importDataRegisterRujukan')->middleware('can:isAdminVerifikator');
+    Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan')->middleware('can:isAdminVerifikator');
+});
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/verifikasi')->group(function () {
     Route::get('list-kategori', 'VerifikasiController@listKategori');
 });
 
-// Route::middleware(['auth:api', 'can:isAdminValidator'])->namespace('V1')->prefix('v1/validasi')->group(function () {
-//     Route::get('/', 'ValidasiController@index');
-//     Route::get('/export', 'ValidasiController@export');
-//     Route::get('list-validator', 'ValidasiController@getValidator');
-//     Route::post('bulk-validasi', 'ValidasiController@bulkValidate');
-//     Route::post('edit-status-sampel/{sampel}', 'ValidasiController@updateToValidate');
-//     Route::get('detail/{sampel}', 'ValidasiController@show');
-//     Route::post('reject-sample/{sampel}', 'ValidasiController@rejectSample');
-//     Route::get('export-pdf/{sampel}', 'ExportPDFController@downloadPdfHasil');
-//     Route::post('regenerate-pdf/{sampel}', 'ExportPDFController@regeneratePdfHasil');
-// });
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/validasi')->group(function () {
+    Route::get('/', 'ValidasiController@index')->middleware('can:isAdminValidator');
+    Route::get('/export', 'ValidasiController@export')->middleware('can:isAdminValidator');
+    Route::get('list-validator', 'ValidasiController@getValidator')->middleware('can:isAdminValidator');
+    Route::post('bulk-validasi', 'ValidasiController@bulkValidate')->middleware('can:isAdminValidator');
+    Route::post('edit-status-sampel/{sampel}', 'ValidasiController@updateToValidate')->middleware('can:isAdminValidator');
+    Route::get('detail/{sampel}', 'ValidasiController@show')->middleware('can:isAdminValidator');
+    Route::post('reject-sample/{sampel}', 'ValidasiController@rejectSample')->middleware('can:isAdminValidator');
+    Route::get('export-pdf/{sampel}', 'ExportPDFController@downloadPdfHasil')->middleware('can:isAdminValidator');
+    Route::post('regenerate-pdf/{sampel}', 'ExportPDFController@regeneratePdfHasil')->middleware('can:isAdminValidator');
+});
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/pelacakan-sampel')->group(function () {
     Route::get('list', 'PelacakanSampelController@index');
@@ -163,11 +163,11 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/list')->group(functio
     Route::get('reagen-pcr', 'ReagenPCRListController');
 });
 
-// Route::middleware(['auth:api', 'can:isAdmin'])->namespace('V1')->prefix('v1')->group(function () {
-//     Route::apiResource('jenis-vtm', 'JenisVTMController');
-//     Route::apiResource('reagen-ekstraksi', 'ReagenEkstraksiController');
-//     Route::apiResource('reagen-pcr', 'ReagenPCRController');
-// });
+Route::middleware('auth:api')->namespace('V1')->prefix('v1')->group(function () {
+    Route::apiResource('jenis-vtm', 'JenisVTMController')->middleware('can:isAdmin');
+    Route::apiResource('reagen-ekstraksi', 'ReagenEkstraksiController')->middleware('can:isAdmin');
+    Route::apiResource('reagen-pcr', 'ReagenPCRController')->middleware('can:isAdmin');
+});
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/tes-masif')->group(function () {
     Route::get('/', 'TesMasifController@index');
