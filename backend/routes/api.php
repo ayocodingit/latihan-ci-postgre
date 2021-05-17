@@ -158,21 +158,21 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/pelaporan')->group(fu
     Route::get('data', 'PelaporanController@fetchData');
 });
 
-Route::middleware('auth:api')->namespace('V1')->prefix('v1/list')->group(function () {
-    Route::get('reagen-ekstraksi', 'ReagenEkstraksiListController');
-    Route::get('reagen-pcr', 'ReagenPCRListController');
-});
+// Route::middleware('auth:api')->namespace('V1')->prefix('v1/list')->group(function () {
+//     Route::get('reagen-ekstraksi', 'ReagenEkstraksiListController');
+//     Route::get('reagen-pcr', 'ReagenPCRListController');
+// });
 
-Route::middleware(['auth:api', 'can:isAdmin'])->namespace('V1')->prefix('v1')->group(function () {
-    Route::apiResource('jenis-vtm', 'JenisVTMController');
-    Route::apiResource('reagen-ekstraksi', 'ReagenEkstraksiController');
-    Route::apiResource('reagen-pcr', 'ReagenPCRController');
-});
+// Route::middleware(['auth:api', 'can:isAdmin'])->namespace('V1')->prefix('v1')->group(function () {
+//     Route::apiResource('jenis-vtm', 'JenisVTMController');
+//     Route::apiResource('reagen-ekstraksi', 'ReagenEkstraksiController');
+//     Route::apiResource('reagen-pcr', 'ReagenPCRController');
+// });
 
-Route::middleware('auth:api')->namespace('V1')->prefix('v1/tes-masif')->group(function () {
-    Route::get('/', 'TesMasifController@index');
-    Route::post('/registering', 'TesMasifController@bulk');
-});
+// Route::middleware('auth:api')->namespace('V1')->prefix('v1/tes-masif')->group(function () {
+//     Route::get('/', 'TesMasifController@index');
+//     Route::post('/registering', 'TesMasifController@bulk');
+// });
 
 // Route::middleware('auth:api')->namespace('V1')->prefix('v1/swab-antigen')->group(function () {
 //     Route::get('/nomor-registrasi', 'SwabAntigenController@getNomorRegistrasi');
