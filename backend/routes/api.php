@@ -99,6 +99,8 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1')->group(function () 
     Route::get('kota/detail/{kota}', 'KotaController@show');
     Route::get('list-fasyankes-jabar', 'FasyankesController@listByProvinsi');
     Route::get('fasyankes/detail/{fasyankes}', 'FasyankesController@show');
+    Route::apiResource('swab-antigen', 'SwabAntigenController');
+    Route::get('download', 'FileDownloadController');
 });
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/register')->group(function () {
@@ -114,4 +116,109 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/register')->group(fun
     Route::post('import-rujukan-tes-masif', 'ImportRegisterController@importRegisterRujukanTesMasif');
     Route::post('import-data-rujukan', 'ImportRegisterController@importDataRegisterRujukan');
     Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan');
+});
+
+Route::middleware(['auth:api', 'can:isAdminVerifikator'])->namespace('V1')->prefix('v1/verifikasi')->group(function () {
+    Route::post('mandiri', 'RegisterController@storeMandiri');
+    Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate');
+    Route::get('mandiri/{register_id}/{pasien_id}', 'RegisterController@getById');
+    Route::get('logs/{register_id}', 'RegisterController@logs');
+    Route::delete('mandiri/{register}/{pasien}', 'RegisterController@delete');
+    Route::get('noreg', 'RegisterController@requestNomor');
+
+    Route::post('import-mandiri', 'ImportRegisterController@importRegisterMandiri');
+    Route::post('import-rujukan', 'ImportRegisterController@importRegisterRujukan');
+    Route::post('import-rujukan-tes-masif', 'ImportRegisterController@importRegisterRujukanTesMasif');
+    Route::post('import-data-rujukan', 'ImportRegisterController@importDataRegisterRujukan');
+    Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan');
+});
+
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/verifikasi')->group(function () {
+    Route::get('list-kategori', 'VerifikasiController@listKategori');
+});
+
+Route::middleware(['auth:api', 'can:isAdminValidator'])->namespace('V1')->prefix('v1/validasi')->group(function () {
+    Route::get('/', 'ValidasiController@index');
+    Route::get('/export', 'ValidasiController@export');
+    Route::get('list-validator', 'ValidasiController@getValidator');
+    Route::post('bulk-validasi', 'ValidasiController@bulkValidate');
+    Route::post('edit-status-sampel/{sampel}', 'ValidasiController@updateToValidate');
+    Route::get('detail/{sampel}', 'ValidasiController@show');
+    Route::post('reject-sample/{sampel}', 'ValidasiController@rejectSample');
+    Route::get('export-pdf/{sampel}', 'ExportPDFController@downloadPdfHasil');
+    Route::post('regenerate-pdf/{sampel}', 'ExportPDFController@regeneratePdfHasil');
+});
+
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/pelacakan-sampel')->group(function () {
+    Route::get('list', 'PelacakanSampelController@index');
+    Route::get('detail/{sampel}', 'PelacakanSampelController@show');
+});
+
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/pelaporan')->group(function () {
+    Route::get('data', 'PelaporanController@fetchData');
+});
+
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/list')->group(function () {
+    Route::get('reagen-ekstraksi', 'ReagenEkstraksiListController');
+    Route::get('reagen-pcr', 'ReagenPCRListController');
+});
+
+Route::middleware(['auth:api', 'can:isAdmin'])->namespace('V1')->prefix('v1')->group(function () {
+    Route::apiResource('jenis-vtm', 'JenisVTMController');
+    Route::apiResource('reagen-ekstraksi', 'ReagenEkstraksiController');
+    Route::apiResource('reagen-pcr', 'ReagenPCRController');
+});
+
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/tes-masif')->group(function () {
+    Route::get('/', 'TesMasifController@index');
+    Route::post('/registering', 'TesMasifController@bulk');
+});
+
+Route::middleware('auth:api')->namespace('V1')->prefix('v1/swab-antigen')->group(function () {
+    Route::get('/nomor-registrasi', 'SwabAntigenController@getNomorRegistrasi');
+    Route::post('/bulk', 'SwabAntigenController@bulkValidasi');
+    Route::post('/import', 'SwabAntigenController@import');
+    Route::get('/export-excel', 'SwabAntigenController@export');
+    Route::get('/export-pdf/{swab_antigen}', 'ExportPDFController@downloadPdfSwabAntigen');
+    Route::post('/regenerate-pdf/{swab_antigen}', 'ExportPDFController@regeneratePdfSwabAntigen');
+});
+
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/ekstraksi')->group(function () {
+    Route::get('/get-data', 'EkstraksiController@getData');
+});
+
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/pcr')->group(function () {
+    Route::get('/get-data', 'PCRController@index');
+});
+
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/pelacakan-sampel')->group(function () {
+    Route::get('list', 'PelacakanSampelController@index');
+});
+
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/dashboard')->group(function () {
+     Route::get('/tracking-progress', 'DashboardController@trackingProgress');
+     Route::get('/positif-negatif', 'DashboardController@positifNegatif');
+     Route::get('/pasien-diperiksa', 'DashboardController@pasienDiperiksa');
+     Route::get('/registrasi', 'DashboardController@registrasi');
+     Route::get('/admin-sampel', 'DashboardController@adminSampel');
+     Route::get('/ekstraksi', 'DashboardController@ekstraksi');
+     Route::get('/pcr', 'DashboardController@pcr');
+     Route::get('/verifikasi', 'DashboardController@verifikasi');
+     Route::get('/validasi', 'DashboardController@validasi');
+});
+
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/dashboard/list')->group(function () {
+    Route::get('/sampel-perdomisili', 'SampelPerDomisili');
+});
+
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/chart')->group(function () {
+    Route::get('/regis', 'DashboardChartController@registrasi');
+    Route::get('/sampel', 'DashboardChartController@sampel');
+    Route::get('/ekstraksi', 'DashboardChartController@ekstraksi');
+    Route::get('/pcr', 'DashboardChartController@pcr');
+    Route::get('/positif-negatif', 'DashboardChartController@positifNegatif');
+});
+
+Route::prefix('v1/tes-masif')->namespace('V1')->group(function () {
+    Route::post('/bulk', 'StoreTesMasifController');
 });
