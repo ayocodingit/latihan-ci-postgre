@@ -118,7 +118,7 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/register')->group(fun
     Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan');
 });
 
-Route::middleware(['auth:api', 'can:isAdminVerifikator'])->namespace('V1')->prefix('v1/verifikasi')->group(function () {
+Route::middleware('auth:api')->middleware('can:isAdminVerifikator')->namespace('V1')->prefix('v1/verifikasi')->group(function () {
     Route::post('mandiri', 'RegisterController@storeMandiri');
     Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate');
     Route::get('mandiri/{register_id}/{pasien_id}', 'RegisterController@getById');
@@ -137,7 +137,8 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/verifikasi')->group(f
     Route::get('list-kategori', 'VerifikasiController@listKategori');
 });
 
-Route::middleware(['auth:api', 'can:isAdminValidator'])->namespace('V1')->prefix('v1/validasi')->group(function () {
+Route::middleware('auth:api')->middleware('can:isAdminValidator')->namespace('V1')->prefix('v1/validasi')->group(function ()
+{
     Route::get('/', 'ValidasiController@index');
     Route::get('/export', 'ValidasiController@export');
     Route::get('list-validator', 'ValidasiController@getValidator');
@@ -163,7 +164,7 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/list')->group(functio
     Route::get('reagen-pcr', 'ReagenPCRListController');
 });
 
-Route::middleware(['auth:api', 'can:isAdmin'])->namespace('V1')->prefix('v1')->group(function () {
+Route::middleware('auth:api')->middleware('can:isAdmin')->namespace('V1')->prefix('v1')->group(function () {
     Route::apiResource('jenis-vtm', 'JenisVTMController');
     Route::apiResource('reagen-ekstraksi', 'ReagenEkstraksiController');
     Route::apiResource('reagen-pcr', 'ReagenPCRController');
