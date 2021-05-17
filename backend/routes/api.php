@@ -118,7 +118,8 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/register')->group(fun
     Route::post('import-data-tes-masif', 'ImportRegisterController@importDataRegisterRujukan');
 });
 
-Route::middleware('auth:api')->middleware('can:isAdminVerifikator')->namespace('V1')->prefix('v1/verifikasi')->group(function () {
+Route::middleware('auth:api')->middleware('can:isAdminVerifikator')->namespace('V1')->prefix('v1/verifikasi')
+     ->group(function () {
     Route::post('mandiri', 'RegisterController@storeMandiri');
     Route::post('mandiri/update/{register}/{pasien}', 'RegisterController@storeUpdate');
     Route::get('mandiri/{register_id}/{pasien_id}', 'RegisterController@getById');
@@ -137,7 +138,8 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/verifikasi')->group(f
     Route::get('list-kategori', 'VerifikasiController@listKategori');
 });
 
-Route::middleware('auth:api')->middleware('can:isAdminValidator')->namespace('V1')->prefix('v1/validasi')->group(function ()
+Route::middleware('auth:api')->middleware('can:isAdminValidator')->namespace('V1')->prefix('v1/validasi')
+     ->group(function ()
 {
     Route::get('/', 'ValidasiController@index');
     Route::get('/export', 'ValidasiController@export');
