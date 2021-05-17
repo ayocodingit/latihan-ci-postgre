@@ -137,7 +137,7 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/verifikasi')->group(f
     Route::get('list-kategori', 'VerifikasiController@listKategori');
 });
 
-Route::middleware('auth:api')->middleware('can:isAdminValidator')->namespace('V1')->prefix('v1/validasi')->group(function () {
+Route::middleware(['auth:api', 'can:isAdminValidator'])->namespace('V1')->prefix('v1/validasi')->group(function () {
     Route::get('/', 'ValidasiController@index');
     Route::get('/export', 'ValidasiController@export');
     Route::get('list-validator', 'ValidasiController@getValidator');
@@ -183,42 +183,42 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/swab-antigen')->group
     Route::post('/regenerate-pdf/{swab_antigen}', 'ExportPDFController@regeneratePdfSwabAntigen');
 });
 
-// Route::middleware('auth:api')->namespace('V2')->prefix('v2/ekstraksi')->group(function () {
-//     Route::get('/get-data', 'EkstraksiController@getData');
-// });
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/ekstraksi')->group(function () {
+    Route::get('/get-data', 'EkstraksiController@getData');
+});
 
-// Route::middleware('auth:api')->namespace('V2')->prefix('v2/pcr')->group(function () {
-//     Route::get('/get-data', 'PCRController@index');
-// });
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/pcr')->group(function () {
+    Route::get('/get-data', 'PCRController@index');
+});
 
-// Route::middleware('auth:api')->namespace('V2')->prefix('v2/pelacakan-sampel')->group(function () {
-//     Route::get('list', 'PelacakanSampelController@index');
-// });
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/pelacakan-sampel')->group(function () {
+    Route::get('list', 'PelacakanSampelController@index');
+});
 
-// Route::middleware('auth:api')->namespace('V2')->prefix('v2/dashboard')->group(function () {
-//      Route::get('/tracking-progress', 'DashboardController@trackingProgress');
-//      Route::get('/positif-negatif', 'DashboardController@positifNegatif');
-//      Route::get('/pasien-diperiksa', 'DashboardController@pasienDiperiksa');
-//      Route::get('/registrasi', 'DashboardController@registrasi');
-//      Route::get('/admin-sampel', 'DashboardController@adminSampel');
-//      Route::get('/ekstraksi', 'DashboardController@ekstraksi');
-//      Route::get('/pcr', 'DashboardController@pcr');
-//      Route::get('/verifikasi', 'DashboardController@verifikasi');
-//      Route::get('/validasi', 'DashboardController@validasi');
-// });
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/dashboard')->group(function () {
+     Route::get('/tracking-progress', 'DashboardController@trackingProgress');
+     Route::get('/positif-negatif', 'DashboardController@positifNegatif');
+     Route::get('/pasien-diperiksa', 'DashboardController@pasienDiperiksa');
+     Route::get('/registrasi', 'DashboardController@registrasi');
+     Route::get('/admin-sampel', 'DashboardController@adminSampel');
+     Route::get('/ekstraksi', 'DashboardController@ekstraksi');
+     Route::get('/pcr', 'DashboardController@pcr');
+     Route::get('/verifikasi', 'DashboardController@verifikasi');
+     Route::get('/validasi', 'DashboardController@validasi');
+});
 
-// Route::middleware('auth:api')->namespace('V2')->prefix('v2/dashboard/list')->group(function () {
-//     Route::get('/sampel-perdomisili', 'SampelPerDomisili');
-// });
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/dashboard/list')->group(function () {
+    Route::get('/sampel-perdomisili', 'SampelPerDomisili');
+});
 
-// Route::middleware('auth:api')->namespace('V2')->prefix('v2/chart')->group(function () {
-//     Route::get('/regis', 'DashboardChartController@registrasi');
-//     Route::get('/sampel', 'DashboardChartController@sampel');
-//     Route::get('/ekstraksi', 'DashboardChartController@ekstraksi');
-//     Route::get('/pcr', 'DashboardChartController@pcr');
-//     Route::get('/positif-negatif', 'DashboardChartController@positifNegatif');
-// });
+Route::middleware('auth:api')->namespace('V2')->prefix('v2/chart')->group(function () {
+    Route::get('/regis', 'DashboardChartController@registrasi');
+    Route::get('/sampel', 'DashboardChartController@sampel');
+    Route::get('/ekstraksi', 'DashboardChartController@ekstraksi');
+    Route::get('/pcr', 'DashboardChartController@pcr');
+    Route::get('/positif-negatif', 'DashboardChartController@positifNegatif');
+});
 
-// Route::prefix('v1/tes-masif')->namespace('V1')->group(function () {
-//     Route::post('/bulk', 'StoreTesMasifController');
-// });
+Route::prefix('v1/tes-masif')->namespace('V1')->group(function () {
+    Route::post('/bulk', 'StoreTesMasifController');
+});
