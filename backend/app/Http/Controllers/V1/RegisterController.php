@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Enums\JenisRegistrasiEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterMandiriRequest;
 use App\Models\Pasien;
@@ -35,6 +36,7 @@ class RegisterController extends Controller
             $register['nomor_register'] = $this->generateNomorRegister();
             $register['register_uuid'] = Str::uuid();
             $register['creator_user_id'] = $request->user()->id;
+            $register['jenis_registrasi'] = JenisRegistrasiEnum::mandiri();
             $register = Register::create($register);
             $pasien = Pasien::create($this->getRequestPasien($request));
             PasienRegister::create(['pasien_id' => $pasien->id, 'register_id' => $register->id]);

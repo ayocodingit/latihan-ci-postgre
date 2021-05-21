@@ -1,9 +1,29 @@
 #!/bin/sh
 
-composer dump-autoload -d backend/
-php backend/artisan config:clear
-php backend/artisan cache:clear
-php backend/artisan route:clear
-#php backend/artisan migrate --no-interaction -vvv --force
+app=${DOCKER_APP:-app}
 
-/usr/bin/supervisord
+php artisan optimize
+
+if [ "$app" = "app" ]; then
+
+    echo "Running the app..."
+    /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+
+elif [ "$app" = "queue" ]; then
+
+    echo "Running the queue..."
+    php /var/www/html/artisan queue:work --queue=default --sleep=3 --tries=3
+
+elif [ "$app" = "scheduler" ]; then
+
+    echo "Running the scheduler..."
+    while [ true ]
+    do
+        php /var/www/html/artisan schedule:run --no-interaction &
+        sleep 60
+    done
+
+else
+    echo "Could not match the container app \"$app\""
+    exit 1
+fi

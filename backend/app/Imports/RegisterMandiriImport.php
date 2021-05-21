@@ -54,35 +54,24 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
         'usia_bulan' => 'nullable|integer',
     ];
 
-    public $data = [];
-
     public function collection(Collection $rows)
-    {
-        $this->setMessage('Sukses import data.');
-        foreach ($rows as $key => $row) {
-            if (!$row->get('no')) {
-                continue;
-            }
-            $this->result['number_row'][] = $key + 1;
-            $row['kriteria'] = strtolower($row->get('kriteria'));
-            $row['nomor_sampel'] = trim(strtoupper($row->get('nomor_sampel')));
-            $this->validated($row->toArray(), $key);
-            $this->data[] = $row->toArray();
-        }
-
-        if ($this->result['errors_count'] === 0) {
-            $this->mappingData($this->data);
-        }
-    }
-
-    public function mappingData($rows)
     {
         DB::beginTransaction();
         try {
-            foreach ($rows as $row) {
-                $this->saveData(collect($row));
+            foreach ($rows as $key => $row) {
+                if (!$row->get('no')) {
+                    break;
+                }
+                $this->result['number_row'][] = $key + 1;
+                $row['kriteria'] = strtolower($row->get('kriteria'));
+                $row['nomor_sampel'] = trim(strtoupper($row->get('nomor_sampel')));
+                $this->validated($row->toArray(), $key);
+                $this->saveData($row);
             }
-            DB::commit();
+            if ($this->result['errors_count'] === 0) {
+                $this->setMessage('Sukses import data.');
+                DB::commit();
+            }
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

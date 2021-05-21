@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Register;
 
+use App\Enums\FasyankesMandiriEnum;
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KewarganegaraanEnum;
 use App\Enums\StatusPasienEnum;
@@ -23,6 +24,8 @@ class RegisterMandiriTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Fasyankes::query()->truncate();
+        factory(Fasyankes::class)->create(['id' => FasyankesMandiriEnum::LABJABAR()->getIndex()]);
 
         $this->artisan('db:seed --class=StatusSampelSeeder');
         $this->kota = factory(Kota::class)->create();

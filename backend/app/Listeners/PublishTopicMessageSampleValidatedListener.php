@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\App;
 
-class PublishTopicMessageSampleValidatedListener
+class PublishTopicMessageSampleValidatedListener implements ShouldQueue
 {
     use ConvertEnumTrait;
 

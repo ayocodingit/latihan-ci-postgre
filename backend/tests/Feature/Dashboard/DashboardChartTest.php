@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Dashboard;
 
+use App\Enums\FasyankesMandiriEnum;
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KesimpulanPemeriksaanEnum;
 use App\Models\Fasyankes;
@@ -21,6 +22,8 @@ class DashboardChartTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Fasyankes::query()->truncate();
+        factory(Fasyankes::class)->create(['id' => FasyankesMandiriEnum::LABJABAR()->getIndex()]);
         $this->user = factory(User::class)->create();
         $this->artisan('db:seed --class=StatusSampelSeeder');
         $this->kota = factory(Kota::class)->create();

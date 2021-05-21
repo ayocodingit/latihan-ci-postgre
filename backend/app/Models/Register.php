@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\FasyankesMandiriEnum;
+use App\Enums\JenisRegistrasiEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -81,6 +83,14 @@ class Register extends Model
         self::deleting(function ($register) {
             if ($register->sampel) {
                 $register->sampel()->delete();
+            }
+        });
+
+        self::created(function ($register) {
+            if ($register->jenis_registrasi == JenisRegistrasiEnum::mandiri()) {
+                $register->fasyankes_id = FasyankesMandiriEnum::LABJABAR()->getIndex();
+                $register->fasyankes_pengirim = FasyankesMandiriEnum::LABJABAR();
+                $register->save();
             }
         });
     }
