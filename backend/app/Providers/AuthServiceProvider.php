@@ -35,7 +35,9 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->checkAuthorize();
 
-        return $this->isAuthorize;
+        if (!$this->isAuthorize) {
+            return $this->isAuthorize;
+        }
     }
 
     /**
