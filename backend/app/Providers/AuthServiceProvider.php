@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
+
+    /**
+     * isAuthorize
+     *
+     * @var bool
+     */
+    protected $isAuthorize = true;
+
     /**
      * The policy mappings for the application.
      *
@@ -25,36 +33,41 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        $this->checkAuthorize();
+
+        return $this->isAuthorize;
+    }
+
+    /**
+     * checkAuthorize
+     *
+     * @return void
+     */
+    public function checkAuthorize()
+    {
         Gate::define('isAdmin', function ($user) {
-            return $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = $user->role_id == ROLE_ADMIN;
         });
-
         Gate::define('isAdminRegister', function ($user) {
-            return $user->role_id == ROLE_REGISTER || $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = in_array($user->role_id, [ROLE_REGISTER, ROLE_ADMIN]);
         });
-
         Gate::define('isAdminSampel', function ($user) {
-            return $user->role_id == ROLE_SAMPEL || $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = in_array($user->role_id, [ROLE_SAMPEL, ROLE_ADMIN]);
         });
-
         Gate::define('isAdminEkstraksi', function ($user) {
-            return $user->role_id == ROLE_EKSTRAKSI || $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = in_array($user->role_id, [ROLE_EKSTRAKSI, ROLE_ADMIN]);
         });
-
         Gate::define('isAdminPCR', function ($user) {
-            return $user->role_id == ROLE_PCR || $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = in_array($user->role_id, [ROLE_PCR, ROLE_ADMIN]);
         });
-
         Gate::define('isAdminVerifikator', function ($user) {
-            return $user->role_id == ROLE_VERIFIKATOR || $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = in_array($user->role_id, [ROLE_VERIFIKATOR, ROLE_ADMIN]);
         });
-
         Gate::define('isAdminValidator', function ($user) {
-            return $user->role_id == ROLE_VALIDATOR || $user->role_id == ROLE_ADMIN;
+            $this->isAuthorize = in_array($user->role_id, [ROLE_VALIDATOR, ROLE_ADMIN]);
         });
-
         Gate::define('isAdminSwabAntigen', function ($user) {
-            return in_array($user->role_id, [ROLE_VALIDATOR, ROLE_REGISTER, ROLE_ADMIN]);
+            $this->isAuthorize = in_array($user->role_id, [ROLE_VALIDATOR, ROLE_REGISTER, ROLE_ADMIN]);
         });
     }
 }
