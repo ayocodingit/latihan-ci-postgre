@@ -52,10 +52,7 @@ class RegisterRujukanRequest extends FormRequest
             'reg_usia_tahun' => 'nullable|numeric',
             'reg_tempatlahir' => 'nullable',
             'reg_tanggalkunjungan' => 'nullable|date',
-            'status' => [
-                'nullable',
-                new EnumIndexRule(StatusPasienEnum::class),
-            ],
+            'status' => ['nullable', new EnumIndexRule(StatusPasienEnum::class)],
         ];
     }
 }
