@@ -124,9 +124,10 @@ trait RegisterTrait
         foreach ($pasienChanges as $key => $value) {
             if ($key == "updated_at") {
                 continue;
-            } elseif ($key == 'status') {
-                $pasienLogs[$key]["from"] = $this->convertEnumStatusPasien($pasienOrigin[$key]);
-                $pasienLogs[$key]["to"] = $this->convertEnumStatusPasien($value);
+            }
+            if ($key == 'status') {
+                $pasienLogs[$key]["from"] = optional($this->convertEnumStatusPasien($pasienOrigin[$key]))->getValue();
+                $pasienLogs[$key]["to"] = optional($this->convertEnumStatusPasien($value))->getValue();
             } elseif ($key == 'tanggal_lahir') {
                 $pasienLogs[$key]["from"] = date('d-m-Y', strtotime($pasienOrigin[$key]));
                 $pasienLogs[$key]["to"] = date('d-m-Y', strtotime($value));

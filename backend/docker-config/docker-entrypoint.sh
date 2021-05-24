@@ -2,7 +2,6 @@
 
 app=${DOCKER_APP:-app}
 
-php artisan optimize
 
 if [ "$app" = "app" ]; then
 

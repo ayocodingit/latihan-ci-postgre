@@ -1,0 +1,38 @@
+version: '3'
+services:
+  app:
+    build: .
+    restart: always
+    container_name: app
+    tty: true
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    environment:
+      DOCKER_APP: app
+    command: ['/bin/sh', 'php artisan optimize']
+    env_file:
+        - .env
+    networks:
+      - gateway
+    entrypoint: ['/bin/sh', 'docker-config/docker-entrypoint.sh']
+
+  queue:
+    build: .
+    restart: always
+    container_name: queue
+    tty: true
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    environment:
+      DOCKER_APP: queue
+    command: ['/bin/sh', 'php artisan optimize']
+    env_file:
+        - .env
+    networks:
+      - gateway
+    entrypoint: ['/bin/sh', 'docker-config/docker-entrypoint.sh']
+networks:
+  gateway:
+    external: true

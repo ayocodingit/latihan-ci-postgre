@@ -46,9 +46,10 @@ trait SwabAntigenTrait
         foreach ($changes as $key => $value) {
             if ($key == "updated_at") {
                 continue;
-            } elseif ($key == "tujuan_pemeriksaan") {
+            }
+            if ($key == "tujuan_pemeriksaan") {
                 $swabAntigenLogs[$key]["from"] = $origin[$key];
-                $swabAntigenLogs[$key]["to"] = $this->convertTujuanPemeriksaanEnum($value)->getValue();
+                $swabAntigenLogs[$key]["to"] = optional($this->convertTujuanPemeriksaanEnum($value))->getValue();
             } elseif (in_array($key, ['kode_provinsi', 'kode_kota_kabupaten', 'kode_kecamatan', 'kode_kelurahan'])) {
                 $swabAntigenLogs = $this->translateWilayah($swabAntigenLogs, $origin, $key, $value);
             } elseif (in_array($key, ['tanggal_lahir', 'tanggal_periksa', 'tanggal_gejala'])) {
