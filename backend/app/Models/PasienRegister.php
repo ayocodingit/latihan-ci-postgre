@@ -21,7 +21,7 @@ class PasienRegister extends Pivot
         'is_from_migration',
     ];
 
-    private $SELECT_DETAIL = [
+    const SELECT_DETAIL = [
         'register.nomor_register',
         'pasien.kewarganegaraan',
         'pasien.nama_lengkap',
@@ -98,7 +98,7 @@ class PasienRegister extends Pivot
 
     public function scopeSelectDetail($query)
     {
-        return $query->select($this->SELECT_DETAIL);
+        return $query->select(self::SELECT_DETAIL);
     }
 
     public function scopeSelectCustom($query)
