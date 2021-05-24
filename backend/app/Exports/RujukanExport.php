@@ -28,7 +28,7 @@ class RujukanExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
-    public $header = [
+    const HEADER = [
         'No',
         'No Registrasi',
         'Kode Sampel',
@@ -103,5 +103,10 @@ class RujukanExport implements
             'G' => NumberFormat::FORMAT_NUMBER,
             'T' => NumberFormat::FORMAT_NUMBER,
         ];
+    }
+
+    public function headings(): array
+    {
+        return self::HEADER;
     }
 }

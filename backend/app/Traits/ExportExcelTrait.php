@@ -27,11 +27,6 @@ trait ExportExcelTrait
         return $this->title;
     }
 
-    public function headings(): array
-    {
-        return $this->header;
-    }
-
     public function array(): array
     {
         return $this->models;

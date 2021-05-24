@@ -28,7 +28,7 @@ class VerifikasiExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
-    public $header = [
+    const HEADER = [
         'No',
         'No Registrasi',
         'Kode Sampel',
@@ -107,5 +107,10 @@ class VerifikasiExport implements
             'G' => NumberFormat::FORMAT_NUMBER,
             'R' => NumberFormat::FORMAT_NUMBER,
         ];
+    }
+
+    public function headings(): array
+    {
+        return self::HEADER;
     }
 }
