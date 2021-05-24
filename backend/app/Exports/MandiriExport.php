@@ -68,7 +68,7 @@ class MandiriExport implements
             $model->nomor_register,
             $model->nomor_sampel,
             $model->sumber_pasien,
-            optional($this->convertEnumStatusPasien($model->status))->getValue(),
+            $this->convertEnumStatusPasien($model->status),
             $model->nama_lengkap,
             $model->nik . ' ',
             usiaPasien($model->tanggal_lahir, $model->usia_tahun),

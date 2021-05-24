@@ -30,7 +30,7 @@ class SampelRequest extends FormRequest
     {
         $pen_sampel_sumber = $this->get('pen_sampel_sumber');
         $regexRule = 'regex:/^' . Sampel::NUMBER_FORMAT_RUJUKAN . '$/';
-        if ($pen_sampel_sumber == SumberSampelEnum::mandiri()->getValue()) {
+        if ($pen_sampel_sumber == SumberSampelEnum::mandiri()) {
             $regexRule = 'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/';
         }
 

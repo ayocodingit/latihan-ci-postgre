@@ -48,7 +48,7 @@ class CreateSampleListenerLetterListener
         $data['nomor_sampel'] = $sampel->nomor_sampel;
         $data['pasien'] = $pasien;
         $data['validator'] = $sampel->validator;
-        $data['hasil_pemeriksaan'] = $this->convertEnumKesimpulanPemeriksaan($pemeriksaanSampel->kesimpulan_pemeriksaan)->getValue();
+        $data['hasil_pemeriksaan'] = $this->convertEnumKesimpulanPemeriksaan($pemeriksaanSampel->kesimpulan_pemeriksaan);
         $data['ct_normal'] = $pemeriksaanSampel->ct_normal;
         $data['kop_surat'] = $this->getKopSurat();
         $data['umur_pasien'] = $this->hitungUmur($pasien);

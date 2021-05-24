@@ -21,7 +21,7 @@ class PasienRegister extends Pivot
         'is_from_migration',
     ];
 
-    const SELECT_DETAIL = [
+    private const SELECT_DETAIL = [
         'register.nomor_register',
         'pasien.kewarganegaraan',
         'pasien.nama_lengkap',
