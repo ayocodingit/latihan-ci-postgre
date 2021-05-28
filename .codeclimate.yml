@@ -5,5 +5,4 @@ exclude_patterns:
 - "backend/database"
 - "backend/app/Console"
 - "backend/tests"
-- "backend/config"
 
