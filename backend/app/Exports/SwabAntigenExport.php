@@ -23,7 +23,7 @@ class SwabAntigenExport implements
 {
     use ExportExcelTrait;
 
-    const HEADER = [
+    public $header = [
         'No',
         'Nama Pasien',
         'Tanggal Lahir',
@@ -98,10 +98,5 @@ class SwabAntigenExport implements
             'E' => NumberFormat::FORMAT_NUMBER,
             'I' => NumberFormat::FORMAT_NUMBER,
         ];
-    }
-
-    public function headings(): array
-    {
-        return self::HEADER;
     }
 }

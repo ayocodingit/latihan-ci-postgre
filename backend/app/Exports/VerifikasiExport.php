@@ -28,7 +28,7 @@ class VerifikasiExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
-    const HEADER = [
+    public $header = [
         'No',
         'No Registrasi',
         'Kode Sampel',
@@ -74,7 +74,7 @@ class VerifikasiExport implements
             $model->nomor_register,
             $model->nomor_sampel,
             $model->sumber_pasien,
-            $this->convertEnumStatusPasien($model->status),
+            optional($this->convertEnumStatusPasien($model->status))->getValue(),
             $model->nama_lengkap,
             $model->nik . ' ',
             usiaPasien($model->tanggal_lahir, $model->usia_tahun),
@@ -87,12 +87,12 @@ class VerifikasiExport implements
             $model->no_rt,
             $model->no_rw,
             $model->no_hp,
-            $this->convertEnumFasyankesPengirim($model->fasyankes_pengirim),
+            optional($this->convertEnumFasyankesPengirim($model->fasyankes_pengirim))->getValue(),
             $model->fasyankes_nama,
             $model->jenis_sampel_nama,
             $this->hasil_deteksi($model->hasil_deteksi),
             $this->getHasilDeteksiTerkecil($model->hasil_deteksi),
-            $this->convertEnumKesimpulanPemeriksaan($model->kesimpulan_pemeriksaan),
+            optional($this->convertEnumKesimpulanPemeriksaan($model->kesimpulan_pemeriksaan))->getValue(),
             Carbon::parse($model->created_at)->format('Y-m-d'),
             optional($model->waktu_sample_taken)->format('Y-m-d'),
             $model->tanggal_input_hasil,
@@ -107,10 +107,5 @@ class VerifikasiExport implements
             'G' => NumberFormat::FORMAT_NUMBER,
             'R' => NumberFormat::FORMAT_NUMBER,
         ];
-    }
-
-    public function headings(): array
-    {
-        return self::HEADER;
     }
 }

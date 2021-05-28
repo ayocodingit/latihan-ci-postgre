@@ -15,7 +15,7 @@ $factory->define(Register::class, function (Faker $faker) {
         'nomor_rekam_medis' => $faker->randomNumber(),
         'nama_dokter' => $faker->name,
         'no_telp' => $faker->randomNumber(),
-        'sumber_pasien' => SumberPasienEnum::Umum(),
+        'sumber_pasien' => SumberPasienEnum::Umum()->getValue(),
         'register_uuid' => Str::uuid(),
         'jenis_registrasi' => $faker->randomElement(JenisRegistrasiEnum::getAll()),
         'nomor_register' => $faker->randomNumber(),

@@ -28,7 +28,7 @@ class RujukanExport implements
     use ConvertEnumTrait;
     use ExportMappingTrait;
 
-    const HEADER = [
+    public $header = [
         'No',
         'No Registrasi',
         'Kode Sampel',
@@ -72,7 +72,7 @@ class RujukanExport implements
             $model->nomor_register,
             $model->nomor_sampel,
             $model->sumber_pasien,
-            $this->convertEnumStatusPasien($model->status),
+            optional($this->convertEnumStatusPasien($model->status))->getValue(),
             $model->nama_lengkap,
             $model->nik . ' ',
             usiaPasien($model->tanggal_lahir, $model->usia_tahun),
@@ -88,7 +88,7 @@ class RujukanExport implements
             $model->no_rt,
             $model->no_rw,
             $model->no_hp,
-            $this->convertEnumFasyankesPengirim($model->fasyankes_pengirim),
+            optional($this->convertEnumFasyankesPengirim($model->fasyankes_pengirim))->getValue(),
             $model->nama_rs,
             $model->nama_dokter,
             $model->no_telp,
@@ -103,10 +103,5 @@ class RujukanExport implements
             'G' => NumberFormat::FORMAT_NUMBER,
             'T' => NumberFormat::FORMAT_NUMBER,
         ];
-    }
-
-    public function headings(): array
-    {
-        return self::HEADER;
     }
 }

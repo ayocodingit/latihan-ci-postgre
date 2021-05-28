@@ -36,8 +36,8 @@ class TerimaEkstraksiRequest extends FormRequest
                 'required',
                 new EnumValueRule(MetodeEkstraksiEnum::class),
             ],
-            'nama_kit_ekstraksi' => 'required_if:metode_ekstraksi,' . MetodeEkstraksiEnum::Manual(),
-            'alat_ekstraksi' => 'required_if:metode_ekstraksi,' . MetodeEkstraksiEnum::Otomatis(),
+            'nama_kit_ekstraksi' => 'required_if:metode_ekstraksi,' . MetodeEkstraksiEnum::Manual()->getValue(),
+            'alat_ekstraksi' => 'required_if:metode_ekstraksi,' . MetodeEkstraksiEnum::Otomatis()->getValue(),
             'samples' => 'required|array',
             'samples.*.nomor_sampel' => 'required|exists:sampel,nomor_sampel,deleted_at,NULL',
             'catatan_penerimaan' => 'nullable'

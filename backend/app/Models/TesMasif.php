@@ -74,12 +74,16 @@ class TesMasif extends Model
 
     public function setKecamatanIdAttribute($value)
     {
-        $this->attributes['kecamatan_id'] = Kecamatan::where('nama', strtoupper($value))->value('id');
+        $this->attributes['kecamatan_id'] = Kecamatan::where('kota_id', $this->kota_id)
+                                                        ->where('nama', strtoupper($value))
+                                                        ->value('id');
     }
 
     public function setKelurahanIdAttribute($value)
     {
-        $this->attributes['kelurahan_id'] = Kelurahan::where('nama', strtoupper($value))->value('id');
+        $this->attributes['kelurahan_id'] = Kelurahan::where('kecamatan_id', $this->kecamatan_id)
+                                                        ->where('nama', strtoupper($value))
+                                                        ->value('id');
     }
 
     public function setKriteriaAttribute($value)

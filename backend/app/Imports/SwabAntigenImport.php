@@ -11,6 +11,7 @@ use App\Enums\KewarganegaraanEnum;
 use App\Enums\KondisiPasienEnum;
 use App\Enums\TujuanPemeriksaanEnum;
 use App\Models\SwabAntigen;
+use App\Traits\ImportExcelTrait;
 use App\Traits\SwabAntigenTrait;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -25,10 +26,12 @@ class SwabAntigenImport implements WithHeadingRow, WithChunkReading, WithValidat
 {
     use Importable;
     use SwabAntigenTrait;
+    use ImportExcelTrait;
 
     public function onRow(Row $row)
     {
-        SwabAntigen::create($row->toArray() + [
+        $items = $this->getItemsValidated($row->toArray());
+        SwabAntigen::create($items + [
             'nomor_registrasi' => $this->generateNomorRegister()
         ]);
     }
@@ -36,59 +39,59 @@ class SwabAntigenImport implements WithHeadingRow, WithChunkReading, WithValidat
     public function rules(): array
     {
         return [
-            '*.nama_pasien' => 'required',
-            '*.tanggal_lahir' => 'nullable|date|date_format:Y-m-d',
-            '*.usia_tahun' => 'nullable|integer',
-            '*.usia_bulan' => 'nullable|integer',
-            '*.jenis_kelamin' =>  [
+            'nama_pasien' => 'required',
+            'tanggal_lahir' => 'nullable|date|date_format:Y-m-d',
+            'usia_tahun' => 'nullable|integer',
+            'usia_bulan' => 'nullable|integer',
+            'jenis_kelamin' =>  [
                 'nullable',
                 new EnumRule(JenisKelaminEnum::class),
             ],
-            '*.no_telp' => 'required|max:16',
-            '*.warganegara' => [
+            'no_telp' => 'required|max:16',
+            'warganegara' => [
                 'required',
                 new EnumRule(KewarganegaraanEnum::class),
             ],
-            '*.negara_asal' => 'required_if:warganegara,' . KewarganegaraanEnum::WNA(),
-            '*.jenis_identitas' => [
+            'negara_asal' => 'required_if:warganegara,' . KewarganegaraanEnum::WNA(),
+            'jenis_identitas' => [
                 'required',
                 new EnumRule(JenisIdentitasEnum::class),
             ],
-            '*.no_identitas' => 'required|digits:16',
-            '*.kategori' => 'nullable',
-            '*.alamat' => 'required',
-            '*.kode_provinsi' => 'required|integer|exists:provinsi,id',
-            '*.kode_kota_kabupaten' => 'required|integer|exists:kota,id',
-            '*.kode_kecamatan' => 'required|integer|exists:kecamatan,id',
-            '*.kode_kelurahan' => 'required|integer|exists:kelurahan,id',
-            '*.rw' => 'nullable|max:3',
-            '*.rt' => 'nullable|max:3',
-            '*.kondisi_pasien' => [
+            'no_identitas' => 'required|digits:16',
+            'kategori' => 'nullable',
+            'alamat' => 'required',
+            'kode_provinsi' => 'required|integer|exists:provinsi,id',
+            'kode_kota_kabupaten' => 'required|integer|exists:kota,id',
+            'kode_kecamatan' => 'required|integer|exists:kecamatan,id',
+            'kode_kelurahan' => 'required|integer|exists:kelurahan,id',
+            'rw' => 'nullable|max:3',
+            'rt' => 'nullable|max:3',
+            'kondisi_pasien' => [
                 'required',
                 new EnumRule(KondisiPasienEnum::class),
             ],
-            '*.tanggal_gejala' => 'nullable|date|date_format:Y-m-d',
-            '*.jenis_gejala' => [
+            'tanggal_gejala' => 'nullable|date|date_format:Y-m-d',
+            'jenis_gejala' => [
                 'nullable',
                 new EnumRule(JenisGejalaEnum::class),
             ],
-            '*.tujuan_pemeriksaan' => [
+            'tujuan_pemeriksaan' => [
                 'nullable',
                 new EnumIndexRule(TujuanPemeriksaanEnum::class),
             ],
-            '*.tujuan_pemeriksaan_lainnya' => 'required_if:tujuan_pemeriksaan,' . TujuanPemeriksaanEnum::lainnya()->getIndex(),
-            '*.jenis_antigen' => [
+            'tujuan_pemeriksaan_lainnya' => 'required_if:tujuan_pemeriksaan,' . TujuanPemeriksaanEnum::lainnya()->getIndex(),
+            'jenis_antigen' => [
                 'nullable',
                 new EnumRule(JenisAntigenEnum::class),
             ],
-            '*.no_hasil' => [
+            'no_hasil' => [
                 'required',
                 'unique:swab_antigen,no_hasil,NULL,id,deleted_at,NULL',
                 'regex:/^' . SwabAntigen::NO_HASIL . '$/',
                 'distinct'
             ],
-            '*.tanggal_periksa' => 'nullable|date|date_format:Y-m-d',
-            '*.hasil_periksa' =>  [
+            'tanggal_periksa' => 'nullable|date|date_format:Y-m-d',
+            'hasil_periksa' =>  [
                 'required',
                 new EnumRule(HasilPeriksaEnum::class),
             ],

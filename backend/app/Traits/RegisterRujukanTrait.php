@@ -19,14 +19,14 @@ trait RegisterRujukanTrait
     {
         $fasyankes = Fasyankes::find($request->input('reg_fasyankes_id'));
         $sumberPasien = $request->input('reg_sumberpasien_isian');
-        if ($request->input('reg_sumberpasien') == SumberPasienEnum::Umum()) {
+        if ($request->input('reg_sumberpasien') == SumberPasienEnum::Umum()->getValue()) {
             $sumberPasien = $request->input('reg_sumberpasien');
         }
         return [
             'nomor_rekam_medis' => null,
             'creator_user_id' => auth()->user()->id,
             'sumber_pasien' => $sumberPasien,
-            'jenis_registrasi' => JenisRegistrasiEnum::rujukan(),
+            'jenis_registrasi' => JenisRegistrasiEnum::rujukan()->getValue(),
             'dinkes_pengirim' => $request->input('reg_dinkes_pengirim'),
             'other_dinas_pengirim' => $request->input('daerahlain'),
             'fasyankes_id' => $request->input('reg_fasyankes_id'),

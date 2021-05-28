@@ -109,7 +109,7 @@ class SwabAntigenController extends Controller
     {
         SwabAntigen::whereIn('id', $request->input('id'))->update([
             'validator_id' => $request->input('validator_id'),
-            'status' => StatusAntigenEnum::tervalidasi(),
+            'status' => StatusAntigenEnum::tervalidasi()->getValue(),
             'tanggal_validasi' => Carbon::now(),
         ]);
         return response()->json([

@@ -21,7 +21,7 @@ class PasienRegister extends Pivot
         'is_from_migration',
     ];
 
-    const SELECT_DETAIL = [
+    public $selectDetail = [
         'register.nomor_register',
         'pasien.kewarganegaraan',
         'pasien.nama_lengkap',
@@ -55,7 +55,7 @@ class PasienRegister extends Pivot
         'fasyankes.nama as fasyankes_nama'
     ];
 
-    const SELECT_CUSTOM = [
+    public $selectCustom = [
         'register.nomor_register',
         'pasien_register.register_id',
         'pasien_register.pasien_id',
@@ -98,11 +98,11 @@ class PasienRegister extends Pivot
 
     public function scopeSelectDetail($query)
     {
-        return $query->select(self::SELECT_DETAIL);
+        return $query->select($this->selectDetail);
     }
 
     public function scopeSelectCustom($query)
     {
-        return $query->select(self::SELECT_CUSTOM);
+        return $query->select($this->selectCustom);
     }
 }

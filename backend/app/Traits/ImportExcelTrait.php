@@ -94,4 +94,13 @@ trait ImportExcelTrait
     {
         $this->result['message'] = $message;
     }
+
+    public function getItemsValidated(array $rows, bool $isArray = true)
+    {
+        $keyRules = array_keys($this->rules());
+
+        $items = collect($rows)->only($keyRules);
+
+        return $isArray ? $items->toArray() : $items;
+    }
 }
