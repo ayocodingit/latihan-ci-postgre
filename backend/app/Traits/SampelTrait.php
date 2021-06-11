@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\JenisSampel;
 use App\Models\Sampel;
 use App\Enums\JenisSampelEnum;
+use App\Enums\KesimpulanPemeriksaanEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
@@ -64,5 +65,16 @@ trait SampelTrait
             });
         });
         return $record;
+    }
+
+    public function getDescriptionAnalysisComplete($kesimpulanPemeriksaan)
+    {
+        $description = 'Analisis Selesai, hasil ' . strtoupper($kesimpulanPemeriksaan);
+
+        if ($kesimpulanPemeriksaan == KesimpulanPemeriksaanEnum::invalid()) {
+            $description .= ' (perlu di re-PCR)';
+        }
+
+        return $description;
     }
 }

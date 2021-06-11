@@ -14,10 +14,12 @@ use App\Models\LabPCR;
 use Validator;
 use Illuminate\Support\Arr;
 use App\Traits\PemeriksaanTrait;
+use App\Traits\SampelTrait;
 
 class PCRController extends Controller
 {
     use PemeriksaanTrait;
+    use SampelTrait;
 
     public function detail(Request $request, $id)
     {
@@ -204,16 +206,5 @@ class PCRController extends Controller
         ]);
 
         return response()->json(['message' => 'Sampel berhasil ditandai telah dimusnahkan']);
-    }
-
-    public function getDescriptionAnalysisComplete($kesimpulanPemeriksaan)
-    {
-        $description = 'Analisis Selesai, hasil ' . strtoupper($kesimpulanPemeriksaan);
-
-        if ($kesimpulanPemeriksaan == KesimpulanPemeriksaanEnum::invalid()) {
-            $description .= ' (perlu di re-PCR)';
-        }
-
-        return $description;
     }
 }

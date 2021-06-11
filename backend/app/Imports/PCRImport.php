@@ -2,15 +2,9 @@
 
 namespace App\Imports;
 
-use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KesimpulanPemeriksaanEnum;
-use App\Enums\StatusPasienEnum;
-use App\Models\Fasyankes;
-use App\Models\Kota;
 use App\Models\Sampel;
-use App\Rules\ExistsSampel;
 use App\Rules\ExistsSampleReceivedRule;
-use App\Rules\SampleReceivedRule;
 use App\Traits\ImportExcelTrait;
 use App\Traits\RegisterTrait;
 use Illuminate\Support\Collection;
@@ -19,7 +13,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Spatie\Enum\Laravel\Rules\EnumValueRule;
 
-class RegisterRujukanImport implements ToCollection, WithHeadingRow
+class PCRImport implements ToCollection, WithHeadingRow
 {
     use RegisterTrait;
     use Importable;
@@ -27,22 +21,56 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
 
     protected $rulesCTValue = [];
 
+    protected $no = 1;
+
     public function collection(Collection $rows)
     {
         foreach ($rows as $key => $row) {
             if (!$row->get('no')) {
                 continue;
             }
-            $row['kriteria'] = strtolower($row->get('kriteria'));
-            $row['nomor_sampel'] = trim($row->get('nomor_sampel'));
+            $row['no_sample'] = trim($row->get('no_sample'));
+            $row['sampel_id'] = Sampel::where('nomor_sampel', $row['no_sample'])
+                                    ->where('sampel_status', 'pcr_sample_received')
+                                    ->value('id');
+            $row = $this->getTargetGen($row);
             $this->validated($row->toArray(), $key);
             $this->setData($this->mappingData($row));
         }
     }
 
+    private function getTargetGen($row)
+    {
+        $targetGen = [];
+        $this->rulesCTValue = [];
+
+        $ct_keys = array_keys($row->toArray());
+        foreach ($ct_keys as $ct_key) {
+            if (strpos($ct_key, 'ct_') === 0) {
+                $this->setRuleTargetGen($ct_key);
+                $targetGen[] = [
+                    'target_gen' => strtoupper(substr($ct_key, 3)),
+                    'ct_value' => $row[$ct_key],
+                ];
+            }
+        }
+
+        $row['target_gen'] = $targetGen;
+
+        return $row;
+    }
+
+    private function setRuleTargetGen($ct_key)
+    {
+        $this->rulesCTValue[] = [
+            $ct_key => 'required|numeric'
+        ];
+    }
+
     private function mappingData($row)
     {
         return [
+            'no' => $this->no++,
             'nomor_sampel' => $row->get('no_sample'),
             'sampel_id' => $row->get('sampel_id'),
             'kesimpulan_pemeriksaan' => $row->get('interpretasi'),

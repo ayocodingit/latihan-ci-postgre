@@ -28,7 +28,7 @@ class ExistsSampleReceivedRule implements Rule
     {
         return Sampel::where('nomor_sampel', $value)
                     ->where('sampel_status', 'pcr_sample_received')
-                    ->doesntExist();
+                    ->exists();
     }
 
     /**
@@ -38,6 +38,6 @@ class ExistsSampleReceivedRule implements Rule
      */
     public function message()
     {
-        return __('validation.exists', ['attribute' => 'nomor sampel']);
+        return 'Sampel RNA belum Diterima di Lab PCR';
     }
 }
