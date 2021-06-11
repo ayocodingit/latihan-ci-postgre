@@ -30,11 +30,16 @@ trait FilterPcrTrait
     public function scopeFilterSampelStatusPcrAnalyze($query, $filter_inconclusive)
     {
         $query->when(!$filter_inconclusive, function ($query) {
-            $query->whereIn('sampel.sampel_status', ['pcr_sample_analyzed', 'sample_verified', 'sample_invalid']);
-            $query->where('pemeriksaansampel.kesimpulan_pemeriksaan', 'invalid');
+            $query->whereIn('sampel.sampel_status', ['pcr_sample_analyzed', 'sample_verified', 'sample_valid']);
+            $query->whereNotIn('pemeriksaansampel.kesimpulan_pemeriksaan', ['invalid', 'swab_ulang']);
         }, function ($query) {
-            $query->whereIn('sampel.sampel_status', ['pcr_sample_analyzed', 'sample_verified', 'sample_valid', 'inkonklusif']);
-            $query->whereNotIn('pemeriksaansampel.kesimpulan_pemeriksaan', ['swab_ulang']);
+            $query->where(function ($query) {
+                $query->where('sampel.sampel_status', 'sample_invalid')
+                        ->orWhere(function ($query) {
+                            $query->whereIn('sampel.sampel_status', ['pcr_sample_analyzed', 'sample_verified', 'sample_valid'])
+                                    ->where('pemeriksaansampel.kesimpulan_pemeriksaan', 'invalid');
+                        });
+            });
         });
         return $query;
     }

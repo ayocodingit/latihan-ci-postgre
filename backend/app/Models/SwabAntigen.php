@@ -97,7 +97,7 @@ class SwabAntigen extends Model
 
     public function getIsAllowDeleteAttribute()
     {
-        return $this->status_swab_antigen == StatusAntigenEnum::registrasi()->getValue();
+        return $this->status_swab_antigen == StatusAntigenEnum::registrasi();
     }
 
     public function scopeOrder($query, $order, $order_direction)
@@ -150,7 +150,7 @@ class SwabAntigen extends Model
 
     public function getTujuanPemeriksaanAttribute()
     {
-        return TujuanPemeriksaanEnum::make($this->attributes['tujuan_pemeriksaan'])->getValue();
+        return TujuanPemeriksaanEnum::make($this->attributes['tujuan_pemeriksaan']);
     }
 
     public function getStoragePathAttribute()

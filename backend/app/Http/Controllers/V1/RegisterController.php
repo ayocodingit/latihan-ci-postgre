@@ -66,7 +66,6 @@ class RegisterController extends Controller
             $sampelOrigin = clone $sampel;
             $register->update($this->getRequestRegister($request));
             $pasien->update($this->getRequestPasien($request));
-            $sampel->update(['nomor_sampel' => $request->input('reg_sampel')]);
             $registerChanges = $register->getChanges();
             $pasienChanges = $pasien->getChanges();
             $sampelChanges = $sampel->getChanges();

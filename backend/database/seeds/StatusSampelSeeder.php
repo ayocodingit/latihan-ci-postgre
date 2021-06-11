@@ -70,8 +70,8 @@ class StatusSampelSeeder extends Seeder
             ],
             [
                 "sampel_status" => "sample_invalid",
-                "chamber" => "extraction",
-                "deskripsi" => "Sampel Invalid",
+                "chamber" => "pcr",
+                "deskripsi" => "Sampel perlu dilakukan re-PCR",
             ],
             [
                 "sampel_status" => "swab_ulang",

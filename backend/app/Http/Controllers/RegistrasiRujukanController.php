@@ -37,7 +37,7 @@ class RegistrasiRujukanController extends Controller
     {
         DB::beginTransaction();
         try {
-            $nomorRegister = $this->generateNomorRegister(null, JenisRegistrasiEnum::rujukan()->getValue());
+            $nomorRegister = $this->generateNomorRegister(null, JenisRegistrasiEnum::rujukan());
             $storeRegistrasi = ['nomor_register' => $nomorRegister, 'register_uuid' => Str::uuid()];
             $register = new Register();
             $register->fill($this->getRegisterRujukanRequest($request) + $storeRegistrasi)->save();

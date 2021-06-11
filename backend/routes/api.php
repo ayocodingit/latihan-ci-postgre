@@ -45,6 +45,7 @@ Route::middleware('auth:api')->prefix('sample')->group(function () {
     Route::delete('delete/{sampel}', 'SampleController@destroy');
     Route::post('update/{sampel}', 'SampleController@update');
     Route::get('get-sample/{nomor_sampel}', 'SampleController@getSampel');
+    Route::get('logs/{sampel}', 'SampleLogsController');
 });
 
 Route::middleware('auth:api')->prefix('registrasi-mandiri')->group(function () {
@@ -82,9 +83,9 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/pcr')->group(function
     Route::get('detail/{id}', 'PCRController@detail');
     Route::post('edit/{id}', 'PCRController@edit');
     Route::post('terima', 'PCRController@terima');
-    Route::post('invalid/{id}', 'PCRController@invalid');
-    Route::post('input/{id}', 'PCRController@input');
-    Route::post('musnahkan/{id}', 'PCRController@musnahkan');
+    Route::post('invalid/{sampel}', 'PCRController@invalid');
+    Route::post('input/{sampel}', 'PCRController@input');
+    Route::post('musnahkan/{sampel}', 'PCRController@destroy');
     Route::post('import-hasil-pemeriksaan', 'ImportPemeriksaanSampelController@importHasilPemeriksaan');
     Route::post('import-data-hasil-pemeriksaan', 'ImportPemeriksaanSampelController@importDataHasilPemeriksaan');
 });

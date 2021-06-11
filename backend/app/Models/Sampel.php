@@ -200,7 +200,7 @@ class Sampel extends Model
 
     public function getHasilDeteksiAttribute()
     {
-        return optional($this->pemeriksaanSampel)->hasil_deteksi;
+        return $this->pemeriksaanSampel()->value('hasil_deteksi');
     }
 
     public function jenisSampel()

@@ -66,11 +66,15 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
                 $row['kriteria'] = strtolower($row->get('kriteria'));
                 $row['nomor_sampel'] = trim(strtoupper($row->get('nomor_sampel')));
                 $this->validated($row->toArray(), $key);
+                if ($this->result['errors'][$key] != null) {
+                    continue;
+                }
                 $this->saveData($this->getItemsValidated($row->toArray(), false));
-            }
-            if ($this->result['errors_count'] === 0) {
-                $this->setMessage('Sukses import data.');
                 DB::commit();
+            }
+            if ($this->result['errors_count'] > 0) {
+                $this->setMessage('Sukses import data.');
+                DB::rollBack();
             }
         } catch (\Throwable $th) {
             DB::rollBack();

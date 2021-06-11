@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\KesimpulanPemeriksaanEnum;
 use App\Traits\PemeriksaanTrait;
 use Illuminate\Database\Eloquent\Model;
 
@@ -58,5 +59,10 @@ class PemeriksaanSampel extends Model
     public function setHasilDeteksiAttribute($value)
     {
         $this->attributes['hasil_deteksi'] = is_array($value) ? json_encode($value) : $value;
+    }
+
+    public function setKesimpulanPemeriksaanAttribute($value)
+    {
+        $this->attributes['kesimpulan_pemeriksaan'] = $value == KesimpulanPemeriksaanEnum::invalid() ? null : $value;
     }
 }

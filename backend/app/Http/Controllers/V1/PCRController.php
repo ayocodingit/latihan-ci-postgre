@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Enums\KesimpulanPemeriksaanEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InputPCRRequest;
+use App\Http\Requests\InvalidPCRRequest;
 use App\Http\Requests\TerimaPCRRequest;
 use Illuminate\Http\Request;
 use App\Models\Sampel;
@@ -102,86 +105,64 @@ class PCRController extends Controller
         return response()->json(['status' => 201, 'message' => 'Perubahan berhasil disimpan']);
     }
 
-    public function invalid(Request $request, $id)
+    public function invalid(InvalidPCRRequest $request, Sampel $sampel)
     {
         $user = $request->user();
-        $sampel = Sampel::with(['pcr'])->find($id);
-        $v = Validator::make($request->all(), [
-            'catatan_pemeriksaan' => 'required',
-        ]);
-
-        $v->validate();
-
-        $pcr = $sampel->pcr;
-        if (!$pcr) {
-            $pcr = new PemeriksaanSampel();
-            $pcr->sampel_id = $sampel->id;
-            $pcr->user_id = $user->id;
-        }
-        $pcr->catatan_pemeriksaan = $request->catatan_pemeriksaan;
-        $pcr->save();
+        $pemeriksaanSampel = PemeriksaanSampel::firstOrNew(['sampel_id' => $sampel->id]);
+        $pemeriksaanSampel->user_id = $pemeriksaanSampel->user_id ?? $user->id;
+        $pemeriksaanSampel->sampel_id = $sampel->id;
+        $pemeriksaanSampel->catatan_pemeriksaan = $request->catatan_pemeriksaan;
+        $pemeriksaanSampel->kesimpulan_pemeriksaan = null;
+        $pemeriksaanSampel->save();
 
         $sampel->updateState('extraction_sample_reextract', [
             'user_id' => $user->id,
-            'metadata' => $pcr,
-            'description' => 'Invalid PCR, need re-extraction',
+            'metadata' => $pemeriksaanSampel,
+            'description' => 'Sampel perlu dilakukan re-ekstraksi',
         ]);
 
-        return response()->json(['status' => 201, 'message' => 'Perubahan berhasil disimpan']);
+        return response()->json(['message' => 'Perubahan berhasil disimpan']);
     }
 
-    public function input(Request $request, $id)
+    public function input(InputPCRRequest $request, Sampel $sampel)
     {
         $user = $request->user();
-        $sampel = Sampel::with(['pcr'])->find($id);
-        $v = Validator::make($request->all(), [
-            'kesimpulan_pemeriksaan' => 'required',
-            'hasil_deteksi.*.target_gen' => 'required',
-            'hasil_deteksi.*.ct_value' => 'required',
-        ]);
-        if (count($request->hasil_deteksi) < 1) {
-            $v->after(function ($validator) {
-                $validator->errors()->add('samples', 'Minimal 1 hasil deteksi CT Value');
-            });
-        }
+        $pemeriksaanSampel = PemeriksaanSampel::firstOrNew(['sampel_id' => $sampel->id]);
+        $pemeriksaanSampel->user_id = $pemeriksaanSampel->user_id ?? $user->id;
+        $pemeriksaanSampel->sampel_id = $sampel->id;
+        $pemeriksaanSampel->fill($request->validated());
+        $pemeriksaanSampel->save();
 
-        $v->validate();
-
-        $pcr = $sampel->pcr;
-        if (!$pcr) {
-            $pcr = new PemeriksaanSampel();
-            $pcr->sampel_id = $sampel->id;
-            $pcr->user_id = $user->id;
-        }
-        $pcr->tanggal_input_hasil = $request->tanggal_input_hasil;
-        $pcr->jam_input_hasil = $request->jam_input_hasil;
-        $pcr->catatan_pemeriksaan = $request->catatan_pemeriksaan;
-        $pcr->grafik = $request->grafik;
-        $pcr->hasil_deteksi = $this->parseHasilDeteksi($request->hasil_deteksi);
-        $pcr->kesimpulan_pemeriksaan = $request->kesimpulan_pemeriksaan;
-        $pcr->save();
+        $logs = [
+            'user_id' => $user->id,
+            'metadata' => $pemeriksaanSampel,
+            'description' => $this->getDescriptionAnalysisComplete($request->kesimpulan_pemeriksaan)
+        ];
 
         if ($sampel->sampel_status == 'pcr_sample_received') {
-            $new_sampel_status = 'pcr_sample_analyzed';
-            if ($pcr->kesimpulan_pemeriksaan == 'inkonklusif') {
-                $new_sampel_status = 'inkonklusif';
-            }
-            $sampel->updateState($new_sampel_status, [
-                'user_id' => $user->id,
-                'metadata' => $pcr,
-                'description' => 'Analisis Selesai, hasil ' . strtoupper($pcr->kesimpulan_pemeriksaan),
-            ]);
+            $sampel->updateState($this->getStatusSampelInput($request), $logs);
         } else {
-            $sampel->addLog([
-                'user_id' => $user->id,
-                'metadata' => $pcr,
-                'description' => 'Analisis Selesai, hasil ' . strtoupper($pcr->kesimpulan_pemeriksaan),
-            ]);
+            $sampel->addLog($logs);
             $sampel->waktu_pcr_sample_analyzed = date('Y-m-d H:i:s');
             $sampel->save();
         }
 
-        return response()->json(['status' => 201, 'message' => 'Hasil analisa berhasil disimpan']);
+        return response()->json(['message' => 'Hasil analisa berhasil disimpan']);
+    }
+
+    public function getStatusSampelInput($request)
+    {
+        $sampel_status = 'pcr_sample_analyzed';
+
+        if ($request->kesimpulan_pemeriksaan == 'inkonklusif') {
+            $sampel_status = 'inkonklusif';
+        }
+
+        if ($request->kesimpulan_pemeriksaan == KesimpulanPemeriksaanEnum::invalid()) {
+            $sampel_status = 'sample_invalid';
+        }
+
+        return $sampel_status;
     }
 
     /**
@@ -211,28 +192,28 @@ class PCRController extends Controller
         return response()->json(['message' => 'Penerimaan sampel berhasil dicatat'], 200);
     }
 
-    public function musnahkan(Request $request, $id)
+    public function destroy(Request $request, Sampel $sampel)
     {
-        $user = $request->user();
-        $sampel = Sampel::with(['status', 'pcr'])->find($id);
-        if (!$sampel) {
-            return response()->json(['success' => false, 'code' => 422, 'message' => 'Sampel tidak ditemukan'], 422);
-        }
-        $pcr = $sampel->pcr;
-        if (!$pcr) {
-            $pcr = new PemeriksaanSampel();
-            $pcr->sampel_id = $sampel->id;
-            $pcr->user_id = $user->id;
-        }
         $sampel->is_musnah_pcr = true;
         $sampel->save();
 
         $sampel->addLog([
-            'user_id' => $user->id,
-            'metadata' => $pcr,
-            'description' => 'Sample marked as destroyed at PCR chamber',
+            'user_id' => $request->user(),
+            'metadata' => $sampel,
+            'description' => 'Sampel ditandai sebagai dihancurkan di ruang PCR',
         ]);
 
-        return response()->json(['success' => true, 'code' => 201, 'message' => 'Sampel berhasil ditandai telah dimusnahkan']);
+        return response()->json(['message' => 'Sampel berhasil ditandai telah dimusnahkan']);
+    }
+
+    public function getDescriptionAnalysisComplete($kesimpulanPemeriksaan)
+    {
+        $description = 'Analisis Selesai, hasil ' . strtoupper($kesimpulanPemeriksaan);
+
+        if ($kesimpulanPemeriksaan == KesimpulanPemeriksaanEnum::invalid()) {
+            $description .= ' (perlu di re-PCR)';
+        }
+
+        return $description;
     }
 }

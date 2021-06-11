@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM registry.digitalservice.id/proxyjds/library/alpine:3.13
 
 LABEL Maintainer="Jabar Digital Service <digital.service@jabarprov.go.id>" \
     Description="Lightweight container with Nginx 1.16 & PHP-FPM 7.4 based on Alpine Linux (forked from trafex/alpine-nginx-php7)."
@@ -72,7 +72,7 @@ WORKDIR /var/www/html
 COPY --chown=nobody . /var/www/html/
 
 # Install composer from the official image
-COPY --from=composer:2.0.9 /usr/bin/composer /usr/bin/composer
+COPY --from=registry.digitalservice.id/proxyjds/library/composer:2.0.9 /usr/bin/composer /usr/bin/composer
 
 # Run composer install to install the dependencies
 RUN composer install --no-cache --no-dev --optimize-autoloader --prefer-dist --no-interaction --no-progress

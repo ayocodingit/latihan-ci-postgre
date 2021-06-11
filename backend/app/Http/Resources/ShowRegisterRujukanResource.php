@@ -24,7 +24,7 @@ class ShowRegisterRujukanResource extends JsonResource
                 'reg_no' => $register['nomor_register'],
                 'reg_kewarganegaraan' => $pasien->kewarganegaraan,
                 'reg_sumberpasien' => $register['sumber_pasien'],
-                'reg_sumberpasien_isian' => $register['sumber_pasien'] != SumberPasienEnum::Umum()->getValue() ? $register['sumber_pasien'] : null,
+                'reg_sumberpasien_isian' => $register['sumber_pasien'] != SumberPasienEnum::Umum() ? $register['sumber_pasien'] : null,
                 'reg_nama_pasien' => $pasien->nama_lengkap,
                 'reg_nik' => $pasien->nik,
                 'reg_tempatlahir' => $pasien->tempat_lahir,

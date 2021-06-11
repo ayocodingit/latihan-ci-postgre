@@ -52,9 +52,9 @@ class TesMasifController extends Controller
                             $tes_masif = $this->mappingRecordFromTesMasif($tes_masif);
                             $this->addRecordFromTesMasif($tes_masif);
                             TesMasif::find($tes_masif['id'])->update(['available' => false]);
+                            DB::commit();
                         }
                     });
-            DB::commit();
             return response()->json(['message' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();

@@ -57,11 +57,14 @@ class RegisterMandiriRequest extends FormRequest
             'reg_sampel' => [
                 'required',
                 'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/',
-                new UniqueSampel(optional($this)->sampel_id),
+                new UniqueSampel(),
                 'unique:tes_masif,nomor_sampel',
             ],
             'reg_sumberpasien_isian' => 'required_unless:reg_sumberpasien,' . SumberPasienEnum::Umum(),
         ];
+        if ($this->register) {
+            unset($rules['reg_sampel']);
+        }
         return $rules;
     }
 }

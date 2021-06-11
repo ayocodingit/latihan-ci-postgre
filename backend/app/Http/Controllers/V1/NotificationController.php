@@ -31,6 +31,7 @@ class NotificationController extends Controller
 
     public function ekstraksiNotification()
     {
+        $count = 0;
         if (in_array(Auth::user()->role_id, [ROLE_EKSTRAKSI, ROLE_ADMIN])) {
             $count = Sampel::where('sampel_status', 'extraction_sample_reextract')->count('id');
         }
@@ -46,6 +47,7 @@ class NotificationController extends Controller
 
     public function pendaftaranNotification()
     {
+        $count = 0;
         if (in_array(Auth::user()->role_id, [ROLE_REGISTER, ROLE_ADMIN])) {
             $count = TesMasif::where('jenis_registrasi', JenisRegistrasiEnum::mandiri())
                              ->where('available', true)

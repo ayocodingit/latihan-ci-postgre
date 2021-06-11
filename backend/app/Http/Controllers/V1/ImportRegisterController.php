@@ -57,8 +57,8 @@ class ImportRegisterController extends Controller
             $dataChunk = array_chunk($request->input('data'), 50);
             foreach ($dataChunk as $data) {
                 $this->saveDataRegisterRujukan($data);
+                DB::commit();
             }
-            DB::commit();
             return response()->json(['message' => 'Sukses import data.']);
         } catch (\Throwable $th) {
             DB::rollback();
