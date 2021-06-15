@@ -48,19 +48,19 @@ class EkstraksiTest extends TestCase
 
         $this->data_update = [
             'tanggal_penerimaan_sampel' => $this->faker->date(),
-            'jam_penerimaan_sampel' => $this->faker->time(),
+            'jam_penerimaan_sampel' => $this->faker->time('H:i'),
             'petugas_penerima_sampel' => $this->faker->name(),
             'catatan_penerimaan' => $this->faker->paragraph(),
             'operator_ekstraksi' => $this->faker->name(),
             'tanggal_mulai_ekstraksi' => $this->faker->date(),
-            'jam_mulai_ekstraksi' => $this->faker->time(),
+            'jam_mulai_ekstraksi' => $this->faker->time('H:i'),
             'metode_ekstraksi' => MetodeEkstraksiEnum::Manual(),
             'nama_kit_ekstraksi' => $this->faker->name(),
         ];
 
         $this->data_kirim_ekstraksi = [
             'tanggal_pengiriman_rna' => $this->faker->date(),
-            'jam_pengiriman_rna' => $this->faker->time(),
+            'jam_pengiriman_rna' => $this->faker->time('H:i'),
             'nama_pengirim_rna' => $this->faker->name(),
             'lab_pcr_nama' => $this->faker->name(),
             'samples' => [[
@@ -192,7 +192,7 @@ class EkstraksiTest extends TestCase
     {
         // additional data
         $data['tanggal_pengiriman_rna'] = $this->faker->date();
-        $data['jam_pengiriman_rna'] = $this->faker->time();
+        $data['jam_pengiriman_rna'] = $this->faker->time('H:i');
         $data['nama_pengirim_rna'] = $this->faker->name();
         $data['lab_pcr_nama'] = $this->faker->name();
         $data['lab_pcr_id'] = rand(1, 3);

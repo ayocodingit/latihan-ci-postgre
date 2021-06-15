@@ -18,7 +18,7 @@ trait ImportExcelTrait
         'number_row' => []
     ];
 
-    private $sampel = [];
+    private $uniqueBy = [];
 
     public function validated(array $rows, $key)
     {
@@ -29,9 +29,8 @@ trait ImportExcelTrait
             $this->setError($key, $validator->errors()->all());
         }
         $errors = $validator->errors();
-        $isNomorSampel = isset($rows['nomor_sampel']) &&  !$errors->get('nomor_sampel');
-        $isNomorSampelLabkes = isset($rows['nomor_sampel_labkes']) &&  !$errors->get('nomor_sampel_labkes');
-        if ($isNomorSampel || $isNomorSampelLabkes) {
+        $uniqueBy = isset($rows[$this->uniqueBy()]) && !$errors->get($this->uniqueBy());
+        if ($uniqueBy) {
             $this->checkDuplicateSampel($key, $rows);
         }
     }
@@ -72,22 +71,22 @@ trait ImportExcelTrait
 
     public function checkDuplicateSampel($key, $rows)
     {
-        $nomorSampel = $this->getSampel($rows);
+        $uniqueBy = $this->getUniqueBy($rows);
 
-        if (!$nomorSampel) {
+        if (!$uniqueBy) {
             return;
         }
 
-        if (in_array($nomorSampel, $this->sampel)) {
-            $this->setError($key, __('validation.unique', ['attribute' => 'nomor sampel']));
+        if (in_array($uniqueBy, $this->uniqueBy)) {
+            $this->setError($key, __('validation.unique', ['attribute' => $this->uniqueBy()]));
         } else {
-            $this->sampel[] = $nomorSampel;
+            $this->sampel[] = $uniqueBy;
         }
     }
 
-    public function getSampel($rows)
+    public function getUniqueBy($rows)
     {
-        return $rows['nomor_sampel_labkes'] ?? $rows['nomor_sampel'] ?? null;
+        return $rows[$this->uniqueBy()] ?? null;
     }
 
     public function setMessage($message)

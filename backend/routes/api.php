@@ -81,7 +81,7 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/ekstraksi')->group(fu
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/pcr')->group(function () {
     Route::get('detail/{id}', 'PCRController@detail');
-    Route::post('edit/{id}', 'PCRController@edit');
+    Route::post('edit/{sampel}', 'PCRController@edit');
     Route::post('terima', 'PCRController@terima');
     Route::post('invalid/{sampel}', 'PCRController@invalid');
     Route::post('input/{sampel}', 'PCRController@input');

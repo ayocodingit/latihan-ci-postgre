@@ -4,14 +4,15 @@ namespace App\Traits;
 
 trait OrderTrait
 {
-    private $waktu_status_sampel = [
+    private $order_sampel_allowed = [
         'waktu_extraction_sample_sent',
         'waktu_sample_taken',
         'waktu_extraction_sample_extracted',
         'waktu_extraction_sample_reextract',
         'waktu_pcr_sample_received',
         'waktu_pcr_sample_analyzed',
-        'waktu_waiting_sample'
+        'waktu_waiting_sample',
+        'nomor_register'
     ];
 
     public function scopeOrderPasien($query, $order, $order_direction)
@@ -69,13 +70,10 @@ trait OrderTrait
         $query->when($order == 'tanggal_taken', function ($query) use ($order_direction) {
             $query->orderBy('sampel.waktu_sample_taken', $order_direction);
         });
-        $query->when($order == 'nomor_register', function ($query) use ($order_direction) {
-            $query->orderBy('sampel.nomor_register', $order_direction);
-        });
         $query->when($order == 'tgl_input_sampel', function ($query) use ($order_direction) {
             $query->orderBy('sampel.created_at', $order_direction);
         });
-        $query->when(in_array($order, $this->waktu_status_sampel), function ($query) use ($order_direction, $order) {
+        $query->when(in_array($order, $this->order_sampel_allowed), function ($query) use ($order_direction, $order) {
             $query->orderBy("sampel.$order", $order_direction);
         });
         return $query;

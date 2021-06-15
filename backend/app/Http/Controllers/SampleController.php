@@ -99,7 +99,7 @@ class SampleController extends Controller
     public function getSampel($nomor_sampel)
     {
         $sampel = Sampel::select('nomor_sampel', 'sampel.id')
-                    ->where('nomor_sampel', 'ilike', $nomor_sampel)
+                    ->where('nomor_sampel', strtoupper($nomor_sampel))
                     ->get();
         return response()->json($sampel);
     }

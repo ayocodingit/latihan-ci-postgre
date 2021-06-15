@@ -25,7 +25,7 @@ class RegistrasiRujukanController extends Controller
     public function cekData(Request $request)
     {
         $nomor = $request->get('nomor_sampel');
-        $sampel = Sampel::where('nomor_sampel', 'ilike', $nomor)->firstOrFail();
+        $sampel = Sampel::where('nomor_sampel', strtoupper($nomor))->firstOrFail();
         if ($sampel->register_id != null) {
             return response()->json(['message' => 'Sampel sudah memiliki data pasien'], Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {

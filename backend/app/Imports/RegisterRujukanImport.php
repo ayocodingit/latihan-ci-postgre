@@ -66,6 +66,14 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
         'hasil_rdt' => 'nullable'
     ];
 
+    /**
+     * @return string
+     */
+    public function uniqueBy()
+    {
+        return 'nomor_sampel';
+    }
+
     public function collection(Collection $rows)
     {
         $this->checkValidLimit($rows);
@@ -74,7 +82,7 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
                 continue;
             }
             $row['kriteria'] = strtolower($row->get('kriteria'));
-            $row['nomor_sampel'] = trim($row->get('nomor_sampel'));
+            $row['nomor_sampel'] = strtoupper(trim($row->get('nomor_sampel')));
             $this->validated($row->toArray(), $key);
             $this->setData($this->mappingData($row));
         }

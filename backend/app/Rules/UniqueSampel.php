@@ -28,7 +28,7 @@ class UniqueSampel implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Sampel::where('nomor_sampel', 'ilike', $value)
+        return Sampel::where('nomor_sampel', strtoupper($value))
                     ->where(function ($query) {
                         if ($this->id) {
                             $query->where('id', '!=', $this->id);

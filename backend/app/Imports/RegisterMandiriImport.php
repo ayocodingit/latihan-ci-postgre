@@ -54,6 +54,14 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
         'usia_bulan' => 'nullable|integer',
     ];
 
+    /**
+     * @return string
+     */
+    public function uniqueBy()
+    {
+        return 'nomor_sampel';
+    }
+
     public function collection(Collection $rows)
     {
         DB::beginTransaction();

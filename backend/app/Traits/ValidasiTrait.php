@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\FasyankesPengirimEnum;
 use App\Enums\KesimpulanPemeriksaanEnum;
 use App\Events\SampleValidatedEvent;
 use Illuminate\Http\Response;
@@ -33,7 +34,11 @@ trait ValidasiTrait
 
     private function sendSampleValidPositif($sampel)
     {
-        if ($sampel->pemeriksaanSampel->kesimpulan_pemeriksaan == KesimpulanPemeriksaanEnum::positif()) {
+        if (
+            $sampel->pemeriksaanSampel->kesimpulan_pemeriksaan == KesimpulanPemeriksaanEnum::positif() &&
+            $sampel->register->fasyankes()->value('id_fasyankes_pelaporan') &&
+            $sampel->register->fasyankes()->value('tipe') == FasyankesPengirimEnum::puskesmas()
+        ) {
             event(new SampleValidatedEvent($sampel));
         }
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\V1;
 
 use App\Enums\KesimpulanPemeriksaanEnum;
+use App\Enums\LabPCREnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EditPCRRequest;
 use App\Http\Requests\InputPCRRequest;
 use App\Http\Requests\InvalidPCRRequest;
 use App\Http\Requests\TerimaPCRRequest;
@@ -11,7 +13,6 @@ use Illuminate\Http\Request;
 use App\Models\Sampel;
 use App\Models\PemeriksaanSampel;
 use App\Models\LabPCR;
-use Validator;
 use Illuminate\Support\Arr;
 use App\Traits\PemeriksaanTrait;
 use App\Traits\SampelTrait;
@@ -33,78 +34,29 @@ class PCRController extends Controller
         return response()->json(['status' => 200, 'message' => 'success', 'data' => $model]);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(EditPCRRequest $request, Sampel $sampel)
     {
-        $user = $request->user();
-        $sampel = Sampel::with(['pcr'])->find($id);
-        if ($sampel->sampel_status == 'pcr_sample_received') {
-            $v = Validator::make($request->all(), [
-                'tanggal_penerimaan_sampel' => 'required',
-                'jam_penerimaan_sampel' => 'required',
-                'petugas_penerima_sampel' => 'required',
-                'catatan_penerimaan' => 'nullable',
-                'operator_ekstraksi' => 'required',
-                'tanggal_mulai_ekstraksi' => 'required',
-                'jam_mulai_ekstraksi' => 'required',
-                'metode_ekstraksi' => 'required',
-                'nama_kit_ekstraksi' => 'required',
-            ]);
-        } else {
-            $v = Validator::make($request->all(), [
-                'tanggal_penerimaan_sampel' => 'required',
-                'jam_penerimaan_sampel' => 'required',
-                'petugas_penerima_sampel' => 'required',
-                'operator_ekstraksi' => 'required',
-                'tanggal_mulai_ekstraksi' => 'required',
-                'jam_mulai_ekstraksi' => 'required',
-                'metode_ekstraksi' => 'required',
-                'nama_kit_ekstraksi' => 'required',
-                'tanggal_pengiriman_rna' => 'required',
-                'jam_pengiriman_rna' => 'required',
-                'nama_pengirim_rna' => 'required',
-                'lab_pcr_id' => 'required',
-                'catatan_pengiriman' => 'nullable',
-                'lab_pcr_nama' => 'required_if:lab_pcr_id,999999',
-            ]);
-        }
         $lab_pcr = LabPCR::find($request->lab_pcr_id);
 
-        if (!$lab_pcr) {
-            $v->after(function ($validator) {
-                $validator->errors()->add('samples', 'Lab PCR Tidak ditemukan');
-            });
-        }
-
-        $v->validate();
-
-        $pcr = $sampel->pcr;
-        if (!$pcr) {
-            $pcr = new PemeriksaanSampel();
-            $pcr->sampel_id = $sampel->id;
-            $pcr->user_id = $user->id;
-        }
-        $pcr->tanggal_penerimaan_sampel = parseDate($request->tanggal_penerimaan_sampel);
-        $pcr->jam_penerimaan_sampel = parseTime($request->jam_penerimaan_sampel);
-        $pcr->petugas_penerima_sampel = $request->petugas_penerima_sampel;
-        $pcr->operator_ekstraksi = $request->operator_ekstraksi;
-        $pcr->tanggal_mulai_ekstraksi = parseDate($request->tanggal_mulai_ekstraksi);
-        $pcr->jam_mulai_ekstraksi = parseTime($request->jam_mulai_ekstraksi);
-        $pcr->metode_ekstraksi = $request->metode_ekstraksi;
-        $pcr->nama_kit_ekstraksi = $request->nama_kit_ekstraksi;
-        $pcr->tanggal_pengiriman_rna = parseDate($request->tanggal_pengiriman_rna);
-        $pcr->jam_pengiriman_rna = parseTime($request->jam_pengiriman_rna);
-        $pcr->nama_pengirim_rna = $request->nama_pengirim_rna;
-        $pcr->catatan_penerimaan = $request->catatan_penerimaan;
-        $pcr->catatan_pengiriman = $request->catatan_pengiriman;
+        $pcr = PemeriksaanSampel::firstOrNew(['sampel_id' => $sampel->id]);
+        $pcr->user_id = $pcr->user_id ?? $request->user()->id;
+        $pcr->sampel_id = $sampel->id;
+        $pcr->fill($request->validated() + [
+            'petugas_penerima_sampel_rna' => $request->petugas_penerima_sampel
+        ]);
         $pcr->save();
 
         $sampel->lab_pcr_id = $request->lab_pcr_id;
-        $sampel->lab_pcr_nama = $lab_pcr->id == 999999 ? $request->lab_pcr_nama : $lab_pcr->nama;
-        $sampel->waktu_pcr_sample_received = $pcr->tanggal_mulai_ekstraksi ? date('Y-m-d H:i:s', strtotime($pcr->tanggal_mulai_ekstraksi . ' ' . $pcr->jam_mulai_ekstraksi)) : null;
-        $sampel->waktu_extraction_sample_sent = $pcr->tanggal_pengiriman_rna ? date('Y-m-d H:i:s', strtotime($pcr->tanggal_pengiriman_rna . ' ' . $pcr->jam_pengiriman_rna)) : null;
-        $sampel->save();
+        $sampel->lab_pcr_nama = $lab_pcr->id == LabPCREnum::lainnya()->getIndex() ? $request->lab_pcr_nama : $lab_pcr->nama;
+        if ($pcr->tanggal_mulai_ekstraksi && $pcr->jam_mulai_ekstraksi) {
+            $sampel->waktu_pcr_sample_received = $pcr->tanggal_mulai_ekstraksi . ' ' .  $pcr->jam_mulai_ekstraksi;
+        }
 
-        return response()->json(['status' => 201, 'message' => 'Perubahan berhasil disimpan']);
+        if ($pcr->tanggal_pengiriman_rna && $pcr->jam_pengiriman_rna) {
+            $sampel->waktu_extraction_sample_sent =  $pcr->tanggal_pengiriman_rna . ' ' .  $pcr->jam_pengiriman_rna;
+        }
+        $sampel->save();
+        return response()->json(['message' => 'Perubahan berhasil disimpan']);
     }
 
     public function invalid(InvalidPCRRequest $request, Sampel $sampel)
@@ -200,7 +152,7 @@ class PCRController extends Controller
         $sampel->save();
 
         $sampel->addLog([
-            'user_id' => $request->user(),
+            'user_id' => $request->user()->id,
             'metadata' => $sampel,
             'description' => 'Sampel ditandai sebagai dihancurkan di ruang PCR',
         ]);

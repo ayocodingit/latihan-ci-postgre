@@ -107,6 +107,13 @@ trait FilterTrait
                 $query->where('sampel.sampel_status', $value);
             });
         });
+        $query->filterJenisSampel($key, $value);
+        $query->filterSampelLengkap($key, $value);
+        return $query;
+    }
+
+    public function scopeFilterJenisSampel($query, $key, $value)
+    {
         $query->when($key == 'jenis_sampel_nama', function ($query) use ($value) {
             $isValueInt = filter_var($value, FILTER_VALIDATE_INT);
             $query->when($isValueInt, function ($query) use ($value) {
@@ -115,7 +122,6 @@ trait FilterTrait
                 $query->where('sampel.jenis_sampel_nama', 'ilike', '%' . $value . '%');
             });
         });
-        $query->filterSampelLengkap($key, $value);
         return $query;
     }
 

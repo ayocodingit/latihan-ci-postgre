@@ -20,11 +20,11 @@ class CreateSwabAntigensTable extends Migration
             $table->date('tanggal_lahir')->nullable();
             $table->integer('usia_tahun')->nullable();
             $table->integer('usia_bulan')->nullable();
-            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
+            $table->char('jenis_kelamin', 1)->nullable();
             $table->string('no_telp', 16)->nullable();
-            $table->enum('warganegara', ['WNA', 'WNI'])->nullable();
+            $table->string('warganegara')->nullable();
             $table->string('negara_asal')->nullable();
-            $table->enum('jenis_identitas', ['ktp', 'paspor'])->nullable();
+            $table->string('jenis_identitas')->nullable();
             $table->string('no_identitas', 16);
             $table->string('kategori')->nullable()->index();
             $table->string('alamat')->nullable();

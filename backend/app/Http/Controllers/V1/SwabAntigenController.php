@@ -120,10 +120,13 @@ class SwabAntigenController extends Controller
     public function import(ImportExcelRequest $request)
     {
         $import = new SwabAntigenImport();
+        DB::beginTransaction();
         try {
             $import->import($request->file('register_file'));
+            DB::commit();
             return response()->json(['message' => 'Sukses import data.']);
         } catch (ValidationException $e) {
+            DB::rollback();
             $errors = [];
             foreach ($e->failures() as $key => $failure) {
                 $errors[$key]['row'] = $failure->row();

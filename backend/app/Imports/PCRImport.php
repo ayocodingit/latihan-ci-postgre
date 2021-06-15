@@ -23,13 +23,21 @@ class PCRImport implements ToCollection, WithHeadingRow
 
     protected $no = 1;
 
+    /**
+     * @return string
+     */
+    public function uniqueBy()
+    {
+        return 'no_sample';
+    }
+
     public function collection(Collection $rows)
     {
         foreach ($rows as $key => $row) {
             if (!$row->get('no')) {
                 continue;
             }
-            $row['no_sample'] = trim($row->get('no_sample'));
+            $row['no_sample'] = strtoupper(trim($row->get('no_sample')));
             $row['sampel_id'] = Sampel::where('nomor_sampel', $row['no_sample'])
                                     ->where('sampel_status', 'pcr_sample_received')
                                     ->value('id');
