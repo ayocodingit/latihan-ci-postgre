@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\JenisRegistrasiEnum;
 use App\Models\Register;
 use Illuminate\Support\Facades\DB;
 
@@ -26,9 +27,9 @@ trait RegisterTrait
             $date = date('Ymd');
         }
         $kodeRegistrasi = 'L';
-        if ($jenisRegistrasi === 'mandiri') {
+        if ($jenisRegistrasi == JenisRegistrasiEnum::mandiri()) {
             $kodeRegistrasi = 'L';
-        } elseif ($jenisRegistrasi === 'rujukan') {
+        } elseif ($jenisRegistrasi == JenisRegistrasiEnum::rujukan()) {
             $kodeRegistrasi = 'R';
         }
         $res = DB::select(

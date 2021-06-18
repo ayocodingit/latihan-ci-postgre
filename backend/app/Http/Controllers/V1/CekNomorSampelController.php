@@ -22,7 +22,7 @@ class CekNomorSampelController extends Controller
             $this->setNotValidResult($validator->errors()->first('nomor_sampel'));
             return response()->json($this->result);
         }
-        $sampel = Sampel::where('nomor_sampel', strtoupper($request->input('nomor_sampel')))->first();
+        $sampel = Sampel::where('nomor_sampel', $request->input('nomor_sampel'))->first();
         if ($sampel->sampel_status != $request->input('sampel_status')) {
             $tahapan = $sampel->status ? $sampel->status->deskripsi : $sampel->sampel_status;
             $this->setNotValidResult("Status sampel sudah pada tahap $tahapan");

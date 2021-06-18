@@ -28,7 +28,7 @@ class ExistsSampel implements Rule
      */
     public function passes($attribute, $value)
     {
-        $sampel = Sampel::where('nomor_sampel', strtoupper($value));
+        $sampel = Sampel::where('nomor_sampel', $value);
         if ($sampel->doesntExist()) {
             $this->error = 'exists';
         }

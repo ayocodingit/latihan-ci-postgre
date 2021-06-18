@@ -77,6 +77,8 @@ trait ImportExcelTrait
             return;
         }
 
+        $uniqueBy = strtoupper($uniqueBy);
+
         if (in_array($uniqueBy, $this->uniqueBy)) {
             $this->setError($key, __('validation.unique', ['attribute' => $this->uniqueBy()]));
         } else {

@@ -37,7 +37,7 @@ class PCRImport implements ToCollection, WithHeadingRow
             if (!$row->get('no')) {
                 continue;
             }
-            $row['no_sample'] = strtoupper(trim($row->get('no_sample')));
+            $row['no_sample'] = trim($row->get('no_sample'));
             $row['sampel_id'] = Sampel::where('nomor_sampel', $row['no_sample'])
                                     ->where('sampel_status', 'pcr_sample_received')
                                     ->value('id');

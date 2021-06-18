@@ -27,7 +27,7 @@ class SwabAntigenImport implements WithHeadingRow, WithChunkReading, WithValidat
     use Importable;
     use SwabAntigenTrait;
     use ImportExcelTrait;
-
+  
     const RULES = [
         'nama_pasien' => 'required',
         'tanggal_lahir' => 'nullable|date|date_format:Y-m-d',

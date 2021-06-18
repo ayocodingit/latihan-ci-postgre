@@ -22,16 +22,18 @@ class PCRController extends Controller
     use PemeriksaanTrait;
     use SampelTrait;
 
-    public function detail(Request $request, $id)
+    public function detail(Sampel $sampel)
     {
-        $model = Sampel::with(['pcr', 'status', 'ekstraksi', 'pemeriksaanSampel'])->find($id);
-        $model->log_pcr = $model->logs()
-            ->whereIn('sampel_status', ['pcr_sample_received', 'pcr_sample_analyzed', 'extraction_sample_reextract'])
-            ->orderByDesc('created_at')
-            ->get();
-        $model['re_pcr'] = Sampel::find($id)->logs->where('sampel_status', 'pcr_sample_received')->count() >= 2 ? 're-PCR' : null;
+        $model = $sampel->load(['pcr', 'status', 'ekstraksi', 'pemeriksaanSampel']);
 
-        return response()->json(['status' => 200, 'message' => 'success', 'data' => $model]);
+        $sampel_status = ['pcr_sample_received', 'pcr_sample_analyzed', 'extraction_sample_reextract'];
+
+        $model->log_pcr = $model->logs()
+                                ->whereIn('sampel_status', $sampel_status)
+                                ->orderByDesc('created_at')
+                                ->get();
+
+        return response()->json(['data' => $model]);
     }
 
     public function edit(EditPCRRequest $request, Sampel $sampel)

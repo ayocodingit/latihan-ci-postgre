@@ -53,7 +53,6 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
         'usia_tahun' => 'nullable|integer',
         'usia_bulan' => 'nullable|integer',
     ];
-
     /**
      * @return string
      */

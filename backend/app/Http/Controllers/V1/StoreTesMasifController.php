@@ -23,19 +23,24 @@ class StoreTesMasifController extends Controller
     {
         $dataTesMasif = $request->input('data');
         foreach ($dataTesMasif as $row) {
-            try {
-                if (!$this->isValidTesMasif($row)) {
-                    continue;
-                }
-                $row['kewarganeraan'] = $row['kewarganegaraan'];
-                TesMasif::create($row);
-                $this->berhasil[] = $row['nomor_sampel'];
-            } catch (\Throwable $th) {
-                $this->setResultGagal($row['nomor_sampel'], 'errors', 'Internal Server Error');
-                Log::alert($th->getMessage());
+            if (!$this->isValidTesMasif($row)) {
+                continue;
             }
+            $this->saveData($row);
         }
         return $this->getResponse(count($dataTesMasif));
+    }
+
+    private function saveData($row)
+    {
+        try {
+            $row['kewarganeraan'] = $row['kewarganegaraan'];
+            TesMasif::create($row);
+            $this->berhasil[] = $row['nomor_sampel'];
+        } catch (\Throwable $th) {
+            $this->setResultGagal($row['nomor_sampel'], 'errors', 'Internal Server Error');
+            Log::alert($th->getMessage());
+        }
     }
 
     private function getResponse($countDataTesMasif)

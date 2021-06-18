@@ -80,7 +80,7 @@ Route::middleware('auth:api')->namespace('V1')->prefix('v1/ekstraksi')->group(fu
 });
 
 Route::middleware('auth:api')->namespace('V1')->prefix('v1/pcr')->group(function () {
-    Route::get('detail/{id}', 'PCRController@detail');
+    Route::get('detail/{sampel}', 'PCRController@detail');
     Route::post('edit/{sampel}', 'PCRController@edit');
     Route::post('terima', 'PCRController@terima');
     Route::post('invalid/{sampel}', 'PCRController@invalid');

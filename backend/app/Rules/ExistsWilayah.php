@@ -10,6 +10,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ExistsWilayah implements Rule
 {
+
     /**
      * Create a new rule instance.
      *
@@ -30,21 +31,32 @@ class ExistsWilayah implements Rule
     public function passes($attribute, $value)
     {
         $value = getConvertCodeDagri($value);
+
+        if ($value) {
+            return $this->isExistWilayah($attribute, $value);
+        }
+
+        return true;
+    }
+
+    protected function isExistWilayah($attribute, $value)
+    {
         switch ($attribute) {
             case 'provinsi_id':
-                $models = Provinsi::find($value);
+                $result = Provinsi::where('id', $value)->exists();
                 break;
             case 'kota_id':
-                $models = Kota::find($value);
+                $result = Kota::where('id', $value)->exists();
                 break;
             case 'kecamatan_id':
-                $models = Kecamatan::find($value);
+                $result = Kecamatan::where('id', $value)->exists();
                 break;
             case 'kelurahan_id':
-                $models = Kelurahan::find($value);
+                $result = Kelurahan::where('id', $value)->exists();
                 break;
         }
-        return $models ? true : false;
+
+        return $result;
     }
 
     /**
