@@ -37,7 +37,7 @@ class CreateSampleListenerLetterListener
     {
         $sampel = $event->sampel;
         $pdfFile = $this->createPDF($sampel);
-        $fileName = "SURAT_HASIL_{$sampel->no_hasil}_{$this->timestamp}.pdf";
+        $fileName = "SURAT_HASIL_{$sampel->nomor_sampel}_{$this->timestamp}.pdf";
         return $this->savePDF($sampel, $pdfFile, $fileName);
     }
 
@@ -52,7 +52,7 @@ class CreateSampleListenerLetterListener
         $data['ct_normal'] = $pemeriksaanSampel->ct_normal;
         $data['kop_surat'] = $this->getKopSurat();
         $data['umur_pasien'] = $this->hitungUmur($pasien);
-        $data['ct_value'] = $this->getHasilDeteksiTerkecil($sampel->hasil_deteksi);
+        $data['ct_value'] = $this->getHasilDeteksiTerkecil($sampel->hasil_deteksi, $pemeriksaanSampel->kesimpulan_pemeriksaan);
         $data['register'] = $sampel->register;
         $data['tanggal_registrasi'] = $this->formatTanggalIndo($sampel->waktu_sample_taken);
         $data['tanggal_periksa'] = $this->formatTanggalIndo($pemeriksaanSampel->tanggal_mulai_pemeriksaan);

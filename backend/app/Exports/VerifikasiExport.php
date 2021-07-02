@@ -91,7 +91,7 @@ class VerifikasiExport implements
             $model->fasyankes_nama,
             $model->jenis_sampel_nama,
             $this->hasil_deteksi($model->hasil_deteksi),
-            $this->getHasilDeteksiTerkecil($model->hasil_deteksi),
+            $this->getHasilDeteksiTerkecil($model->hasil_deteksi, $model->kesimpulan_pemeriksaan),
             $this->convertEnumKesimpulanPemeriksaan($model->kesimpulan_pemeriksaan),
             Carbon::parse($model->created_at)->format('Y-m-d'),
             optional($model->waktu_sample_taken)->format('Y-m-d'),

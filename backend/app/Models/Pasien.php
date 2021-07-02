@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Enums\StatusPasienEnum;
+use App\Traits\ConvertEnumTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Pasien extends Model
 {
-    const STATUSES = STATUSES;
+    use ConvertEnumTrait;
 
     protected $appends = ['status_name'];
 
@@ -72,7 +73,7 @@ class Pasien extends Model
 
     public function getStatusNameAttribute()
     {
-        return $this->status ? self::STATUSES[$this->status] : null;
+        return $this->convertEnumStatusPasien($this->status);
     }
 
     public function registers()

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\KesimpulanPemeriksaanEnum;
 use Illuminate\Http\Request;
 
 trait ExportMappingTrait
@@ -33,11 +34,12 @@ trait ExportMappingTrait
         return $result;
     }
 
-    private function getHasilDeteksiTerkecil($hasil)
+    private function getHasilDeteksiTerkecil($hasil, $kesimpulan_pemeriksaan = null)
     {
         if (!$hasil) {
             return '-';
         }
+
         $result = collect($hasil)
             ->whereNotNull('ct_value')
             ->whereNotIn('target_gen', ['IC','ic'])
@@ -45,6 +47,9 @@ trait ExportMappingTrait
             ->where('ct_value', '>', 0)
             ->sortBy('ct_value')
             ->first();
-        return $result ? round($result['ct_value'], 2) : '-';
+
+        $isNotResultNegative = $kesimpulan_pemeriksaan != KesimpulanPemeriksaanEnum::negatif();
+
+        return $result && $isNotResultNegative ? round($result['ct_value'], 2) : '-';
     }
 }

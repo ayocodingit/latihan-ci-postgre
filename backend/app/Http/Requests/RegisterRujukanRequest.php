@@ -35,7 +35,7 @@ class RegisterRujukanRequest extends FormRequest
             'reg_sumberpasien' => 'required',
             'reg_sumberpasien_isian' => 'required_unless:reg_sumberpasien,' . SumberPasienEnum::Umum(),
             'reg_nama_pasien' => 'required',
-            'reg_nik'  => 'nullable|digits:16',
+            'reg_nik' => 'required|digits:16',
             'reg_nohp' => 'nullable',
             'reg_kota_id' => 'required|numeric|exists:kota,id',
             'reg_provinsi_id' => 'nullable|numeric|exists:provinsi,id',

@@ -15,6 +15,7 @@ use App\Models\Ekstraksi;
 use App\Models\PemeriksaanSampel;
 use App\Models\LabPCR;
 use App\Traits\SampelTrait;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
 class EkstraksiController extends Controller
@@ -74,7 +75,7 @@ class EkstraksiController extends Controller
         $ekstraksi->user_id = $user->id;
         $ekstraksi->catatan_pengiriman = $request->input('alasan');
         $ekstraksi->save();
-        $this->updateState($sampel, 'sample_invalid', $ekstraksi, 'Sample marked as invalid');
+        $this->updateState($sampel, 'sample_invalid', $ekstraksi, 'Sampel ditandai sebagai tidak valid');
         return response()->json(['message' => 'Sampel berhasil ditandai sebagai invalid']);
     }
 
@@ -129,7 +130,7 @@ class EkstraksiController extends Controller
         $sampel->addLog([
             'user_id' => $user->id,
             'metadata' => $sampel,
-            'description' => 'Sample marked as destroyed at extraction chamber',
+            'description' => 'Sampel ditandai sebagai dihancurkan di ruang ekstraksi',
         ]);
         $sampel->save();
         return response()->json(['message' => 'Sampel berhasil ditandai telah dimusnahkan']);
@@ -146,7 +147,7 @@ class EkstraksiController extends Controller
         $pemeriksaanSampel->sampel_id = $sampel->id;
         $pemeriksaanSampel->kesimpulan_pemeriksaan = 'sampel kurang';
         $pemeriksaanSampel->save();
-        $this->updateState($sampel, 'pcr_sample_analyzed', $pemeriksaanSampel, 'Sample marked as insufficient');
+        $this->updateState($sampel, 'pcr_sample_analyzed', $pemeriksaanSampel, 'Sampel ditandai sebagai tidak cukup');
         return response()->json(['message' => 'Sampel berhasil ditandai sebagai sampel kurang']);
     }
 
@@ -159,7 +160,11 @@ class EkstraksiController extends Controller
         $pemeriksaanSampel->kesimpulan_pemeriksaan = 'swab_ulang';
         $pemeriksaanSampel->catatan_pemeriksaan = $request->input('alasan');
         $pemeriksaanSampel->save();
-        $this->updateState($sampel, 'swab_ulang', $pemeriksaanSampel, 'Sample marked as need to be re-swab');
+
+        $this->updateState($sampel, 'swab_ulang', $pemeriksaanSampel, 'Sampel ditandai sebagai perlu di-swab ulang');
+
+        $sampel->update(['waktu_pcr_sample_analyzed' => Carbon::now()]);
+
         return response()->json(['message' => 'Sampel berhasil ditandai sebagai sampel yang perlu swab ulang']);
     }
 

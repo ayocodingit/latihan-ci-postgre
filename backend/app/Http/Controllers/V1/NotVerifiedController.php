@@ -43,7 +43,7 @@ class NotVerifiedController extends Controller
     public function export(Request $request)
     {
         $models = $this->index($request);
-        $namaFile = 'Belum diverifikasi-' . time() . '.xlsx';
+        $namaFile = 'Belum-diverifikasi-' . time() . '.xlsx';
         return Excel::download(new VerifikasiExport($models, $this->getNomorUrut($request)), $namaFile);
     }
 }

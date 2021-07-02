@@ -2,11 +2,11 @@
 
 namespace App\Imports;
 
+use App\Enums\FormatSampelEnum;
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\StatusPasienEnum;
 use App\Models\Fasyankes;
 use App\Models\Kota;
-use App\Models\Sampel;
 use App\Rules\ExistsSampel;
 use App\Traits\ImportExcelTrait;
 use App\Traits\RegisterTrait;
@@ -34,7 +34,7 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
         'suhu' => 'nullable',
         'tanggal_kunjungan' => 'nullable|date|date_format:Y-m-d',
         'rs_kunjungan' => 'nullable',
-        'nik' => 'nullable|digits:16',
+        'nik' => 'required|digits:16',
         'nama_pasien' => 'required|min:3',
         'tanggal_lahir' => 'nullable|date|date_format:Y-m-d',
         'usia_bulan' => 'nullable|integer',
@@ -131,7 +131,7 @@ class RegisterRujukanImport implements ToCollection, WithHeadingRow
             'kriteria' => new EnumValueRule(StatusPasienEnum::class),
             'nomor_sampel' => [
                 'required',
-                'regex:/^' . Sampel::NUMBER_FORMAT_RUJUKAN . '$/',
+                'regex:/^' . FormatSampelEnum::RUJUKAN() . '$/',
                 new ExistsSampel(),
             ],
         ]);

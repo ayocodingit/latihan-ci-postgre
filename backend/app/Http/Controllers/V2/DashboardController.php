@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V2;
 
+use App\Enums\StatusPasienEnum;
 use App\Http\Controllers\Controller;
 use App\Models\DashboardCounter;
 
@@ -36,8 +37,9 @@ class DashboardController extends Controller
     public function pasienDiperiksa()
     {
         $data = [];
-        foreach (STATUSES as $key => $value) {
-            $data[str_replace(' ', '_', strtolower($value))] = $this->getTotal('pasien_diperiksa_' . $key);
+        foreach (StatusPasienEnum::getAll() as $item) {
+            $key = str_replace(' ', '_', strtolower($item->getValue()));
+            $data[$key] = $this->getTotal('pasien_diperiksa_' . $item->getIndex());
         }
 
         return response()->json([

@@ -2,98 +2,180 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Enums\StatusPasienEnum;
+use App\Enums\StatusPasienPelaporanEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Services\PelaporanService;
 use App\Models\Pasien;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 
 class PelaporanController extends Controller
 {
+    /**
+     * defaultDataByPasien
+     *
+     * @var array
+     */
+    protected $defaultDataByPasien = [
+        'id' => null,
+        'id_case' => null,
+        'nationality_name' => null,
+        'final_result' => null,
+        'test_location_type' => null,
+        'test_location' => null,
+        'test_date' => null,
+        'id_match' => null,
+    ];
+
+    /**
+     * defaultDataByPelaporan
+     *
+     * @var array
+     */
+    protected $defaultDataByPelaporan = [
+        'no_rt' => null,
+        'no_rw' => null,
+        'usia_bulan' => null,
+        'usia_tahun' => null,
+        'suhu' => null,
+    ];
+
+    /**
+     * addressProvinceCode
+     *
+     * @var int
+     */
+    protected $addressProvinceCode = 32;
+
+    /**
+     * items
+     *
+     * @var array
+     */
+    protected $items = [];
+
+    /**
+     * limit
+     *
+     * @var int
+     */
+    protected $limit = 10;
+
+
+    /**
+     * fetchData
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function fetchData(Request $request)
     {
-        $pelaporan = new PelaporanService();
-        $response = $pelaporan->pendaftar_rdt($request->get('search'), $request->get('limit', 10))->json();
-        if ($response['status_code'] == 200) {
-            foreach ($response['data']['content'] as $key => $item) {
-                $response['data']['content'][$key]['status_code'] = $this->setStatusCoce($item['status']);
-                $response['data']['content'][$key]['address_subdistrict_code'] = (int)str_replace('.', '', $item['address_subdistrict_code']);
-                $response['data']['content'][$key]['address_district_code'] = (int)str_replace('.', '', $item['address_district_code']);
-                $response['data']['content'][$key]['address_village_code'] = (int)str_replace('.', '', $item['address_village_code']);
-                $response['data']['content'][$key]['address_province_code'] = PROVINSI_JAWABARAT;
-                $response['data']['content'][$key]['no_rt'] = null;
-                $response['data']['content'][$key]['no_rw'] = null;
-                $response['data']['content'][$key]['usia_bulan'] = null;
-                $response['data']['content'][$key]['usia_tahun'] = null;
-                $response['data']['content'][$key]['suhu'] = null;
+        $pelaporanService = App::makeWith(PelaporanService::class, [
+            'keyword' => $request->input('search'),
+            'limit' => $request->input('limit', $this->limit)
+        ]);
+        if ($pelaporanService->response['status_code'] == Response::HTTP_OK) {
+            foreach ($pelaporanService->response['data']['content'] as $key => $item) {
+                $this->mappingSearchByPelaporan($item, $key);
             }
         }
-        $key = $response['status_code'] == 200 ? count($response['data']['content']) : 0;
-        unset($response['status_code']);
-        unset($response['message']);
 
-        $search = $request->search;
-        $pasien = Pasien::where('nama_lengkap', 'ilike', "%$search%")
-            ->orWhere('nik', 'like', "$search%")
-            ->orWhere('no_hp', 'like', "$search%")
-            ->distinct('nama_lengkap', 'nik')
-            ->orderByRaw('nama_lengkap desc, nik desc, updated_at desc')
-            ->limit(10 - $key)->get();
-        foreach ($pasien as $item) {
-            $response['data']['content'][$key]['id'] = null;
-            $response['data']['content'][$key]['id_case'] = null;
-            $response['data']['content'][$key]['nik'] = $item->nik;
-            $response['data']['content'][$key]['name'] = $item->nama_lengkap;
-            $response['data']['content'][$key]['birth_date'] = $item->tanggal_lahir;
-            $response['data']['content'][$key]['age'] = $item->usia_tahun;
-            $response['data']['content'][$key]['gender'] = $item->jenis_kelamin;
-            $response['data']['content'][$key]['address_detail'] = $item->alamat_lengkap;
-            $response['data']['content'][$key]['address_district_code'] = $item->kota_id;
-            $response['data']['content'][$key]['address_district_name'] = optional($item->kota)->nama;
-            $response['data']['content'][$key]['address_subdistrict_code'] = $item->kecamatan_id;
-            $response['data']['content'][$key]['address_subdistrict_name'] = optional($item->kecamatan)->nama;
-            $response['data']['content'][$key]['address_village_code'] = $item->kelurahan_id;
-            $response['data']['content'][$key]['address_village_name'] = optional($item->kelurahan)->nama;
-            $response['data']['content'][$key]['nationality'] = $item->kewarganegaraan;
-            $response['data']['content'][$key]['nationality_name'] = null;
-            $response['data']['content'][$key]['final_result'] = null;
-            $response['data']['content'][$key]['test_location_type'] = null;
-            $response['data']['content'][$key]['test_location'] = null;
-            $response['data']['content'][$key]['status'] = $item->status;
-            $response['data']['content'][$key]['test_date'] = null;
-            $response['data']['content'][$key]['id_match'] = null;
-            $response['data']['content'][$key]['status_code'] = $item->status;
-            $response['data']['content'][$key]['phone_number'] = $item->no_hp;
-            $response['data']['content'][$key]['no_rt'] = $item->no_rt;
-            $response['data']['content'][$key]['no_rw'] = $item->no_rw;
-            $response['data']['content'][$key]['usia_bulan'] = $item->usia_bulan;
-            $response['data']['content'][$key]['usia_tahun'] = $item->usia_tahun;
-            $response['data']['content'][$key]['suhu'] = $item->suhu;
-            $key++;
-        }
+        $this->searchByPasien($request->input('search'), count($this->items));
 
-        return response()->json($response, 200);
+        return response()->json($this->items, Response::HTTP_OK);
     }
 
-    public function setStatusCoce($status)
+    /**
+     * mappingSearchByPelaporan
+     *
+     * @param  mixed $item
+     * @param  mixed $key
+     * @return void
+     */
+    protected function mappingSearchByPelaporan($item, $key)
     {
-        switch (strtoupper($status)) {
-            case 'SUSPECT':
-                $status = 'suspek';
-                break;
-            case 'CLOSEDCONTACT':
-                $status = 'kontak erat';
-                break;
-            case 'PROBABLE':
-                $status = 'probable';
-                break;
-            case 'CONFIRMATION':
-                $status = 'konfirmasi';
-                break;
-            default:
-                $status = 'tanpa kriteria';
-                break;
+        $this->items[$key]['status_code'] = $this->getStatus($item['status']);
+        $this->items[$key]['address_subdistrict_code'] = getConvertCodeDagri($item['address_subdistrict_code']);
+        $this->items[$key]['address_district_code'] = getConvertCodeDagri($item['address_district_code']);
+        $this->items[$key]['address_village_code'] = getConvertCodeDagri($item['address_village_code']);
+        $this->items[$key]['address_province_code'] = $this->addressProvinceCode;
+        $this->items[$key] += $item;
+        $this->items[$key] += $this->defaultDataByPelaporan;
+    }
+
+    /**
+     * searchByPasien
+     *
+     * @param  mixed $search
+     * @param  mixed $key
+     * @return void
+     */
+    protected function searchByPasien($search, $key)
+    {
+        $pasien = Pasien::where(function ($query) use ($search) {
+                        $query->where('nama_lengkap', 'ilike', '%'. $search .'%')
+                            ->orWhere('nik', $search)
+                            ->orWhere('no_hp', $search);
+                        })
+                        ->distinct('nama_lengkap', 'nik')
+                        ->orderByRaw('nama_lengkap desc, nik desc, updated_at desc')
+                        ->limit($this->limit - $key)
+                        ->get();
+
+        foreach ($pasien as $item) {
+            $this->mappingSearchByPasien($item, $key);
+            $key++;
+        }
+    }
+
+    /**
+     * mappingSearchByPasien
+     *
+     * @param  mixed $item
+     * @param  mixed $key
+     * @return void
+     */
+    protected function mappingSearchByPasien($item, $key)
+    {
+        $this->items[$key]['nik'] = $item->nik;
+        $this->items[$key]['name'] = $item->nama_lengkap;
+        $this->items[$key]['birth_date'] = $item->tanggal_lahir;
+        $this->items[$key]['age'] = $item->usia_tahun;
+        $this->items[$key]['gender'] = $item->jenis_kelamin;
+        $this->items[$key]['address_detail'] = $item->alamat_lengkap;
+        $this->items[$key]['address_district_code'] = $item->kota_id;
+        $this->items[$key]['address_district_name'] = optional($item->kota)->nama;
+        $this->items[$key]['address_subdistrict_code'] = $item->kecamatan_id;
+        $this->items[$key]['address_subdistrict_name'] = optional($item->kecamatan)->nama;
+        $this->items[$key]['address_village_code'] = $item->kelurahan_id;
+        $this->items[$key]['address_village_name'] = optional($item->kelurahan)->nama;
+        $this->items[$key]['nationality'] = $item->kewarganegaraan;
+        $this->items[$key]['status'] = $item->status;
+        $this->items[$key]['status_code'] = $item->status;
+        $this->items[$key]['phone_number'] = $item->no_hp;
+        $this->items[$key]['no_rt'] = $item->no_rt;
+        $this->items[$key]['no_rw'] = $item->no_rw;
+        $this->items[$key]['usia_bulan'] = $item->usia_bulan;
+        $this->items[$key]['usia_tahun'] = $item->usia_tahun;
+        $this->items[$key]['suhu'] = $item->suhu;
+        $this->items[$key] += $this->defaultDataByPasien;
+    }
+
+    /**
+     * getStatus
+     *
+     * @param  mixed $status
+     * @return void
+     */
+    public function getStatus($status)
+    {
+        $status = strtoupper($status);
+        if (!in_array($status, ['SUSPECT', 'CLOSEDCONTACT', 'PROBABLE', 'CONFIRMATION'])) {
+            return StatusPasienEnum::tanpa_kriteria()->getIndex();
         }
 
-        return array_search($status, array_map('strtolower', Pasien::STATUSES));
+        return StatusPasienPelaporanEnum::make($status)->getIndex();
     }
 }

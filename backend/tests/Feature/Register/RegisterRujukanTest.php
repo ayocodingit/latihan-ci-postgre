@@ -48,6 +48,7 @@ class RegisterRujukanTest extends TestCase
             "reg_sumberpasien_isian" => "Rujukan",
             "reg_nama_pasien" => $this->faker->name,
             "reg_alamat" => $this->faker->address,
+            'reg_nik' => $this->faker->numberBetween(1000000000000000, 9999999999999999),
             "reg_nohp" => rand(),
             "reg_fasyankes_pengirim" => "1",
             "reg_no" => "R1996",

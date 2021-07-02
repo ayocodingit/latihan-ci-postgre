@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\Sampel;
+use App\Enums\FormatSampelEnum;
 use Carbon\Carbon;
 
 trait FilterTrait
@@ -24,7 +24,7 @@ trait FilterTrait
 
     public function scopeFilterNomorSampel($query, $operator, $nomorSampel)
     {
-        if (preg_match('{^' . Sampel::NUMBER_FORMAT . '$}', $nomorSampel)) {
+        if (preg_match('{^' . FormatSampelEnum::FILTER() . '$}', $nomorSampel)) {
             $str = $nomorSampel;
             $n = 1;
             $start = $n - strlen($str);

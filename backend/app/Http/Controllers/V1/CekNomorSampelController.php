@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Enums\FormatSampelEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Sampel;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class CekNomorSampelController extends Controller
         return [
             'nomor_sampel' => [
                 'required',
-                'regex:/^' . Sampel::NUMBER_FORMAT . '$/',
+                'regex:/^' . FormatSampelEnum::FILTER() . '$/',
                 'exists:sampel,nomor_sampel,deleted_at,NULL'
             ],
         ];

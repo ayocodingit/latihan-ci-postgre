@@ -20,7 +20,7 @@ trait ValidasiTrait
     private function getNameFileValidasi($status_sampel): string
     {
         if ($status_sampel == 'sample_verified') {
-            $namaFile = 'Belum divalidasi';
+            $namaFile = 'Belum-divalidasi';
         } else {
             $namaFile = 'Tervalidasi';
         }

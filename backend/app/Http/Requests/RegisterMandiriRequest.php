@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\FormatSampelEnum;
 use App\Enums\JenisKelaminEnum;
 use App\Enums\KewarganegaraanEnum;
 use App\Enums\StatusPasienEnum;
 use App\Enums\SumberPasienEnum;
-use App\Models\Sampel;
 use App\Rules\UniqueSampel;
 use Illuminate\Foundation\Http\FormRequest;
 use Spatie\Enum\Laravel\Rules\EnumIndexRule;
@@ -18,7 +18,7 @@ class RegisterMandiriRequest extends FormRequest
     const RULES = [
         'reg_sumberpasien' => 'nullable',
         'reg_nama_pasien' => 'required',
-        'reg_nik' => 'max:16',
+        'reg_nik' => 'required|max:16',
         'reg_nohp' => 'nullable',
         'reg_provinsi_id' => 'required|numeric|exists:provinsi,id',
         'reg_kota_id' => 'required|numeric|exists:kota,id',
@@ -50,21 +50,19 @@ class RegisterMandiriRequest extends FormRequest
     public function rules()
     {
         $rules = self::RULES;
+        $sampelId = $this->register ? $this->register->sampel->id : null;
         $rules += [
             'reg_kewarganegaraan' => ['nullable', new EnumValueRule(KewarganegaraanEnum::class)],
             'reg_jk' => ['nullable', new EnumValueRule(JenisKelaminEnum::class)],
             'status' => ['nullable', new EnumIndexRule(StatusPasienEnum::class)],
             'reg_sampel' => [
                 'required',
-                'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/',
-                new UniqueSampel(),
+                'regex:/^' . FormatSampelEnum::MANDIRI() . '$/',
+                new UniqueSampel($sampelId),
                 'unique:tes_masif,nomor_sampel',
             ],
             'reg_sumberpasien_isian' => 'required_unless:reg_sumberpasien,' . SumberPasienEnum::Umum(),
         ];
-        if ($this->register) {
-            unset($rules['reg_sampel']);
-        }
         return $rules;
     }
 }

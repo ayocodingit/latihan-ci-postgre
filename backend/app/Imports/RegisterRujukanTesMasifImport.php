@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
+use App\Enums\FormatSampelEnum;
 use App\Enums\JenisRegistrasiEnum;
 use App\Models\Fasyankes;
 use App\Models\Kota;
-use App\Models\Sampel;
 use App\Models\TesMasif;
 use App\Rules\ExistsSampel;
 use App\Rules\TesMasifRujukanExistsRule;
@@ -94,7 +94,7 @@ class RegisterRujukanTesMasifImport implements ToCollection, WithHeadingRow
             'nomor_sampel_fasyankes' => ['required', new TesMasifRujukanExistsRule()],
             'nomor_sampel_labkes' => [
                 'required',
-                'regex:/^' . Sampel::NUMBER_FORMAT_RUJUKAN . '$/',
+                'regex:/^' . FormatSampelEnum::RUJUKAN() . '$/',
                 new ExistsSampel()
             ],
         ];

@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
+use App\Enums\FormatSampelEnum;
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KewarganegaraanEnum;
 use App\Enums\StatusPasienEnum;
-use App\Models\Sampel;
 use App\Rules\ExistsWilayah;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +29,7 @@ trait TesMasifTrait
             'unique:sampel,nomor_sampel,NULL,id,deleted_at,NULL'
         ];
         if ($row['jenis_registrasi'] == JenisRegistrasiEnum::mandiri()) {
-            $ruleNomorSampel[] = 'regex:/^' . Sampel::NUMBER_FORMAT_TES_MASIF . '$/';
+            $ruleNomorSampel[] = 'regex:/^' . FormatSampelEnum::MANDIRI() . '$/';
         }
         return $ruleNomorSampel;
     }
@@ -45,7 +45,7 @@ trait TesMasifTrait
             'kewarganegaraan' => ['nullable', new EnumValueRule(KewarganegaraanEnum::class)],
             'kategori' => 'nullable',
             'kriteria' => ['required', new EnumValueRule(StatusPasienEnum::class)],
-            'nik' => 'nullable|digits:16',
+            'nik' => 'required|digits:16',
             'tanggal_lahir' => 'nullable|date',
             'provinsi_id' => ['nullable', new ExistsWilayah()],
             'kota_id' => ['nullable', new ExistsWilayah()],

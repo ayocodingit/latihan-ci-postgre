@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Services\GCloudPubSubService;
-use App\Oauth\CustomKeycloakProvider;
+use App\Http\Services\PelaporanService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $this->bootKeycloakSocialite();
         JsonResource::withoutWrapping();
     }
 
@@ -33,21 +32,9 @@ class AppServiceProvider extends ServiceProvider
         App::bind(GCloudPubSubService::class, function () {
             return new GCloudPubSubService();
         });
-    }
 
-    /**
-     * bootKeycloakSocialite func
-     *
-     */
-    private function bootKeycloakSocialite()
-    {
-        $socialite = $this->app->make('Laravel\Socialite\Contracts\Factory');
-        $socialite->extend(
-            'keycloak',
-            function ($app) use ($socialite) {
-                $config = $app['config']['services.keycloak'];
-                return new CustomKeycloakProvider($config);
-            }
-        );
+        App::bind(PelaporanService::class, function ($app, $item) {
+            return new PelaporanService($item);
+        });
     }
 }

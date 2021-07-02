@@ -109,8 +109,19 @@ class DashboardChartCommand extends Command
         ],
     ];
 
-    const SELECT_REGISTER = "SELECT DISTINCT(TO_CHAR(created_at,'YYYY MON')) as label,TO_CHAR(created_at,'MM') as month FROM register ORDER BY month";
-    const SELECT_SAMPEL = "SELECT DISTINCT(TO_CHAR(created_at,'YYYY MON')) as label,TO_CHAR(created_at,'MM') as month FROM sampel ORDER BY month";
+    const SELECT_REGISTER = "SELECT
+                                DISTINCT(TO_CHAR(created_at,'YYYY MON')) as label,
+                                TO_CHAR(created_at,'YYYY MM') as monthly,
+                                TO_CHAR(created_at,'MM') as month
+                            FROM register
+                            ORDER BY monthly";
+
+    const SELECT_SAMPEL = "SELECT
+                                DISTINCT(TO_CHAR(created_at,'YYYY MON')) as label,
+                                TO_CHAR(created_at,'YYYY MM') as monthly,
+                                TO_CHAR(created_at,'MM') as month
+                            FROM sampel
+                            ORDER BY monthly";
     /**
      * Execute the console command.
      *

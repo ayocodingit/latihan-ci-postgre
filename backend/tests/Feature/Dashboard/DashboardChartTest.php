@@ -36,7 +36,6 @@ class DashboardChartTest extends TestCase
             'register_id' => $this->register->id,
         ]);
         $this->artisan('command:dashboard_chart');
-        $this->artisan('schedule:run');
     }
 
     public function testRegistrasiDailyMandiri()

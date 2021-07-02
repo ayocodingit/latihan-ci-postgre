@@ -41,16 +41,16 @@ trait GeneratePDFTrait
         return Storage::put($filePath, $file);
     }
 
-    public function isDoesntExistFile($filePath)
+    public function isFileExist($filePath)
     {
-        return Storage::missing($filePath);
+        return Storage::exists($filePath);
     }
 
     public function getFilePath($model)
     {
         $filePath = $model->storage_path . DIRECTORY_SEPARATOR . optional($model->validFile)->original_name;
-        $isValidFile = !$model->validFile && !$this->isDoesntExistFile($filePath);
-        abort_if($isValidFile, Response::HTTP_NOT_FOUND);
+        $isNotValidFile = !$model->validFile || !$this->isFileExist($filePath);
+        abort_if($isNotValidFile, Response::HTTP_NOT_FOUND);
         return $filePath;
     }
 

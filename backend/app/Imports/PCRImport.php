@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Enums\FormatSampelEnum;
 use App\Enums\KesimpulanPemeriksaanEnum;
 use App\Models\Sampel;
 use App\Rules\ExistsSampleReceivedRule;
@@ -38,6 +39,7 @@ class PCRImport implements ToCollection, WithHeadingRow
                 continue;
             }
             $row['no_sample'] = trim($row->get('no_sample'));
+            $row['interpretasi'] = strtolower($row->get('interpretasi'));
             $row['sampel_id'] = Sampel::where('nomor_sampel', $row['no_sample'])
                                     ->where('sampel_status', 'pcr_sample_received')
                                     ->value('id');
@@ -93,7 +95,7 @@ class PCRImport implements ToCollection, WithHeadingRow
             'tanggal_periksa' => 'required|date|date_format:Y-m-d',
             'no_sample' => [
                 'required',
-                'regex:/^' . Sampel::NUMBER_FORMAT . '$/',
+                'regex:/^' . FormatSampelEnum::FILTER() . '$/',
                 new ExistsSampleReceivedRule()
             ],
             'interpretasi' => [

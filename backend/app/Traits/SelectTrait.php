@@ -19,6 +19,7 @@ trait SelectTrait
             'kesimpulan_pemeriksaan',
             'tanggal_lahir',
             'usia_tahun',
+            'usia_bulan',
             'register.nomor_register as nomor_register',
             'waktu_sample_valid',
             'status',

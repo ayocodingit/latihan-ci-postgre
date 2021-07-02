@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Enums\JenisRegistrasiEnum;
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Sampel;
 use App\Models\TesMasif;
@@ -32,7 +33,7 @@ class NotificationController extends Controller
     public function ekstraksiNotification()
     {
         $count = 0;
-        if (in_array(Auth::user()->role_id, [ROLE_EKSTRAKSI, ROLE_ADMIN])) {
+        if (in_array(Auth::user()->role_id, [RoleEnum::EKSTRAKSI()->getIndex(), RoleEnum::ADMIN()->getIndex()])) {
             $count = Sampel::where('sampel_status', 'extraction_sample_reextract')->count('id');
         }
         if ($count > 0) {
@@ -48,7 +49,7 @@ class NotificationController extends Controller
     public function pendaftaranNotification()
     {
         $count = 0;
-        if (in_array(Auth::user()->role_id, [ROLE_REGISTER, ROLE_ADMIN])) {
+        if (in_array(Auth::user()->role_id, [RoleEnum::REGISTER()->getIndex(), RoleEnum::ADMIN()->getIndex()])) {
             $count = TesMasif::where('jenis_registrasi', JenisRegistrasiEnum::mandiri())
                              ->where('available', true)
                              ->count('id');

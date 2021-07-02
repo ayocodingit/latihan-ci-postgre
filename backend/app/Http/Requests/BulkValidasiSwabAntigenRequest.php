@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RoleEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BulkValidasiSwabAntigenRequest extends FormRequest
@@ -13,7 +14,7 @@ class BulkValidasiSwabAntigenRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->role_id != ROLE_REGISTER;
+        return auth()->user()->role_id != RoleEnum::REGISTER()->getIndex();
     }
 
     /**

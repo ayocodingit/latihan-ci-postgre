@@ -17,13 +17,7 @@ class Sampel extends Model
     use OrderTrait;
     use SelectTrait;
 
-    const NUMBER_FORMAT_RUJUKAN = '[rRaAbB]{1}[0-9]{1,}';
-    const NUMBER_FORMAT_MANDIRI = '[lLbB]{1}[0-9]{1,}';
-    const NUMBER_FORMAT_TES_MASIF = '[lLrRaAbB]{1}[0-9]{1,}';
-    const NUMBER_FORMAT = '[lLrRaAbB]{1}[0-9]{1,}';
-
     protected $table = 'sampel';
-
 
     protected $fillable = [
         'nomor_register',

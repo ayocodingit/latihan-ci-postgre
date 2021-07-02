@@ -280,7 +280,7 @@ class EkstraksiTest extends TestCase
         $this->assertDatabaseHas('sampel', ['sampel_status' => 'sample_invalid']);
         $this->assertDatabaseHas('sampel_log', [
             'sampel_status' => 'sample_invalid',
-            'description' => 'Sample marked as invalid',
+            'description' => 'Sampel ditandai sebagai tidak valid',
         ]);
     }
 
@@ -378,7 +378,7 @@ class EkstraksiTest extends TestCase
         ]);
         $this->assertDatabaseHas('sampel_log', [
             'sampel_status' => 'pcr_sample_analyzed',
-            'description' => 'Sample marked as insufficient',
+            'description' => 'Sampel ditandai sebagai tidak cukup',
         ]);
     }
 
@@ -400,7 +400,7 @@ class EkstraksiTest extends TestCase
         $this->assertDatabaseHas('sampel', ['sampel_status' => 'swab_ulang']);
         $this->assertDatabaseHas('sampel_log', [
             'sampel_status' => 'swab_ulang',
-            'description' => 'Sample marked as need to be re-swab',
+            'description' => 'Sampel ditandai sebagai perlu di-swab ulang',
         ]);
         $this->assertDatabaseHas('pemeriksaansampel', [
             'user_id' => $this->user->id,

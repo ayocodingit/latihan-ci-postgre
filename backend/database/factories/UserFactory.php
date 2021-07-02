@@ -1,6 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Enums\RoleEnum;
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
@@ -23,7 +25,7 @@ $factory->define(User::class, function (Faker $faker) {
         'email' => $faker->unique()->email(),
         'email_verified_at' => now(),
         'username' => $faker->unique()->userName(),
-        'role_id' => ROLE_ADMIN,
+        'role_id' => RoleEnum::ADMIN()->getIndex(),
         'password' => 'password',
         'remember_token' => Str::random(10),
     ];

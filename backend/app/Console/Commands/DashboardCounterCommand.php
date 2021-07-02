@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\StatusPasienEnum;
 use App\Models\DashboardCounter;
 use App\Models\PasienRegister;
 use App\Models\Sampel;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class DashboardCounterCommand extends Command
 {
@@ -306,7 +306,7 @@ class DashboardCounterCommand extends Command
                 "total" => Sampel::sampel('sample_valid')->count('sampel.id'),
             ],
         ];
-        foreach (STATUSES as $key => $value) {
+        foreach (StatusPasienEnum::getIndices() as $key) {
             $data[] = [
                 "nama" => "pasien_diperiksa_" . $key,
                 "total" => PasienRegister::joinRegisterFromPasienRegister()

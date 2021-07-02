@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Enums\FormatSampelEnum;
 use App\Enums\JenisKelaminEnum;
 use App\Enums\JenisRegistrasiEnum;
 use App\Enums\KewarganegaraanEnum;
@@ -30,7 +31,7 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
 
     const RULES = [
         'tanggal_kunjungan' => 'nullable|date|date_format:Y-m-d',
-        'nik' => 'nullable|digits:16',
+        'nik' => 'required|digits:16',
         'nama_pasien' => 'required|min:3',
         'kategori' => 'nullable',
         'alamat' => 'required|max:255',
@@ -69,7 +70,6 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
                 if (!$row->get('no')) {
                     break;
                 }
-                $this->result['number_row'][] = $key + 1;
                 $row['kriteria'] = strtolower($row->get('kriteria'));
                 $row['nomor_sampel'] = trim(strtoupper($row->get('nomor_sampel')));
                 $this->validated($row->toArray(), $key);
@@ -118,7 +118,7 @@ class RegisterMandiriImport implements ToCollection, WithHeadingRow, WithChunkRe
             'kriteria' => new EnumValueRule(StatusPasienEnum::class),
             'nomor_sampel' => [
                 'required',
-                'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/',
+                'regex:/^' . FormatSampelEnum::MANDIRI() . '$/',
                 new UniqueSampel(),
                 'unique:tes_masif,nomor_sampel',
             ],

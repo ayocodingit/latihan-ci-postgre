@@ -7,6 +7,9 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ExistsSampleReceivedRule implements Rule
 {
+
+    public $description;
+
     /**
      * Create a new rule instance.
      *
@@ -26,9 +29,17 @@ class ExistsSampleReceivedRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Sampel::where('nomor_sampel', $value)
-                    ->where('sampel_status', 'pcr_sample_received')
-                    ->exists();
+        $sampel = Sampel::where('nomor_sampel', $value)->first();
+
+        if (!$sampel) {
+            $this->description = 'tidak ditemukan';
+        } elseif ($sampel->sampel_status == 'extraction_sample_sent') {
+            $this->description = 'belum diterima di Lab PCR. Mohon diterima terlebih dahulu.';
+        } elseif ($sampel->sampel_status != 'pcr_sample_received') {
+            $this->description = 'masih pada status ' . $sampel->status->deskripsi;
+        }
+
+        return !$this->description ? true : false;
     }
 
     /**
@@ -38,6 +49,6 @@ class ExistsSampleReceivedRule implements Rule
      */
     public function message()
     {
-        return 'Sampel RNA belum Diterima di Lab PCR';
+        return 'Nomor sampel ' . $this->description;
     }
 }

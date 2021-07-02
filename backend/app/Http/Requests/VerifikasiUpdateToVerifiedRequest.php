@@ -30,6 +30,8 @@ class VerifikasiUpdateToVerifiedRequest extends FormRequest
             'hasil_deteksi' => 'required|array',
             'hasil_deteksi.*.target_gen' => 'required',
             'hasil_deteksi.*.ct_value' => 'required',
+            'ct_normal' => 'required',
+            'nama_kit_pemeriksaan' => 'required',
         ];
     }
 }

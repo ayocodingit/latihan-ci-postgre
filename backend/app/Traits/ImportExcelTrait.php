@@ -24,7 +24,7 @@ trait ImportExcelTrait
     {
         App::setLocale('id');
         $validator = Validator::make($rows, $this->rules());
-        $this->initError($key);
+        $this->setUp($key);
         if ($validator->fails()) {
             $this->setError($key, $validator->errors()->all());
         }
@@ -82,7 +82,7 @@ trait ImportExcelTrait
         if (in_array($uniqueBy, $this->uniqueBy)) {
             $this->setError($key, __('validation.unique', ['attribute' => $this->uniqueBy()]));
         } else {
-            $this->sampel[] = $uniqueBy;
+            $this->uniqueBy[] = $uniqueBy;
         }
     }
 
@@ -103,5 +103,16 @@ trait ImportExcelTrait
         $items = collect($rows)->only($keyRules);
 
         return $isArray ? $items->toArray() : $items;
+    }
+
+    public function setUp($key)
+    {
+        $this->initError($key);
+        $this->setNumberRow($key);
+    }
+
+    public function setNumberRow($key)
+    {
+        $this->result['number_row'][] = $key + 1;
     }
 }

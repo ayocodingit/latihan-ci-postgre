@@ -3,21 +3,27 @@
 namespace App\Http\Services;
 
 use Illuminate\Support\Facades\Http;
-use Config;
 
 class PelaporanService
 {
+    public $response;
 
-    public function pendaftar_rdt($keyword, $limit = 10)
+    protected $dataSource = [
+        'data_source' => 'pelaporan',
+        'mode' => 'bykeyword',
+    ];
+
+    public function __construct($item)
     {
-        $url = Config::get('services.pelaporan.url');
+        $url = config('services.pelaporan.url');
+        $apiKey = config('services.pelaporan.api_key');
 
-        return Http::get($url, [
-            'data_source' => 'pelaporan',
-            'mode' => 'bykeyword',
-            'keyword' => $keyword,
-            'limit' => $limit,
-            'api_key' => Config::get('services.pelaporan.api_key')
-        ]);
+        $params = $this->dataSource + [
+            'keyword' => $item['keyword'],
+            'limit' => $item['limit'],
+            'api_key' => $apiKey
+        ];
+
+        $this->response = Http::get($url, $params)->json();
     }
 }

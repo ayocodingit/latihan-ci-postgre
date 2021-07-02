@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Sampel;
+use App\Enums\FormatSampelEnum;
 use App\Rules\UniqueSampel;
 use App\Enums\SumberSampelEnum;
 use App\Enums\JenisSampelEnum;
@@ -29,9 +29,9 @@ class SampelRequest extends FormRequest
     public function rules()
     {
         $pen_sampel_sumber = $this->get('pen_sampel_sumber');
-        $regexRule = 'regex:/^' . Sampel::NUMBER_FORMAT_RUJUKAN . '$/';
+        $regexRule = 'regex:/^' . FormatSampelEnum::RUJUKAN() . '$/';
         if ($pen_sampel_sumber == SumberSampelEnum::mandiri()) {
-            $regexRule = 'regex:/^' . Sampel::NUMBER_FORMAT_MANDIRI . '$/';
+            $regexRule = 'regex:/^' . FormatSampelEnum::MANDIRI() . '$/';
         }
 
         return [
@@ -41,8 +41,6 @@ class SampelRequest extends FormRequest
             'petugas_pengambil' => 'required',
             'vtm' => 'required',
             'pen_catatan' => 'nullable',
-            'pen_nik' => 'nullable',
-            'pen_noreg' => 'nullable',
             'pen_penerima_sampel' => 'nullable',
             'pukulsampel' => 'required|date_format:H:i',
             'tanggalsampel' => 'required|date',

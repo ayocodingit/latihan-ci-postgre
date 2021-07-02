@@ -87,6 +87,7 @@ class TesMasifController extends Controller
         $tes_masif['sampel_status'] = 'waiting_sample';
         $tes_masif['register_uuid'] = Str::uuid();
         $tes_masif['kewarganegaraan'] = $tes_masif['kewarganeraan'];
+        $tes_masif['tes_masif_id'] = $tes_masif['id'];
         return $tes_masif;
     }
 }
